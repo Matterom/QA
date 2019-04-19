@@ -1,0 +1,23 @@
+div.dash_button {
+    width:              35%;
+    float:              left;
+    background-color:   lightblue;
+    margin-left:        10%;
+    margin-top:         3%;
+    border-radius:      20px;
+    height:             200px;
+    text-align:         center;
+    line-height:        200px;
+    font-family:        Arial, Helvetica, sans-serif;
+    font-size:          20px;
+    font-weight:        bold;
+    border-style:       outset;
+    border-color:       white;
+    border-width:       4px;
+    position:           sticky;
+}
+span.dash_button_text {
+    line-height:        1.5;
+    display:            inline-block;
+    vertical-align:     text-top;
+}
