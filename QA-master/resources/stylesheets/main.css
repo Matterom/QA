@@ -1,0 +1,180 @@
+/* Body Region */
+
+main {
+    font-family: 'Poppins', sans-serif;
+}
+body {
+    margin: 0;
+    background-color: #0078ad;
+    height: 100%;
+}
+
+header {
+    margin: 0;
+    position: relative;
+    background: white;
+    height: 5%;
+    min-height: 30px;
+    max-height: 50px;
+}
+
+#login {
+    position:absolute;
+    right:5%;
+    top:18%;
+    width:auto;
+}
+
+.raised {
+    background-color:#0078ad;
+    width:100px;
+    height:25px;
+    font-size: 13px;
+    color:white;
+    font-weight:bold;
+}
+
+.raised:hover{
+    background-color:#018744;
+} 
+
+.logo img{
+width:250px;
+
+}
+/* Putting account user button and Logout button together--- */
+#login{
+    display:inline-block;
+    float:right;
+   
+}
+.userbtn1{
+    display:inline-block;
+    order:0;
+}
+.userbtn2{
+     display:inline-block;
+    order:1;
+}
+/*---end */
+}
+
+#login button {
+    margin: 0%;
+    width: 100px;
+    height: 100%;
+}
+
+.container2 {
+   background-color: white;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    padding-top:10px;
+    padding-bottom:10px;
+    padding-left:10px;
+    padding-right:10px;
+    text-align: center;
+
+}
+/* Q&A information --*/
+.box1{
+    float: left;
+    width: 25%;
+}
+
+.box2{
+    display: inline-block;
+    width:25%;
+}
+
+.box3 {
+   float: right;
+   width: 25%;
+}
+/* -- end */
+h3 {
+    text-align: center;
+    color: #018744;
+    margin-bottom: 0px;
+    margin-top: 0px;
+
+}
+
+ul {
+    text-align: left;
+    color: #018744;
+    margin-bottom: 0px;
+    margin-top: 0px;
+
+}
+.picture{
+    text-align:center;
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.Quiz {
+    float: left;
+    width: 50%;
+    height: 100%;
+    padding-bottom:75px;
+    padding-top: 75px;
+}
+
+#Q {
+    font-size:40px;
+    position: relative;
+    top: 50%;
+    bottom: 25;
+    left: 25%;
+    right: 25%;
+    border-radius: 25px;
+    width: 30%;
+    height: 200px;
+}
+
+.Answer {
+    float: right;
+    width: 50%;
+    height: 100%;
+    padding-bottom:75px;
+    padding-top: 75px;
+}
+
+#A {
+    font-size:40px;
+    position: relative;
+    top: 50%;
+    bottom: 25;
+    left: 25%;
+    right: 25%;
+    border-radius: 25px;
+    width: 30%;
+    height: 200px;
+  }
+
+  .Answer #A {
+    font-size:larger;
+    font-weight:bold;
+}
+
+/* Button Region */
+
+
+/* MainMenu Region */
+
+.noselect {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+}

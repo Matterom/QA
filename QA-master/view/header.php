@@ -15,7 +15,11 @@
 <body>
 <header>
 	<!--Generate Login Bar based on login status, Check Viewport size and apply necisary adjustments-->
-	<?php print_r($_SESSION);?>
+	<div class="logo">
+		<img src="resources/graphics/5.png" alt="Logo">
+	</div>
+	
+	
 	<div id="login">
 		<?php if (array_key_exists('loggedin', $_SESSION) == false) : ?>
 
@@ -23,15 +27,18 @@
 
 		<!--If Logged in, Grant access to new menu options and replace login button with logut-->
 		<?php elseif (array_key_exists('loggedin', $_SESSION) == true) : ?>
-
+			<div class="userbtn1">
 			<button id="accountbtn" class="raised" onclick="window.location.href = '<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/Account'"><?php echo $_SESSION['name']?></button>
+			</div>
 
+			<div class="userbtn2">
 			<form action="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/Login/Logout.php" method="POST">
 				<input type="hidden" name="user" value="<?php echo $_SESSION['username'];?>"/>
 				<input type="submit" class="raised" name="logout" value="Logout"/>
 			</form>
 
 		<?php endif;?>
+			</div>
     </div>
     <!--The Login Box-->
     <div id="logform" class="modal">
