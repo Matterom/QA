@@ -1,5 +1,8 @@
 /* Body Region */
 
+main {
+    font-family: 'Poppins', sans-serif;
+}
 body {
     margin: 0;
     background-color: #0078ad;
@@ -9,29 +12,52 @@ body {
 header {
     margin: 0;
     position: relative;
-    background: grey;
+    background: white;
     height: 5%;
     min-height: 30px;
     max-height: 50px;
 }
 
-header div#login {
-    position: absolute;
-    float: none;
-    margin: 0;
-    min-width: 5%;
-    max-width: 10%;
-    right: 0.5%;
-    top: 10%;
+#login {
+    position:absolute;
+    right:5%;
+    top:18%;
+    width:auto;
 }
 
-#login form {
-    margin: auto;
-    width: 100px;
-    height: 100%;
+.raised {
+    background-color:#0078ad;
+    width:100px;
+    height:25px;
+    font-size: 13px;
+    color:white;
+    font-weight:bold;
 }
 
-.rased {}
+.raised:hover{
+    background-color:#018744;
+} 
+
+.logo img{
+width:250px;
+
+}
+/* Putting account user button and Logout button together--- */
+#login{
+    display:inline-block;
+    float:right;
+   
+}
+.userbtn1{
+    display:inline-block;
+    order:0;
+}
+.userbtn2{
+     display:inline-block;
+    order:1;
+}
+/*---end */
+}
 
 #login button {
     margin: 0%;
@@ -39,43 +65,48 @@ header div#login {
     height: 100%;
 }
 
-
-/*
-.section {
-		
-}*/
-
 .container2 {
    background-color: white;
     width: 100%;
     display: flex;
+    justify-content: space-around;
     padding-top:10px;
     padding-bottom:10px;
     padding-left:10px;
     padding-right:10px;
+    text-align: center;
 
 }
-
-.box1, .box2, .box3 {
-   
-    border: 1px solid blue;
-    display: flex;
-    flex-direction: column;
+/* Q&A information --*/
+.box1{
     float: left;
-    padding-left:5px;
-    padding-top:5px;
-    width: 30%;
+    width: 25%;
 }
 
-h4{
+.box2{
+    display: inline-block;
+    width:25%;
+}
+
+.box3 {
+   float: right;
+   width: 25%;
+}
+/* -- end */
+h3 {
     text-align: center;
     color: #018744;
+    margin-bottom: 0px;
+    margin-top: 0px;
 
 }
 
 ul {
     text-align: left;
     color: #018744;
+    margin-bottom: 0px;
+    margin-top: 0px;
+
 }
 .picture{
     text-align:center;
@@ -88,7 +119,8 @@ ul {
     float: left;
     width: 50%;
     height: 100%;
-    padding-bottom:20px;
+    padding-bottom:75px;
+    padding-top: 75px;
 }
 
 #Q {
@@ -99,15 +131,16 @@ ul {
     left: 25%;
     right: 25%;
     border-radius: 25px;
-    width: 50%;
-    height: 300px;
+    width: 30%;
+    height: 200px;
 }
 
 .Answer {
     float: right;
     width: 50%;
     height: 100%;
-    padding-bottom:20px;
+    padding-bottom:75px;
+    padding-top: 75px;
 }
 
 #A {
@@ -118,8 +151,13 @@ ul {
     left: 25%;
     right: 25%;
     border-radius: 25px;
-    width: 50%;
-    height: 300px;
+    width: 30%;
+    height: 200px;
+  }
+
+  .Answer #A {
+    font-size:larger;
+    font-weight:bold;
 }
 
 /* Button Region */
