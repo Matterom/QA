@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Quiz and Attendance</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/Stylesheets/main.css" type="text/css">
 	<link rel="stylesheet" href="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/Stylesheets/login.css" type="text/css">
