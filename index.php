@@ -1,6 +1,5 @@
 <?php include 'view/header.php';?>
 <main>
-	<link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
 	<div class="sections" style="display:block;">
 		<div class="Quiz">
 			<button id="Q" onclick="window.location.href = 'RoomSetup'">Q</button>
