@@ -58,7 +58,7 @@ class questionObj {
             };
     }
 }
-
+//Function to get a question Object out of an ID ///NOTE: Fragile and think of a better system later.
 function getQObjFromQID(qid) {
     const eText = document.getElementById(qid + ":text").innerHTML;
 
@@ -85,7 +85,7 @@ function getQObjFromQID(qid) {
     console.log(Q);
     return Q;
 }
-
+// Compresses an Element based on an ID
 function compressQuestion(qid) {
     const reset = "This is a sample Answer, Double click to change";
     const eleBox = document.getElementById("AB:" + qid);
@@ -128,10 +128,16 @@ async function addChoice(qid) {
         document.getElementById(qid + ":4"),
         document.getElementById(qid + ":5")
     ]
+    const chArr = [document.getElementById(qid + ":ch1"),
+        document.getElementById(qid + ":ch2"),
+        document.getElementById(qid + ":ch3"),
+        document.getElementById(qid + ":ch4"),
+        document.getElementById(qid + ":ch5")
+    ]
     for (let i = 0; i < ansArr.length; ++i) {
         if (ansArr[i].classList.contains("hidden")) {
             ansArr[i].classList.remove("hidden");
-            ansArr[i].nextSibling.classList.remove("hidden");
+            chArr[i].classList.remove("hidden");
             break;
         }
     }
@@ -473,7 +479,7 @@ async function queryQuestionList(folder, user) {
 async function queryQuizSet(folder, user) {
     const QSBox = document.getElementById('QuestionSetBox');
     //Clear box and Regenerate
-    QSBox.innerHTML = "<div id='NewSet'><button type='button' onclick='newSet()'>New Set Icon</button></div>";
+    QSBox.innerHTML = "<div id='QuestionSetHeader' class='lheader'><div id='NewSet'><button type='button' onclick='newSet(" + folder + ")'>New Set Icon</button></div></div>";
     let data = new FormData();
     data.append("set", true);
     data.append("query", true);
@@ -487,6 +493,8 @@ async function queryQuizSet(folder, user) {
         console.log("Something went wrong")
     } else {
         let sList = await response.json();
+
+
         for (let i = 0; i < sList.length; i++) {
             let qsName = sList[i].setName;
             let qSID = sList[i].setID;

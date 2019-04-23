@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/Stylesheets/main.css" type="text/css">
 	<link rel="stylesheet" href="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/Stylesheets/login.css" type="text/css">
 	<link rel="stylesheet" href="local.css" type="text/css">
+	<link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
 	<script src="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/javascript/main.js" type="text/javascript" async="true"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<!--script src="https://www.google.com/recaptcha/api.js" async defer></script-->
