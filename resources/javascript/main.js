@@ -8,6 +8,8 @@
 /////////////////////////
 
 const modal = document.getElementById('id01');
+let timeKeeper;
+let time;
 let activeFolder = "";
 
 //----------------------------------//
@@ -20,11 +22,13 @@ window.addEventListener("load", function() {
 
 }, false);
 
-
+//////////////////
+// Update Clock //
+//////////////////
 function timer(arg) {
     switch (arg) {
         case "start":
-            timeKeeper = setInterval(updateClock, 1000);
+            timeKeeper = setInterval(updateClock(-1), 1000);
             break;
         case "clear":
             clearInterval(timeKeeper)
@@ -34,10 +38,81 @@ function timer(arg) {
     }
 }
 
-function updateClock() {
+function logicLoop(arg) {
+    switch (arg) {
+        case "start":
+            logloop = setInterval(updateQuiz(mode), 1000);
+            break;
+        case "clear":
+            clearInterval(timeKeeper)
+            time = 0
+        case "pause":
+            clearInterval(timeKeeper)
+    }
+}
+
+function updateClock(mode) {
     var watch = document.getElementById("Watch");
     watch.innerHTML = "Time: " + time;
-    time += 1;
+    time += mode * 1;
+}
+
+async function updateQuiz(mode) {
+    //Note, in the future, check against website or php variable to prevent errors
+    if (mode == "Host") {
+        // Check Quiz State, If Time Remaining < 0, Move to next Question, 
+        const data = new FormData();
+        data.append("QMrequest", true);
+        const response = await fetch("pushRoomSetup.php", {
+            method: 'POST',
+            body: data
+        });
+        if (!response.ok) {
+            //throw error
+        }
+        else {
+            //set content to be loaded by room clients.
+            
+            
+            const Q = JSON.parse(response);
+            buildQuestion(Q, "Host");
+        }
+    }
+    else if (mode == "Review") {
+        //TODO review mode for looking back
+    }
+    else if (mode == "User") {
+        const response1 = await fetch("roomLogic.php", {
+            method: 'POST',
+            body: data
+        });
+        if (!response1.ok) {
+            //throw error
+        }
+        else {
+            //Pull Current Room Data and parse functions
+
+
+            //E
+
+        }
+    }
+    else {
+        //nothinh happens
+    }
+
+}
+//Push User's room to new question
+async function nextQuestion() {
+    //Pull Current Question data and push it to server, just in case. 
+
+    //Pull the question object and refresh the relevant DOM
+
+
+}
+//Build the Dom of a Question
+function buildQuestion(Q, Style) {
+
 }
 //----------------------------------//
 ////////////////////////////
