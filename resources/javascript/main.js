@@ -57,7 +57,7 @@ function updateClock(mode) {
     time += mode * 1;
 }
 
-async function updateQuiz(mode) {
+async function updateQuiz(mode, target) {
     //Note, in the future, check against website or php variable to prevent errors
     if (mode == "Host") {
         // Check Quiz State, If Time Remaining < 0, Move to next Question, 
@@ -69,35 +69,30 @@ async function updateQuiz(mode) {
         });
         if (!response.ok) {
             //throw error
-        }
-        else {
+        } else {
             //set content to be loaded by room clients.
-            
-            
+
+
             const Q = JSON.parse(response);
             buildQuestion(Q, "Host");
         }
-    }
-    else if (mode == "Review") {
+    } else if (mode == "Review") {
         //TODO review mode for looking back
-    }
-    else if (mode == "User") {
+    } else if (mode == "User") {
         const response1 = await fetch("roomLogic.php", {
             method: 'POST',
             body: data
         });
         if (!response1.ok) {
             //throw error
-        }
-        else {
+        } else {
             //Pull Current Room Data and parse functions
 
 
             //E
 
         }
-    }
-    else {
+    } else {
         //nothinh happens
     }
 

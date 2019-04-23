@@ -25,7 +25,7 @@
 <body>
 <header>
 	<div class="logo">
-		<img src="resources/graphics/5.png" alt="Logo">
+		<img src="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/graphics/5.png" alt="Logo">
 	</div>
 	<!--Generate Login Bar based on login status, Check Viewport size and apply necisary adjustments-->
 

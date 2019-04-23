@@ -175,8 +175,21 @@
     //Sets.. a question..set?
     function makeSet($folder, $setName, $setDesc) {
         global $MYSQLi;
-        if ($statement = $MYSQLi->prepare('INSERT into questionsets (qSetName, qSetDesc, folder) VALUES (?, ?, ?)')) {
+        if ($statement = $MYSQLi->prepare('INSERT into questionsets (qSetName, qSetDesc, folderID) VALUES (?, ?, ?)')) {
             $statement->bind_param('sss', $setName, $setDesc, $folder);
+            $result = $statement->execute();
+            $statement->close();
+            return $result;
+        }
+        else {
+            //Throw Error
+        }
+    }
+    //Delete set
+    function deleteSet($setID, $folder) {
+        global $MYSQLi;
+        if($statement = $MYSQLi->prepare('DELETE LOW_PRIORITY FROM questionsetpairing WHERE qSetID = ? AND folderID = ?')) {
+            $statement->bind_param('ss', $setID, $folder);
             $result = $statement->execute();
             $statement->close();
             return $result;
