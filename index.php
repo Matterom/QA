@@ -5,7 +5,7 @@
 			<button id="Q" onclick="window.location.href = 'RoomSetup'">Q</button>
 		</div>
 		<div class="Answer">
-			<button id="A" onclick="window.location.href = 'Room'">Mark Yourself Present!<?php include 'Attendance/LogAttendance.php' ?></button>
+			<button id="A" ondblclick="window.location.href = 'Room'">Mark Yourself Present!<?php include 'Attendance/LogAttendance.php' ?></button>
 		</div>
 	</div>
 
