@@ -8,6 +8,8 @@
 /////////////////////////
 
 const modal = document.getElementById('id01');
+let timeKeeper;
+let time;
 let activeFolder = "";
 
 //----------------------------------//
@@ -20,11 +22,13 @@ window.addEventListener("load", function() {
 
 }, false);
 
-
+//////////////////
+// Update Clock //
+//////////////////
 function timer(arg) {
     switch (arg) {
         case "start":
-            timeKeeper = setInterval(updateClock, 1000);
+            timeKeeper = setInterval(updateClock(-1), 1000);
             break;
         case "clear":
             clearInterval(timeKeeper)
@@ -34,10 +38,76 @@ function timer(arg) {
     }
 }
 
-function updateClock() {
+function logicLoop(arg) {
+    switch (arg) {
+        case "start":
+            logloop = setInterval(updateQuiz(mode), 1000);
+            break;
+        case "clear":
+            clearInterval(timeKeeper)
+            time = 0
+        case "pause":
+            clearInterval(timeKeeper)
+    }
+}
+
+function updateClock(mode) {
     var watch = document.getElementById("Watch");
     watch.innerHTML = "Time: " + time;
-    time += 1;
+    time += mode * 1;
+}
+
+async function updateQuiz(mode, target) {
+    //Note, in the future, check against website or php variable to prevent errors
+    if (mode == "Host") {
+        // Check Quiz State, If Time Remaining < 0, Move to next Question, 
+        const data = new FormData();
+        data.append("QMrequest", true);
+        const response = await fetch("pushRoomSetup.php", {
+            method: 'POST',
+            body: data
+        });
+        if (!response.ok) {
+            //throw error
+        } else {
+            //set content to be loaded by room clients.
+
+
+            const Q = JSON.parse(response);
+            buildQuestion(Q, "Host");
+        }
+    } else if (mode == "Review") {
+        //TODO review mode for looking back
+    } else if (mode == "User") {
+        const response1 = await fetch("roomLogic.php", {
+            method: 'POST',
+            body: data
+        });
+        if (!response1.ok) {
+            //throw error
+        } else {
+            //Pull Current Room Data and parse functions
+
+
+            //E
+
+        }
+    } else {
+        //nothinh happens
+    }
+
+}
+//Push User's room to new question
+async function nextQuestion() {
+    //Pull Current Question data and push it to server, just in case. 
+
+    //Pull the question object and refresh the relevant DOM
+
+
+}
+//Build the Dom of a Question
+function buildQuestion(Q, Style) {
+
 }
 //----------------------------------//
 ////////////////////////////
@@ -58,7 +128,7 @@ class questionObj {
             };
     }
 }
-
+//Function to get a question Object out of an ID ///NOTE: Fragile and think of a better system later.
 function getQObjFromQID(qid) {
     const eText = document.getElementById(qid + ":text").innerHTML;
 
@@ -85,7 +155,7 @@ function getQObjFromQID(qid) {
     console.log(Q);
     return Q;
 }
-
+// Compresses an Element based on an ID
 function compressQuestion(qid) {
     const reset = "This is a sample Answer, Double click to change";
     const eleBox = document.getElementById("AB:" + qid);
@@ -128,10 +198,16 @@ async function addChoice(qid) {
         document.getElementById(qid + ":4"),
         document.getElementById(qid + ":5")
     ]
+    const chArr = [document.getElementById(qid + ":ch1"),
+        document.getElementById(qid + ":ch2"),
+        document.getElementById(qid + ":ch3"),
+        document.getElementById(qid + ":ch4"),
+        document.getElementById(qid + ":ch5")
+    ]
     for (let i = 0; i < ansArr.length; ++i) {
         if (ansArr[i].classList.contains("hidden")) {
             ansArr[i].classList.remove("hidden");
-            ansArr[i].nextSibling.classList.remove("hidden");
+            chArr[i].classList.remove("hidden");
             break;
         }
     }
@@ -473,7 +549,7 @@ async function queryQuestionList(folder, user) {
 async function queryQuizSet(folder, user) {
     const QSBox = document.getElementById('QuestionSetBox');
     //Clear box and Regenerate
-    QSBox.innerHTML = "<div id='NewSet'><button type='button' onclick='newSet()'>New Set Icon</button></div>";
+    QSBox.innerHTML = "<div id='QuestionSetHeader' class='lheader'><div id='NewSet'><button type='button' onclick='newSet(" + folder + ")'>New Set Icon</button></div></div>";
     let data = new FormData();
     data.append("set", true);
     data.append("query", true);
@@ -487,6 +563,8 @@ async function queryQuizSet(folder, user) {
         console.log("Something went wrong")
     } else {
         let sList = await response.json();
+
+
         for (let i = 0; i < sList.length; i++) {
             let qsName = sList[i].setName;
             let qSID = sList[i].setID;

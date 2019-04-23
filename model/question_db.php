@@ -29,8 +29,9 @@
         global $MYSQLi;
         if ($statement = $MYSQLi->prepare('UPDATE questionfolders SET folderName = ?, folderDescription = ? WHERE ownerID = ? AND folderID = ?') ) {
             $statement->bind_param('ssss', $folderName, $folderDescr, $user, $folderID);
-            $statement->execute();
+            $result = $statement->execute();
             $statement->close();
+            return $result;
         }
         else {
             //Throw Error
@@ -174,22 +175,80 @@
     //Sets.. a question..set?
     function makeSet($folder, $setName, $setDesc) {
         global $MYSQLi;
-        if ($statement = $MYSQLi->prepare('INSERT into questionsets (qSetName, qSetDesc, folder) VALUES (?, ?, ?)')) {
+        if ($statement = $MYSQLi->prepare('INSERT into questionsets (qSetName, qSetDesc, folderID) VALUES (?, ?, ?)')) {
             $statement->bind_param('sss', $setName, $setDesc, $folder);
-            $statement->executue();
+            $result = $statement->execute();
             $statement->close();
+            return $result;
+        }
+        else {
+            //Throw Error
+        }
+    }
+    //Delete set
+    function deleteSet($setID, $folder) {
+        global $MYSQLi;
+        if($statement = $MYSQLi->prepare('DELETE LOW_PRIORITY FROM questionsetpairing WHERE qSetID = ? AND folderID = ?')) {
+            $statement->bind_param('ss', $setID, $folder);
+            $result = $statement->execute();
+            $statement->close();
+            return $result;
+        }
+        else {
+            //Throw Error
+        }
+    }
+    //Update Set
+    function updateSet($folder, $setID, $setName, $setDesc) {
+        global $MYSQLi;
+        if ($statement = $MYSQLi->prepare('UPDATE questionsets SET qSetName = ?, qSetDesc = ? WHERE qSetID = ? AND folderID = ?')) {
+            $statement->bind_param('', $setName, $setDesc, $setID, $folder);
+            $result = $statement->execute();
+            $statement->close();
+            return $result;
         }
         else {
             //Throw Error
         }
     }
     //Adds a Question to the set, should be run quite often.. need a way to diferentiate between sets for questions in multiple sets
-    function updateSet($folder, $setID, $setName, $questionID) {
+    function addQToSet($questionID, $setID) {
         global $MYSQLi;
-        if (false) {
+        if ($statement = $MYSQLi->prepare('INSERT into questionsetpairing (qID, qsetID) VALUES (?, ?)')) {
+            $statement->bind_param('??', $questionID, $setID);
+            $result = $statement->execute();
+            $statement->close();
+            return $result;
+            
         }
         else {
             //Throw Error
         }
+    }
+    function subQFromSet($questionID, $setID) {
+        global $MYSQLi;
+        if($statement = $MYSQLi->prepare('DELETE LOW_PRIORITY FROM questionsetpairing WHERE qID = ? AND qsetID = ?')) {
+            $statement->bind_param('ss', $questionID, $setID);
+            $result = $statement->execute();
+            $statement->close();
+            return $result;
+        }
+        else {
+            //Throw Error
+        }
+    }
+    function getQuestionsInSet($setID) {
+        global $MYSQLi;
+        if($statement = $MYSQLi->prepare('SELECT qID WHERE qsetID = ?')) {
+            $statement->bind_param('ss', $questionID, $setID);
+            $statement->execute();
+            $return = $statement->get_result();
+            $statement->close();
+            return $return-fetch_all(MYSQLI_NUM);
+        }
+        else {
+            //Return Error
+        }
+
     }
 ?>

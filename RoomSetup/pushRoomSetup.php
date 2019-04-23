@@ -74,24 +74,34 @@
             echo json_encode($result);
         }
         elseif ($type = filter_input(INPUT_POST, "update")) {
-            if ($target = filter_input(INPUT_POST, "name")) {
-
-            }
-            elseif ($target = filter_input(INPUT_POST, "desc")) {
-
-            }
-        }
+            
+            $result = updateSet($folder, $setID, $setName, $setDesc);
+            echo $result;
+         }
         elseif ($type = filter_input(INPUT_POST, "new")) {
-
+           
+            $result = makeSet($folder, $setName, $setDesc);
+            echo $result;
         }
         elseif ($type = filter_input(INPUT_POST, "delete")) {
-
+            
+            $result = deleteSet($setID, $folder);
+            echo $result;
         }
         elseif ($type = filter_input(INPUT_POST, "add")) {
-
+           
+            $result = addQToSet($questionID, $setID);
+            echo $result;
         }
         elseif ($type = filter_input(INPUT_POST, "remove")) {
-
+            
+            $result = subQFromSet($questionID, $setID);
+            echo $result;
+        }
+        elseif ($type = filter_input(INPUT_POST, "get")) {
+            
+            $result = getQuestionsInSet($setID);
+            echo $result;
         }
     }
     else {

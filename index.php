@@ -1,15 +1,11 @@
 <?php include 'view/header.php';?>
 <main>
-	<link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
-	<div style="text-align: right;">
-	<img src='<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[0], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[0];} ?>/resources/graphics/QA_Logo_2.0.jpg' width='100' height="100" alt="logo" class='image'>
-	</div>
 	<div class="sections" style="display:block;">
 		<div class="Quiz">
 			<button id="Q" onclick="window.location.href = 'RoomSetup'">Q</button>
 		</div>
 		<div class="Answer">
-			<button id="A">Mark Yourself Present!<?php include 'Attendance/LogAttendance.php' ?></button>
+			<button id="A" onclick="window.location.href = 'Room'">Mark Yourself Present!<?php include 'Attendance/LogAttendance.php' ?></button>
 		</div>
 	</div>
 
