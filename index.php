@@ -1,15 +1,11 @@
 <?php include 'view/header.php';?>
 <main>
-	<div style="text-align: right;">
-	<img src='/resources/graphics/QA_Logo_2.0.jpg' width='100' height="100" alt="logo" class='image'>
-	</div>
-
 	<div class="sections" style="display:block;">
 		<div class="Quiz">
-			<button id="Q" onclick="window.location.href = '/RoomSetup'">Q</button>
+			<button id="Q" onclick="window.location.href = 'RoomSetup'">Q</button>
 		</div>
 		<div class="Answer">
-			<button id="A">Mark Yourself Present!<?php include './Attendance/LogAttendance.php' ?></button>
+			<button id="A" onclick="window.location.href = 'Room'">Mark Yourself Present!<?php include 'Attendance/LogAttendance.php' ?></button>
 		</div>
 	</div>
 
@@ -17,7 +13,7 @@
 		<span onclick="document.getElementById('aboutmenu').style.display='none'" class="close Mspan" title="Close Modal"></span>
 		<div class="box1">
 			<div class="picture">
-			<img src="/resources/graphics/attendance.png" width="100" height="100">
+			<img src="resources/graphics/attendance.png" width="100" height="100">
 			</div>
 			<h4><u>Class Attendance</u></h4>
 			<ul>
@@ -29,7 +25,7 @@
 
 		<div class="box2">
 			<div class= "picture">
-			<img src="/resources/graphics/quiz.png" width="100" height="100" >
+			<img src="resources/graphics/quiz.png" width="100" height="100" >
 			</div>
 			<h4><u>Class Quizzes</u></h4>
 			<ul>

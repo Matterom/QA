@@ -3,19 +3,32 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Quiz and Attendance</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="../resources/Stylesheets/main.css" type="text/css">
-	<link rel="stylesheet" href="../resources/Stylesheets/login.css" type="text/css">
+	<link rel="stylesheet" href="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/Stylesheets/main.css" type="text/css">
+	<link rel="stylesheet" href="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/Stylesheets/login.css" type="text/css">
+	<link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
 	<link rel="stylesheet" href="local.css" type="text/css">
-	<script src="../resources/javascript/main.js" type="text/javascript" async="true"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+	<script src="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/javascript/main.js" type="text/javascript" async="true"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 	<!--script src="https://www.google.com/recaptcha/api.js" async defer></script-->
+	<script>
+	// php variables to JS "global" variables
+	const sessionID = <?php echo "\"".session_id()."\""; ?>;
+	const roomID = <?php if (isset($_SESSION['roomID'])){echo "\"".$_SESSION['roomID']."\"";} else echo "\""."\"" ?>;
+
+
+	</script>
+
 </head>
 <body>
 <header>
+	<div class="logo">
+		<img src="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/graphics/5.png" alt="Logo">
+	</div>
 	<!--Generate Login Bar based on login status, Check Viewport size and apply necisary adjustments-->
-	<?php print_r($_SESSION);?>
+
 	<div id="login">
 		<?php if (array_key_exists('loggedin', $_SESSION) == false) : ?>
 
@@ -24,19 +37,23 @@
 		<!--If Logged in, Grant access to new menu options and replace login button with logut-->
 		<?php elseif (array_key_exists('loggedin', $_SESSION) == true) : ?>
 
-			<button id="accountbtn" class="raised" onclick="window.location.href = '../Account'"><?php echo $_SESSION['name']?></button>
+			<div class="userbtn1">
+				<button id="accountbtn" class="raised" onclick="window.location.href = '<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/Account'"><?php echo $_SESSION['name']?></button>
+			</div>
 
-			<form action="../Login/Logout.php" method="POST">
-				<input type="hidden" name="user" value="<?php echo $_SESSION['username'];?>"/>
-				<input type="submit" class="raised" name="logout" value="Logout"/>
-			</form>
-
+			<div class="userbtn2">
+				<form action="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/Login/Logout.php" method="POST">
+					<input type="hidden" name="user" value="<?php echo $_SESSION['username'];?>"/>
+					<input type="submit" class="raised" name="logout" value="Logout"/>
+				</form>
+			</div>
 		<?php endif;?>
+	
     </div>
     <!--The Login Box-->
     <div id="logform" class="modal">
 		<span onclick="document.getElementById('logform').style.display='none'" class="close Mspan" title="Close Modal">&times;</span>
-		<form class="modal-content Mform animate" action="../Login/loginAttempt.php" method="POST">
+		<form class="modal-content Mform animate" action="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/Login/loginAttempt.php" method="POST">
 			<div class="container">
 				<input type="hidden" id="regswitch" name="register" value="false">
 				<label for="email" class="register" style="display:none">Email</label>

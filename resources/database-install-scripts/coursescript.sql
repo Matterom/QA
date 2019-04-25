@@ -12,7 +12,7 @@ Create Table if not exists Rooms (
 /* Trigger which sets the Key value for newly created room */
 DELIMITER ^^
 CREATE TRIGGER IF NOT EXISTS qaproject.room_key_generator_bi
-BEFORE INSERT ON Rooms FOR EACH ROW 
+BEFORE INSERT ON rooms FOR EACH ROW 
 BEGIN
 	declare rnd_str varchar(5);
     declare rdy int;
@@ -22,7 +22,7 @@ BEGIN
 if isnull(NEW.) THEN
     while (not rdy) do
         set rnd_str := lpad(conv(floor(rand()*pow(36,5)), 10, 36), 5, 0);
-            if not exists (select * from Rooms where room_key = rnd_str) then
+            if not exists (select * from rooms where room_key = rnd_str) then
                 set NEW.room_key := rnd_str;
                 set rdy = 1;
             end if;
