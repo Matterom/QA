@@ -28,7 +28,7 @@
     else {
         ?>
         <form method="post" style="hidden" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-            Account ID: <input type="number" name="attendee_id"><br>
+            Account ID: <input type="text" name="attendee_id"><br>
             Course ID: <input type="text" name="course_key"><br>
             <input type="submit"><br>
         </form>
