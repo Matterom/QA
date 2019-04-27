@@ -10,7 +10,8 @@
 const modal = document.getElementById('id01');
 let timeKeeper;
 let time;
-let activeFolder = "";
+let activeFolder;
+let activeSet;
 
 //----------------------------------//
 
@@ -189,7 +190,7 @@ function compressQuestion(qid) {
         }
     }
 }
-
+//Adds question choices TODO breaks after some useage, works for display
 async function addChoice(qid) {
     const eleBox = document.getElementById("AB:" + qid);
     const ansArr = [document.getElementById(qid + ":1"),
@@ -212,6 +213,35 @@ async function addChoice(qid) {
         }
     }
 }
+//Refreshes questions assoicated with the set
+async function revealSetAssoc(setID) {
+    activeSet = setID;
+    qBoxes = document.getElementsByClassName("question")
+    const data = new FormData();
+    data.append("set", true);
+    data.append("get", true);
+    data.append("setID", setID);
+    const response = await fetch("pushRoomSetup.php", {
+        method: 'POST',
+        body: data
+    });
+    if (!response.ok) {
+        console.log("something went wrong");
+    } else {
+        result = await response.text();
+        for (let i = 0; i < qBoxes.length; ++i) {
+            qid = qBoxes[i].id.split(':')[1];
+            if (result.includes(qid)) {
+                revealChildClass("BH:" + qid, "addToSet", false);
+                revealChildClass("BH:" + qid, "subFromSet", true);
+            } else {
+                revealChildClass("BH:" + qid, "addToSet", true);
+                revealChildClass("BH:" + qid, "subFromSet", false);
+            }
+        }
+    }
+
+}
 
 //----------------------------------//
 
@@ -221,12 +251,11 @@ async function addChoice(qid) {
 
 //Closes window, TODO replace with new code, used as test
 window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
     }
-}
-
-//Converts a Text line to a form
+    //DBLclick function to convert the folder name or description to a form
 function convertFolderToForm(select, type, secondary, userID, folderID) {
     select.setAttribute("style", "display:none")
     let input;
@@ -243,7 +272,7 @@ function convertFolderToForm(select, type, secondary, userID, folderID) {
     input.setAttribute("onfocusout", "updateFolderFromForm(this, '" + type + "', '" + secondary + "', " + userID + "," + folderID + ", true)")
     select.parentNode.insertBefore(input, select.nextSibling)
 }
-
+//DBLclick function to convert the Question Text to a form
 function convertQuestionToForm(select, type, folderID, questionID) {
     select.setAttribute("style", "display:none");
     const input = document.createElement("textarea");
@@ -254,19 +283,22 @@ function convertQuestionToForm(select, type, folderID, questionID) {
     select.parentNode.insertBefore(input, select.nextSibling);
 
 }
-
+//DBLclick function to convert the set name or description to a form
 function convertSetToForm(select, type, secondary, userID, folderID, setID) {
+    console.log("UserID:" + userID + " FolderID: " + folderID + " setID: " + setID)
     select.setAttribute("style", "display:none");
     let input;
     if (type == "QSetN") {
         input = document.createElement("input");
         input.setAttribute("value", select.innerHTML);
+        input.focus();
     } else {
         input = document.createElement("textarea");
+        input.focus();
         input.innerHTML = select.innerHTML;
     }
     input.setAttribute("autofocus", true);
-    input.setAttribute("onkeyup", "updateSetFromForm(this, '" + type + "', '" + secondary + "', " + userID + ", " + folderID + ", " + setID + ", true)");
+    input.setAttribute("onkeyup", "updateSetFromForm(this, '" + type + "', '" + secondary + "', " + userID + ", " + folderID + ", " + setID + ", false)");
     input.setAttribute("onfocusout", "updateSetFromForm(this, '" + type + "', '" + secondary + "', " + userID + ", " + folderID + ", " + setID + ", true)");
     select.parentNode.insertBefore(input, select.nextSibling);
 }
@@ -293,7 +325,6 @@ async function updateFolderFromForm(origin, type, secondary, userID, folderID, c
                 console.log("something went wrong");
             } else {
                 let result = await response.text();
-                console.log(result);
 
                 //remove form and reenable node if successful
                 target.setAttribute("style", "display:block");
@@ -307,7 +338,7 @@ async function updateFolderFromForm(origin, type, secondary, userID, folderID, c
         //Escape Pressed, Cancel everything
     }
 }
-
+//Updates the question Text
 async function updateQuestionFromForm(origin, type, folderID, questionID, clickoff) {
     if ((!event.shiftKey & event.keyCode == 13) || clickoff) {
         target = origin.previousSibling;
@@ -348,22 +379,73 @@ async function updateQuestionFromForm(origin, type, folderID, questionID, clicko
     }
 
 }
+//Updates the DB with a new form name or descripter
 async function updateSetFromForm(origin, type, secondary, userId, folderID, setID, clickoff) {
     if ((!event.shiftKey & event.keyCode == 13) || clickoff) {
+        target = origin.previousSibling;
+        val = origin.value.replace(/(\r\n|\n|\r)/gm, "");
+        origin.previousSibling.innerHTML = val;
+        let name;
+        let desc;
+        console.log(type);
+        if (type == "QSetN") {
+            name = val
+            desc = secondary
+        } else {
+            name = secondary;
+            desc = val
+        }
+        console.log(setID)
+        let data = new FormData();
+        data.append("set", true);
+        data.append("update", true);
+        data.append("folderID", folderID);
+        data.append("setID", setID);
+        data.append("name", name);
+        data.append("desc", desc);
 
+        const response = await fetch("pushRoomSetup.php", {
+            method: 'POST',
+            body: data
+        })
+        if (!response.ok) {
+            console.log("something went wrong");
+        } else {
+            let result = await response.text();
+            console.log(result)
+
+            //remove form and reenable node if successful
+            if (!target.classList.contains("hidden")) {
+                target.setAttribute("style", "display:block");
+            }
+            origin.parentNode.removeChild(origin);
+        }
     }
 }
-
+//Utility for revealing children based on some variables
+function revealChildClass(parent, target, mode) {
+    child = document.getElementById(parent).childNodes;
+    for (i = 0; i < child.length; ++i) {
+        if (child[i].classList.contains(target)) {
+            if (mode && child[i].classList.contains("hidden")) {
+                child[i].classList.remove("hidden")
+            } else if (!mode) {
+                child[i].classList.add("hidden")
+            }
+        }
+    }
+}
 //Toggles answerbox
 function toggleAnswers(qid) {
     const ele = document.getElementById("AB:" + qid)
     if (ele.classList.contains("hidden")) {
         ele.classList.remove("hidden");
+        revealChildClass("BH:" + qid, "addChoice", true)
     } else {
         ele.classList.add("hidden");
+        revealChildClass("BH:" + qid, "addChoice", false)
     }
 }
-
 //Deletes Folder, Remove element and ping server's php to remove from memory
 async function deleteFolder(target, folderID, user) {
     const node = target.parentNode
@@ -393,7 +475,7 @@ async function deleteQuestion(target, folderID) {
     let data = new FormData();
     data.append("question", true);
     data.append("delete", true);
-    data.append("target", target);
+    data.append("setID", target);
     data.append("folderID", folderID);
 
     const response = await fetch("pushRoomSetup.php", {
@@ -405,19 +487,19 @@ async function deleteQuestion(target, folderID) {
     } else {
         //Finally delete the node
         let result = await response.text()
-        console.log(result);
+
         node.parentNode.removeChild(node);
     }
 }
 //Delete Question Set, Remove Element and ping server's PHP to remove from memory
-async function deleteQSet(element, setID, user) {
+async function deleteQSet(element, setID, folderID) {
     const node = element.parentNode;
     let data = new FormData();
     data.append("set", true)
     data.append("delete", true);
-    data.append("target", setID);
-    data.append("user", user); // not used but may be used later for security
-    const response = await fetch("psuhRoomSetup.php", {
+    data.append("setID", setID);
+    data.append("folderID", folderID);
+    const response = await fetch("pushRoomSetup.php", {
         method: 'POST',
         body: data
     });
@@ -426,11 +508,9 @@ async function deleteQSet(element, setID, user) {
     } else {
         //Delete the Node
         let result = await response.text()
-        console.log(result);
         node.parentNode.removeChild(node);
     }
 }
-
 //Creates Folder, Pings PHP to create the default, initialaizes form, runs updateElementFromForm when values are entered and converts to normal
 async function newFolder(user) {
     const folderbox = document.getElementById("FolderBox");
@@ -450,7 +530,6 @@ async function newFolder(user) {
         console.log("something went wrong");
     } else {
         let result = await response.text();
-        console.log(result);
 
         //the PHP returns the ID of the folder
         const folderID = result;
@@ -483,7 +562,34 @@ async function newFolder(user) {
         node.appendChild(btn);
     }
 }
+//Makes a new set
+async function newSet(folder, user) {
+    const QSBox = document.getElementById('QuestionSetBox');
+    const QSHead = document.getElementById('QuestionSetHeader');
+    const defName = "Name of Set";
+    const defDesc = "Description of Set";
+    let data = new FormData();
+    data.append('set', true);
+    data.append('new', true);
+    data.append('name', defName);
+    data.append('desc', defDesc);
+    data.append('folderID', folder);
+    const response = await fetch("pushRoomSetup.php", {
+        method: 'POST',
+        body: data
+    });
+    if (!response.ok) {
+        console.log("something went wrong");
+    } else {
+        let result = await response.text();
 
+        const setID = result;
+        generateSEle(setID, folder, defName, defDesc, user)
+
+        const node = document.createElement("div");
+    }
+}
+//Queries the server for a list of questions in a set
 async function queryQuestionList(folder, user) {
     if (activeFolder != folder) {
         activeFolder = folder
@@ -507,34 +613,11 @@ async function queryQuestionList(folder, user) {
                 let Q = JSON.parse(qList[i].question);
                 let qid = qList[i].questionID;
                 //Build Element
-                const Qbtn = document.createElement("div");
-                Qbtn.classList = "question";
-                Qbtn.setAttribute("id", "Q:" + qid);
-
-                let qString = "<div class='QHead'><div id='" + qid + ":text' class='text'>" + Q.text + "</div><div onclick='toggleAnswers(" + qid + ")' class='arrow'>Arrow</div></div>"
-                qString += "<div id='AB:" + qid + "' class='answerBox hidden'>"
-                qString += "<div id='" + qid + ":1" + "' class='ans1 " + Q.answer.one[2] + "'>" + Q.answer.one[1] + "</div><div id='" + qid + ":ch1' class='ch1 " + Q.answer.one[2] + "'><input type='checkbox' name='answerOne' value='true' " + (Q.answer.one[0] ? "checked='true'" : "") + "/></div>"
-                qString += "<div id='" + qid + ":2" + "' class='ans2 " + Q.answer.two[2] + "'>" + Q.answer.two[1] + "</div><div id='" + qid + ":ch2' class='ch2 " + Q.answer.two[2] + "'><input type='checkbox' name='answerTwo' value='true' " + (Q.answer.two[0] ? "checked='true'" : "") + "/></div>"
-                qString += "<div id='" + qid + ":3" + "' class='ans3 " + Q.answer.three[2] + "'>" + Q.answer.three[1] + "</div><div id='" + qid + ":ch3' class='ch3 " + Q.answer.three[2] + "'><input type='checkbox' name='answerThree' value='true' " + (Q.answer.three[0] ? "checked='true'" : "") + "/></div>"
-                qString += "<div id='" + qid + ":4" + "' class='ans4 " + Q.answer.four[2] + "'>" + Q.answer.four[1] + "</div><div id='" + qid + ":ch4' class='ch4 " + Q.answer.four[2] + "'><input type='checkbox' name='answerFour' value='true' " + (Q.answer.four[0] ? "checked='true'" : "") + "/></div>"
-                qString += "<div id='" + qid + ":5" + "' class='ans5 " + Q.answer.five[2] + "'>" + Q.answer.five[1] + "</div><div id='" + qid + ":ch5' class='ch5 " + Q.answer.five[2] + "'><input type='checkbox' name='answerFive' value='true' " + (Q.answer.five[0] ? "checked='true'" : "") + "/></div>"
-                qString += "</div>"
-                qString += "<div id='" + qid + ":args' class='hidden'>" + "TF::" + Q.args.TF + "</div>"
-                qString += "<div class='btnHolder'>"
-                qString += "<button onclick=addChoice(" + qid + ")>Add Answer Choice</button>"
-                qString += "<button>TrueFalse</button>"
-                qString += "<button class='QSetLinkBTN hidden'>Add To Current Set</button>"
-                qString += "<button onclick='deleteQuestion(" + qid + ", " + folder + ")'>Trash</button></div>"
-                Qbtn.innerHTML = qString
-                QBox.appendChild(Qbtn);
-                document.getElementById(qid + ":text").setAttribute("ondblclick", "convertQuestionToForm(this, 'title'," + folder + ", " + qid + ")");
-                document.getElementById(qid + ":1").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
-                document.getElementById(qid + ":2").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
-                document.getElementById(qid + ":3").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
-                document.getElementById(qid + ":4").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
-                document.getElementById(qid + ":5").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
+                Qbtn = generateQEle(QBox, folder, user, qid, Q);
             }
             //Create New question button
+
+
             const newQbtn = document.createElement("div");
             newQbtn.setAttribute("onclick", "newQuestion(" + folder + ", " + user + ")");
             newQbtn.setAttribute("id", "newQbtn");
@@ -546,6 +629,7 @@ async function queryQuestionList(folder, user) {
         }
     }
 }
+//Queries the server for a list of sets in the folder
 async function queryQuizSet(folder, user) {
     const QSBox = document.getElementById('QuestionSetBox');
     //Clear box and Regenerate
@@ -564,28 +648,109 @@ async function queryQuizSet(folder, user) {
     } else {
         let sList = await response.json();
 
-
         for (let i = 0; i < sList.length; i++) {
-            let qsName = sList[i].setName;
-            let qSID = sList[i].setID;
+            let qsName = sList[i].qSetName;
+            let qsDesc = sList[i].qSetDesc;
+            let qSID = sList[i].qSetId;
             //Build Element
-            const qSBtn = document.createElement("div");
-            qSBtn.classList = "setClass";
-            qSBtn.setAttribute("id", "S:" + qSID);
-            qSBtn.innerHTML = "<div class='Details' onclick='querySetQuestions(this, " + folder + ", " + qSID + ", " + user + ")'>"
-            qSBtn.innerHTML += "<h1>" + qsName + "</h1><p>" + qsDesc + "</p></div>"
-            qSBtn.innerHTML += "<div class='qsetbtnbox'><button onclick='deleteQSet(this, " + folder + ", " + qSID + ", " + user + ")'>DELETE</button><button>PUBLISH</button></div>"
-            qSBtn.innerHTML += "</div>"
-            QSBox.appendChild(qSBtn);
+            generateSEle(qSID, folder, qsName, qsDesc, user)
         }
     }
 }
+//Function to add a question to a set
+async function addToSet(qid, insert) {
+    let target;
+    if (insert) {
+        target = "add";
+    } else {
+        target = "sub";
+    }
+    let data = new FormData();
+    data.append("set", true);
+    data.append(target, true);
+    data.append("qID", qid);
+    data.append("setID", activeSet);
+    const response = await fetch("pushRoomsetup.php", {
+        method: "POST",
+        body: data
+    });
+    if (!response.ok) {
+        console.log("Something went wrong")
+    } else {
+        result = await response.text();
+        revealSetAssoc(activeSet)
+    }
 
+}
+//Genereates the Element for a new or existing Question Config box
+function generateQEle(QBox, folder, user, qid, Q) {
+    const Qbtn = document.createElement("div");
+    Qbtn.classList = "question";
+    Qbtn.setAttribute("id", "Q:" + qid);
+
+    let qString = "<div class='QHead'><div id='" + qid + ":text' class='text'>" + Q.text + "</div><div onclick='toggleAnswers(" + qid + ")' class='arrow'>Arrow</div></div>"
+    qString += "<div id='AB:" + qid + "' class='answerBox hidden'>"
+    qString += "<div id='" + qid + ":1" + "' class='ans1 " + Q.answer.one[2] + "'>" + Q.answer.one[1] + "</div><div id='" + qid + ":ch1' class='ch1 " + Q.answer.one[2] + "'><input type='checkbox' name='answerOne' value='true' " + (Q.answer.one[0] ? "checked='true'" : "") + "/></div>"
+    qString += "<div id='" + qid + ":2" + "' class='ans2 " + Q.answer.two[2] + "'>" + Q.answer.two[1] + "</div><div id='" + qid + ":ch2' class='ch2 " + Q.answer.two[2] + "'><input type='checkbox' name='answerTwo' value='true' " + (Q.answer.two[0] ? "checked='true'" : "") + "/></div>"
+    qString += "<div id='" + qid + ":3" + "' class='ans3 " + Q.answer.three[2] + "'>" + Q.answer.three[1] + "</div><div id='" + qid + ":ch3' class='ch3 " + Q.answer.three[2] + "'><input type='checkbox' name='answerThree' value='true' " + (Q.answer.three[0] ? "checked='true'" : "") + "/></div>"
+    qString += "<div id='" + qid + ":4" + "' class='ans4 " + Q.answer.four[2] + "'>" + Q.answer.four[1] + "</div><div id='" + qid + ":ch4' class='ch4 " + Q.answer.four[2] + "'><input type='checkbox' name='answerFour' value='true' " + (Q.answer.four[0] ? "checked='true'" : "") + "/></div>"
+    qString += "<div id='" + qid + ":5" + "' class='ans5 " + Q.answer.five[2] + "'>" + Q.answer.five[1] + "</div><div id='" + qid + ":ch5' class='ch5 " + Q.answer.five[2] + "'><input type='checkbox' name='answerFive' value='true' " + (Q.answer.five[0] ? "checked='true'" : "") + "/></div>"
+    qString += "</div>"
+    qString += "<div id='" + qid + ":args' class='hidden'>" + "TF::" + Q.args.TF + "</div>"
+    qString += "<div id='BH:" + qid + "' class='btnHolder'>"
+    qString += "<button onclick='addChoice(" + qid + ")' class='hidden addChoice'>Add Answer Choice</button>"
+    qString += "<button class='hidden addToSet' onclick='addToSet(" + qid + ", true)'>AddToSet</button>"
+    qString += "<button class='hidden subFromSet' onclick='addToSet(" + qid + ", false)'>SubFromSet</button>"
+    qString += "<button onclick='deleteQuestion(" + qid + ", " + folder + ")'>Trash</button></div>"
+    Qbtn.innerHTML = qString
+    QBox.appendChild(Qbtn);
+    document.getElementById(qid + ":text").setAttribute("ondblclick", "convertQuestionToForm(this, 'title'," + folder + ", " + qid + ")");
+    document.getElementById(qid + ":1").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
+    document.getElementById(qid + ":2").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
+    document.getElementById(qid + ":3").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
+    document.getElementById(qid + ":4").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
+    document.getElementById(qid + ":5").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
+
+    return Qbtn;
+}
+//Generates the element for a new or existing Set
+function generateSEle(setID, folder, name, desc, user) {
+    const QSBox = document.getElementById('QuestionSetBox');
+
+    const node = document.createElement("div");
+    const h1 = document.createElement("h1");
+    const p = document.createElement("p");
+    const btn = document.createElement("button");
+
+    //configure node
+    node.setAttribute("id", "QS:" + setID)
+    node.setAttribute("class", "Set")
+    node.setAttribute("onclick", "revealSetAssoc(" + setID + ", " + folder + ")")
+        //configure h1 select, type, secondary, userID, folderID, setID
+    h1.setAttribute("ondblclick", "convertSetToForm(this, 'QSetN', '" + desc + "', " + user + ", " + folder + ", " + setID + ")");
+    h1.setAttribute("class", "renamable")
+    h1.innerText = name;
+    //configure p
+    p.setAttribute("ondblclick", "convertSetToForm(this, 'QSetD', '" + desc + "', " + user + ", " + folder + ", " + setID + ")");
+    p.setAttribute("class", "renamable")
+    p.innerText = desc;
+
+    //configure btn
+    btn.setAttribute("type", "button");
+    btn.setAttribute("onclick", "deleteQSet(this, " + setID + ", " + folder + ")")
+    btn.innerText = "TRASHICON";
+    //assemble node
+    QSBox.appendChild(node);
+    node.appendChild(h1);
+    node.appendChild(p);
+    node.appendChild(btn);
+}
+//Builds a new Question
 async function newQuestion(folder, user) {
     //Define Element Components
     const QBox = document.getElementById("QuestionBox");
     const newQbtn = document.getElementById("newQbtn");
-    const Qbtn = document.createElement("div");
+
     const Q = new questionObj();
     //Make Entry into database
     const data = new FormData();
@@ -603,42 +768,13 @@ async function newQuestion(folder, user) {
     } else {
         const result = await response.text();
         let qid = result;
-        console.log(result);
-        //Basic Structure of the Question Object
-        Qbtn.classList = "question";
-        Qbtn.setAttribute("id", "Q:" + qid);
 
-        const onclickinsertT = "onclick='convertQuestionToForm(this,'title'," + folder + "," + qid + ")'"
-        const onclickinsertA = "onclick='convertQuestionToForm(this,'answer'," + folder + "," + qid + ")'"
-
-        let qString = "<div class='QHead'><div id='" + qid + ":text' class='text'>" + Q.text + "</div><div onclick='toggleAnswers(" + qid + ")' class='arrow'>Arrow</div></div>"
-        qString += "<div id='AB:" + qid + "' class='answerBox hidden'>"
-        qString += "<div id='" + qid + ":1" + "' class='ans1 " + Q.answer.one[2] + "'>" + Q.answer.one[1] + "</div><div id='" + qid + ":ch1' class='ch1 " + Q.answer.one[2] + "'><input type='checkbox' name='answerOne' value='true' " + (Q.answer.one[0] ? "checked='true'" : "") + "/></div>"
-        qString += "<div id='" + qid + ":2" + "' class='ans2 " + Q.answer.two[2] + "'>" + Q.answer.two[1] + "</div><div id='" + qid + ":ch2' class='ch2 " + Q.answer.two[2] + "'><input type='checkbox' name='answerTwo' value='true' " + (Q.answer.two[0] ? "checked='true'" : "") + "/></div>"
-        qString += "<div id='" + qid + ":3" + "' class='ans3 " + Q.answer.three[2] + "'>" + Q.answer.three[1] + "</div><div id='" + qid + ":ch3' class='ch3 " + Q.answer.three[2] + "'><input type='checkbox' name='answerThree' value='true' " + (Q.answer.three[0] ? "checked='true'" : "") + "/></div>"
-        qString += "<div id='" + qid + ":4" + "' class='ans4 " + Q.answer.four[2] + "'>" + Q.answer.four[1] + "</div><div id='" + qid + ":ch4' class='ch4 " + Q.answer.four[2] + "'><input type='checkbox' name='answerFour' value='true' " + (Q.answer.four[0] ? "checked='true'" : "") + "/></div>"
-        qString += "<div id='" + qid + ":5" + "' class='ans5 " + Q.answer.five[2] + "'>" + Q.answer.five[1] + "</div><div id='" + qid + ":ch5' class='ch5 " + Q.answer.five[2] + "'><input type='checkbox' name='answerFive' value='true' " + (Q.answer.five[0] ? "checked='true'" : "") + "/></div>"
-        qString += "</div>"
-        qString += "<div id='" + qid + ":args' class='hidden'>" + "TF::" + Q.args.TF + "</div>"
-        qString += "<div class='btnHolder'>"
-        qString += "<button onclick=addChoice(" + qid + ")>Add Answer Choice</button>"
-        qString += "<button>TrueFalse</button>"
-        qString += "<button class='QSetLinkBTN hidden'>Add To Current Set</button>"
-        qString += "<button onclick='deleteQuestion(" + qid + ", " + folder + ")'>Trash</button></div>"
-        Qbtn.innerHTML = qString
-        QBox.appendChild(Qbtn);
-        document.getElementById(qid + ":text").setAttribute("ondblclick", "convertQuestionToForm(this, 'title'," + folder + ", " + qid + ")");
-        document.getElementById(qid + ":1").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
-        document.getElementById(qid + ":2").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
-        document.getElementById(qid + ":3").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
-        document.getElementById(qid + ":4").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
-        document.getElementById(qid + ":5").setAttribute("ondblclick", "convertQuestionToForm(this, 'answer'," + folder + ", " + qid + ")");
         //Build Element
+        Qbtn = generateQEle(QBox, folder, user, qid, Q)
+
         QBox.insertBefore(Qbtn, newQbtn);
     }
 }
-
-
 
 //Swaps the login form to enable Registration
 function adjustFormToRegister() {

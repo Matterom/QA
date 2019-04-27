@@ -177,18 +177,21 @@
         global $MYSQLi;
         if ($statement = $MYSQLi->prepare('INSERT into questionsets (qSetName, qSetDesc, folderID) VALUES (?, ?, ?)')) {
             $statement->bind_param('sss', $setName, $setDesc, $folder);
-            $result = $statement->execute();
+            $statement->execute();
+            $result = $statement->insert_id;
             $statement->close();
             return $result;
         }
         else {
             //Throw Error
+            return("Something Failed");
+
         }
     }
     //Delete set
     function deleteSet($setID, $folder) {
         global $MYSQLi;
-        if($statement = $MYSQLi->prepare('DELETE LOW_PRIORITY FROM questionsetpairing WHERE qSetID = ? AND folderID = ?')) {
+        if($statement = $MYSQLi->prepare('DELETE LOW_PRIORITY FROM questionsets WHERE qSetID = ? AND folderID = ?')) {
             $statement->bind_param('ss', $setID, $folder);
             $result = $statement->execute();
             $statement->close();
@@ -196,33 +199,37 @@
         }
         else {
             //Throw Error
+            return("Something Failed");
+
         }
     }
     //Update Set
     function updateSet($folder, $setID, $setName, $setDesc) {
         global $MYSQLi;
         if ($statement = $MYSQLi->prepare('UPDATE questionsets SET qSetName = ?, qSetDesc = ? WHERE qSetID = ? AND folderID = ?')) {
-            $statement->bind_param('', $setName, $setDesc, $setID, $folder);
+            $statement->bind_param('ssss', $setName, $setDesc, $setID, $folder);
             $result = $statement->execute();
             $statement->close();
             return $result;
         }
         else {
             //Throw Error
+            return("Something Failed");
         }
     }
     //Adds a Question to the set, should be run quite often.. need a way to diferentiate between sets for questions in multiple sets
     function addQToSet($questionID, $setID) {
         global $MYSQLi;
         if ($statement = $MYSQLi->prepare('INSERT into questionsetpairing (qID, qsetID) VALUES (?, ?)')) {
-            $statement->bind_param('??', $questionID, $setID);
+            $statement->bind_param('ss', $questionID, $setID);
             $result = $statement->execute();
             $statement->close();
             return $result;
-            
+
         }
         else {
             //Throw Error
+            return("Something Failed");
         }
     }
     function subQFromSet($questionID, $setID) {
@@ -235,19 +242,21 @@
         }
         else {
             //Throw Error
+            return("Something Failed");
         }
     }
     function getQuestionsInSet($setID) {
         global $MYSQLi;
-        if($statement = $MYSQLi->prepare('SELECT qID WHERE qsetID = ?')) {
-            $statement->bind_param('ss', $questionID, $setID);
+        if($statement = $MYSQLi->prepare('SELECT qID FROM questionsetpairing WHERE qsetID = ?')) {
+            $statement->bind_param('s', $setID);
             $statement->execute();
             $return = $statement->get_result();
             $statement->close();
-            return $return-fetch_all(MYSQLI_NUM);
+            return $return->fetch_all(MYSQLI_NUM);
         }
         else {
-            //Return Error
+            //Throw Error
+            return("Something Failed");
         }
 
     }

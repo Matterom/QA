@@ -69,6 +69,12 @@ main {
     border-color: black;
 }
 
+.Set {
+    border-style: solid;
+    border-width: 3px;
+    border-color: black;
+}
+
 
 /* Box for each question */
 

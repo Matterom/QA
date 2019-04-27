@@ -74,34 +74,42 @@
             echo json_encode($result);
         }
         elseif ($type = filter_input(INPUT_POST, "update")) {
-            
+            $setName = filter_input(INPUT_POST, "name");
+            $setDesc = filter_input(INPUT_POST, "desc");
+            $setID = filter_input(INPUT_POST, "setID");
+            $folder = filter_input(INPUT_POST, "folderID");
             $result = updateSet($folder, $setID, $setName, $setDesc);
             echo $result;
          }
         elseif ($type = filter_input(INPUT_POST, "new")) {
-           
+            $setName = filter_input(INPUT_POST, "name");
+            $setDesc = filter_input(INPUT_POST, "desc");
+            $folder = filter_input(INPUT_POST, "folderID");
             $result = makeSet($folder, $setName, $setDesc);
             echo $result;
         }
         elseif ($type = filter_input(INPUT_POST, "delete")) {
-            
+            $setID = filter_input(INPUT_POST, "setID");
+            $folder = filter_input(INPUT_POST, "folderID");
             $result = deleteSet($setID, $folder);
             echo $result;
         }
         elseif ($type = filter_input(INPUT_POST, "add")) {
-           
+            $questionID = filter_input(INPUT_POST, "qID");
+            $setID = filter_input(INPUT_POST, "setID");
             $result = addQToSet($questionID, $setID);
             echo $result;
         }
-        elseif ($type = filter_input(INPUT_POST, "remove")) {
-            
+        elseif ($type = filter_input(INPUT_POST, "sub")) {
+            $questionID = filter_input(INPUT_POST, "qID");
+            $setID = filter_input(INPUT_POST, "setID");
             $result = subQFromSet($questionID, $setID);
             echo $result;
         }
         elseif ($type = filter_input(INPUT_POST, "get")) {
-            
+            $setID = filter_input(INPUT_POST, "setID");
             $result = getQuestionsInSet($setID);
-            echo $result;
+            echo json_encode($result);
         }
     }
     else {
