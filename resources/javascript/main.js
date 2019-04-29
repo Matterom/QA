@@ -106,6 +106,10 @@ async function nextQuestion() {
 
 
 }
+//Enable Question
+function enableQuestion() {
+
+}
 //Build the Dom of a Question
 function buildQuestion(Q, Style) {
 
