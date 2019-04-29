@@ -56,7 +56,8 @@ CREATE TABLE IF NOT EXISTS rosters (
     attendee_count int(4) DEFAULT 0,
     PRIMARY KEY (roster_id),
     CONSTRAINT roster_host_id_fk FOREIGN KEY (roster_host_id)
-        REFERENCES accounts(id)
+        REFERENCES accounts(id),
+    CONSTRAINT unique_roster_name_host_pair UNIQUE(roster_name,roster_host_id)
 ) ;
 
 

@@ -1,0 +1,41 @@
+.roster_col {
+    position:       relative;
+    float:          left;
+    margin:         5px;
+    padding:        10px;
+    border-width:   5px;
+    border-radius:  25px;
+    width:          200px;
+    background:     peachpuff;
+}
+.roster_text {
+    color:          #0078AD;
+    font-size:      1.5em;
+    text-align:     center;
+    width:          65%;
+    margin:         0px 0px 0px 5%;
+    display:        block;
+}
+
+.attendee_col {
+    float:          left;
+    margin:         5px;
+    padding:        10px;
+    border-width:   5px;
+    border-radius:  25px;
+    width:          200px;
+    background:     peachpuff;
+}
+.attendee_text {
+    color:          #0078AD;
+    font-size:      1.5em;
+    text-align:     center;
+    width:          65%;
+    margin:         0px 0px 0px 5%;
+    float:          left;
+}
+
+h3 {
+    color:          #0078AD;
+    line-height:    1.5rem;
+}
