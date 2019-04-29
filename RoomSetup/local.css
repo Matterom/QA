@@ -2,10 +2,14 @@ html {
     height: 100%;
 }
 
+header {
+    max-height: 15px;
+}
+
 .lheader {
     border-style: solid;
-    border-width: 4px;
-    border-color: black;
+    border-width: 1px;
+    border-color: #018744;
 }
 
 body {
@@ -14,6 +18,7 @@ body {
 
 main {
     height: 100%;
+    font-family: 'Poppins', sans-serif;
 }
 
 .column {
@@ -26,8 +31,8 @@ main {
 
 .folderIter {
     border-style: solid;
-    border-width: 2px;
-    border-color: black;
+    border-width: 1px;
+    border-color: #018744;
 }
 
 .left,
@@ -53,9 +58,12 @@ main {
 }
 
 .box {
-    background: peachpuff;
+    background: white;
     min-height: 100px;
     height: 95%;
+    border-style: solid;
+    border-width: 3px;
+    border-color: #018744;
 }
 
 #newQbtn {
@@ -64,12 +72,6 @@ main {
     line-height: 100px;
     background: rgb(0, 200, 0);
     min-height: 100px;
-    border-style: solid;
-    border-width: 3px;
-    border-color: black;
-}
-
-.Set {
     border-style: solid;
     border-width: 3px;
     border-color: black;
@@ -223,9 +225,28 @@ main {
     float: right;
 }
 
+.newfoldbtn, .trashbtn, .newsetbtn {
+    background-color:#0078ad;
+    width:fit-content;
+    height:25px;
+    font-size: 13px;
+    color:white;
+    font-weight:bold;
 
+    
+}
+
+.newsetbtn {
+
+}
 /* standard classes */
 
 .hidden {
     display: none;
 }
+
+
+
+@media screen and (max-width:600px) {
+  .left, .center, .right {
+    width:100%;

@@ -13,11 +13,15 @@ header {
     margin: 0;
     position: relative;
     background: white;
-    height: 5%;
-    min-height: 30px;
-    max-height: 50px;
+    min-height: 40px;
+    overflow:hidden
 }
 
+.logo img{
+width:250px;
+}
+
+/* User buttons--- */
 #login {
     position:absolute;
     right:5%;
@@ -38,22 +42,19 @@ header {
     background-color:#018744;
 } 
 
-.logo img{
-width:250px;
-
-}
-/* Putting account user button and Logout button together--- */
 #login{
-    display:inline-block;
-    float:right;
+    display:flex;
+    justify-content:space-evenly;
+     position:absolute;
+    right:1%;
+    top:18%;
+    width:220px;
    
 }
 .userbtn1{
-    display:inline-block;
     order:0;
 }
 .userbtn2{
-     display:inline-block;
     order:1;
 }
 /*---end */

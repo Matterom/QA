@@ -6,11 +6,13 @@ html {
 
 body {
     height: 100%;
+    background-color: #E4E4E4;
 }
 
 main {
     height: 100%;
-    overflow: hidden
+    overflow: visible;
+    background-color: #E4E4E4;
 }
 
 #QuestionBox {
@@ -25,22 +27,27 @@ main {
     overflow: hidden;
     justify-items: center;
     row-gap: 30px;
+
 }
 
 #QuestionHeader {
-    width: 75%;
+    width: 95%;
     height: 100%;
     border: none;
     border-radius: 15px;
-    background: gray;
+    background: white;
     display: grid;
     justify-items: center;
+    border-style:solid;
+    border-color: #3e8e41;
 }
 
 #QuestionHeader p {
     border: none;
     border-radius: 15px;
-    background: gray;
+    background: white;
+    padding-left:5px;
+    padding-right:5px;
 }
 
 #AnswerGrid {
@@ -54,13 +61,13 @@ main {
 }
 
 #AnswerGrid button {
-    background-color: green;
+    background-color: #0078ad;
     min-width: 50px;
-    max-height: 20%;
-    height: 10%;
-    width: 50%;
+    max-height: 60%;
+    height: 60%;
+    width: 80%;
     min-height: 30px;
-    padding: 10px;
+    padding: -10px;
     margin: 20px;
     border: none;
     border-radius: 15px;
@@ -69,6 +76,8 @@ main {
     text-decoration: none;
     display: inline-block;
     box-shadow: 0 3px #999;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 #AnswerGrid button:active {
@@ -76,3 +85,39 @@ main {
     box-shadow: 0 1px #666;
     transform: translateY(4px);
 }
+#AnswerGrid button:visited {
+    background-color: :#3e8e41;
+/*
+
+@media screen and (max-width:950px){
+    #QuestionBox{
+        width: 100%;
+    }
+
+    #QuestionHeader{
+        width: 70%;
+    }
+
+    #QuizHeader p{
+        width: 30%;
+    }
+
+    #AnswerGrid {
+        width: 100%;
+    }
+}
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+

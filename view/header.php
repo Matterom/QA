@@ -20,25 +20,26 @@
 
 
 	</script>
-
+	<!-- link to fontawesome for icons -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 </head>
 <body>
 <header>
 	<div class="logo">
-		<a href="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>"><img src="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/graphics/5.png" alt="Logo"></a>
+		<img src="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/graphics/5.png" alt="Logo">
 	</div>
 	<!--Generate Login Bar based on login status, Check Viewport size and apply necisary adjustments-->
 
 	<div id="login">
 		<?php if (array_key_exists('loggedin', $_SESSION) == false) : ?>
 
-			<button id="loginbtn" onclick="document.getElementById('logform').style.display='block'" class="raised">Login</button>
+			<button id="loginbtn" onclick="document.getElementById('logform').style.display='block'" class="raised"><i class="fas fa-user"></i> Login</button>
 
 		<!--If Logged in, Grant access to new menu options and replace login button with logut-->
 		<?php elseif (array_key_exists('loggedin', $_SESSION) == true) : ?>
 
 			<div class="userbtn1">
-				<button id="accountbtn" class="raised" onclick="window.location.href = '<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/Account'"><?php echo $_SESSION['name']?></button>
+				<button id="accountbtn" class="raised" onclick="window.location.href = '<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/Account'"><i class="fas fa-user"></i> <?php echo $_SESSION['name']?></button>
 			</div>
 
 			<div class="userbtn2">
