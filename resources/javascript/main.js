@@ -237,9 +237,11 @@ async function revealSetAssoc(setID) {
         for (let i = 0; i < qBoxes.length; ++i) {
             qid = qBoxes[i].id.split(':')[1];
             if (result.includes(qid)) {
+                console.log("Debug: Adding To Set")
                 revealChildClass("BH:" + qid, "addToSet", false);
                 revealChildClass("BH:" + qid, "subFromSet", true);
             } else {
+                console.log("Debug: Removing from Set")
                 revealChildClass("BH:" + qid, "addToSet", true);
                 revealChildClass("BH:" + qid, "subFromSet", false);
             }
@@ -673,6 +675,7 @@ async function queryQuizSet(folder, user) {
 //Function to add a question to a set
 async function addToSet(qid, insert) {
     let target;
+    console.log("Qid: " + qid + " Insert: " + insert  );
     if (insert) {
         target = "add";
     } else {
@@ -691,6 +694,7 @@ async function addToSet(qid, insert) {
         console.log("Something went wrong")
     } else {
         result = await response.text();
+        console.log(result);
         revealSetAssoc(activeSet)
     }
 
