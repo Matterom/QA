@@ -53,6 +53,7 @@
         while($r=$result->fetch_assoc()) {
             if (!array_key_exists($r['rosterName'], $roster_array)) {
                 $roster_list[] = $r['rosterName'];
+                $roster_array[$r['rosterName']] = "";
             }
         } 
     }
@@ -90,7 +91,7 @@
             echo('</span>'); 
         } ?>
         <form action="#" method="POST">
-            <input type="hidden" name="selected_roster" id="hidden_selected_roster">
+            <input type="hidden" name="selected_roster" id="hidden_selected_roster" value="">
             <input type="text" name="new_attendeeID">
             <input type="submit" value="addAttendee" name="addAttendee">
         </form> 

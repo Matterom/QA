@@ -5,7 +5,7 @@
          *  insert into rosters (user_id, rosterID)
          */
         if(!empty($_POST['addRoster']))
-            {    
+            {   
             $user_id = $_SESSION['id'];
             $rosterName = filter_var($_POST['rosterName'], FILTER_SANITIZE_STRING);
             $MYSQLi = new mysqli(HOST, USER, PASSWORD, DATABASE);
