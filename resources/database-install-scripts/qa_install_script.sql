@@ -19,7 +19,6 @@ USE qaproject;
 Triggers:   Convert password to MD5 hash before saving.
 Notes:      Additional index on accounts.username
 */
-DROP TABLE IF EXISTS accounts;
 CREATE TABLE IF NOT EXISTS accounts (
   id int(11) NOT NULL AUTO_INCREMENT,
   username varchar(62) NOT NULL,
@@ -30,8 +29,9 @@ CREATE TABLE IF NOT EXISTS accounts (
 -- Index on accounts.username
 CREATE INDEX idx_account_usernames on accounts(username);
 
+DROP TRIGGER IF EXISTS hash_passwords;
 DELIMITER $$
-CREATE TRIGGER IF NOT EXISTS hash_passwords
+CREATE TRIGGER hash_passwords
 BEFORE INSERT ON accounts
 FOR EACH ROW
 BEGIN
@@ -69,14 +69,14 @@ Notes:  Current_questionID can be is a link to the question currently posted
         and then select that value from publishedquestions.questionID.
 */
 Create TABLE IF NOT EXISTS rooms (
-    room_id int(11) NOT NULL AUTO_INCREMENT,
+    roomID int(11) NOT NULL AUTO_INCREMENT,
     ownerID int(11) NOT NULL,
     roomKey varchar(6) NOT NULL,
-    rosterID int(8), -- CAN BE NULL FOR ANONYMOUS QUIZ
-    start_time TIMESTAMP NOT NULL,
+    rosterID int(8) DEFAULT NULL, -- CAN BE NULL FOR ANONYMOUS QUIZ
+    start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     active_connections int DEFAULT 0,
     current_questionID int(11) DEFAULT NULL,
-    PRIMARY KEY (room_id),
+    PRIMARY KEY (roomID),
     CONSTRAINT rooms_roster_fk FOREIGN KEY (rosterID)
         REFERENCES rosters(rosterID),
     CONSTRAINT room_owner_fk FOREIGN KEY (ownerID)
@@ -86,8 +86,9 @@ Create TABLE IF NOT EXISTS rooms (
 
 CREATE INDEX idx_roomKeys on rooms(roomKey);
 
+DROP TRIGGER IF EXISTS rooms_config_bi;
 DELIMITER $$
-CREATE TRIGGER IF NOT EXISTS rooms_config_BI
+CREATE TRIGGER rooms_config_bi
 BEFORE INSERT ON rooms
 FOR EACH ROW
 BEGIN
@@ -113,7 +114,7 @@ Syntax: "INSERT INTO ATTENDEES (attendeeID, rosterID) VALUES ()"
 Constraints: FK for rosterID (rosters)
 Trigger Algorithm:  Increment the attendance_count of the row in rosters
                     which matches the given rosterID.
-*/
+*/ 
 CREATE TABLE IF NOT EXISTS attendees (
     attendeeID int(11) NOT NULL,
     rosterID int(8) NOT NULL,
@@ -122,8 +123,9 @@ CREATE TABLE IF NOT EXISTS attendees (
         REFERENCES rosters(rosterID) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
+DROP TRIGGER IF EXISTS tr_attendees_update_roster_ai
 DELIMITER $$
-CREATE TRIGGER IF NOT EXISTS tr_attendees_update_roster_ai
+CREATE TRIGGER tr_attendees_update_roster_ai
 BEFORE INSERT ON attendees
 FOR EACH ROW
 BEGIN   
@@ -151,8 +153,9 @@ CREATE TABLE IF NOT EXISTS attendancerecords (
         REFERENCES attendees(attendeeID)
 ) ;
 
+DROP TRIGGER IF EXISTS tr_attendance_record_bi;
 DELIMITER $$
-CREATE TRIGGER IF NOT EXISTS tr_attendance_record_bi
+CREATE TRIGGER tr_attendance_record_bi
 BEFORE INSERT ON attendancerecords
 FOR EACH ROW
 BEGIN
@@ -170,7 +173,7 @@ BEGIN
 end $$
 DELIMITER ;
 
--- Create User_Folder
+-- Create question folder
 CREATE TABLE IF NOT EXISTS questionfolders (
     folderID int(11) NOT NULL AUTO_INCREMENT,
     ownerID int(11) NOT NULL,
@@ -182,10 +185,10 @@ CREATE TABLE IF NOT EXISTS questionfolders (
 ) ;
 
 -- Create Question
-CREATE TABLE IF NOT EXISTS questions (
+CREATE TABLE IF NOT EXISTS questiontable (
     questionID int(11) NOT NULL AUTO_INCREMENT,
     folderID int(11) NOT NULL,
-    questionText varchar(124) NOT NULL,
+    question text NOT NULL,
     PRIMARY KEY (questionID),
     Constraint question_Qfolder_fk FOREIGN KEY (folderID)
         REFERENCES questionfolders(folderID) ON DELETE CASCADE ON UPDATE CASCADE
@@ -197,10 +200,11 @@ Syntax: INSERT INTO questionsets (col1 ,col2, col3)
         SELECT col1, col2, col3 FROM Questions where 
 */
 CREATE TABLE IF NOT EXISTS questionsets (  
-    questionSetID int(11) AUTO_INCREMENT,
-    questionSetName varchar(31) NOT NULL,
+    qSetID int(11) NOT NULL AUTO_INCREMENT,
+    qSetName varchar(31) NOT NULL,
+    qSetDesc text NOT NULL,
     folderID int(11) NOT NULL,
-    PRIMARY KEY (questionSetID),
+    PRIMARY KEY (qSetID),
     CONSTRAINT questionSet_folder_fk FOREIGN KEY (folderID)
         REFERENCES questionfolders(folderID)
 );
@@ -208,56 +212,11 @@ CREATE TABLE IF NOT EXISTS questionsets (
 /********** QuestionSetPairings **********
 */
 CREATE TABLE questionsetpairings (
-    pairingID int(11) AUTO_INCREMENT,
-    questionID int(11) NOT NULL,
-    questionSetID int(11) NOT NULL,
-    PRIMARY KEY (pairingID),
-    CONSTRAINT qsp_question FOREIGN KEY (questionID)
-        REFERENCES questions(questionID),
-    CONSTRAINT qsp_qSet_fk FOREIGN KEY (questionSetID)
-        REFERENCES questionsets(questionSetID)
+    qID int(11) NOT NULL,
+    qsetID int(11) NOT NULL,
+    PRIMARY KEY (qID, qsetID)
 );
 
-/********** PublishedQuizzes **********
-Syntax:         PublishedQuizzes are created *EXCLUSIVELY* through the stored
-                procedure "publish_quiz_folder"
-Constraints:    FK for Room_ID (rooms)
-*/
-CREATE TABLE IF NOT EXISTS publishedquizzes (
-    quizID int(11) NOT NULL AUTO_INCREMENT,
-    roomKey varchar(6) NOT NULL,
-    room_start_time TIMESTAMP,
-    PRIMARY KEY (quizID, roomKey),
-    CONSTRAINT pubQuiz_roomKey_fk FOREIGN KEY (roomKey)
-        REFERENCES rooms(roomKey)
-) ;
-
-
-/********** PublishedQuestions **********
-Syntax:         Published Questions are created *EXCLUSIVELY* through the stored
-                procedure "publish_quiz_folder"
-Constraints:    FK for quizID (PublishedQuizzes)
-*/
-CREATE TABLE IF NOT EXISTS publishedquestions (
-    quizID int(11) NOT NULL,
-    questionID int(11) NOT NULL AUTO_INCREMENT,
-    questionText varchar(124) NOT NULL,
-    PRIMARY KEY (questionID, quizID),
-    CONSTRAINT pubQuest_pubQuiz_fk FOREIGN KEY (quizID)
-        REFERENCES publishedquizzes (quizID) ON DELETE CASCADE
-) ;
-
-
-CREATE TABLE questionanswers (
-    answerID int(11) AUTO_INCREMENT,
-    answerPOS set('1', '2', '3','4','5'),
-    questionID int(11),
-    answer varchar(124),
-    PRIMARY KEY (answerID),
-    CONSTRAINT answer_question_fk FOREIGN KEY (questionID)
-    	REFERENCES questions(questionID)
-    );
-    
 /********** Quiz Attempts **********
 Syntax:         INSERT INTO quizattempts (roomKey, attendeeID, quizID) 
                     VALUES (@key, @attendee, NULL)
@@ -272,12 +231,16 @@ CREATE TABLE quizattempts (
     attendeeID int(11) NOT NULL,
     PRIMARY KEY (attemptID),
     CONSTRAINT unique_quiz UNIQUE(quizID, attendeeID),
-    CONSTRAINT published_quiz_room_quizID_fk FOREIGN KEY (quizID, roomKey)
-        REFERENCES publishedquizzes (quizID, roomKey) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT quizattempt_quizID_fk FOREIGN KEY (quizID)
+        REFERENCES questionsetpairings (qID) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT quizattempt_roomkey_fk FOREIGN KEY (roomKey) 
+        REFERENCES rooms (roomKey)
 ) ;
 
+/* Doesn't work - connected to prior table called PublishedQuizzes
+DROP TRIGGER IF EXISTS tr_quiz_attempts_bi;
 DELIMITER $$
-CREATE TRIGGER IF NOT EXISTS tr_quiz_attempts_bi
+CREATE TRIGGER tr_quiz_attempts_bi
 BEFORE INSERT ON quizattempts
 FOR EACH ROW
 BEGIN
@@ -308,6 +271,7 @@ BEGIN
         WHERE roomKey = NEW.roomKey;
 end $$
 DELIMITER ;
+*/
 
 -- Create AnswerSubmission (a answer the the attendee provides, linked to a quiz attempt)
 CREATE TABLE IF NOT EXISTS answersubmissions (
@@ -315,11 +279,9 @@ CREATE TABLE IF NOT EXISTS answersubmissions (
     quizAttemptID int(11) NOT NULL,
     questionID int(11) NOT NULL,
     answer_choice ENUM('a', 'b', 'c', 'd','e'),
-    PRIMARY KEY (ans_submit_id),
-    CONSTRAINT ans_sub_quiz_attempt_fk FOREIGN KEY (quiz_attemptID)
-        REFERENCES quizattempts (attemptID) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT ans_question_fk FOREIGN KEY (questionID)
-        REFERENCES publishedquestions (questionID)
+    PRIMARY KEY (answerSubmitID),
+    CONSTRAINT ans_sub_quiz_attempt_fk FOREIGN KEY (quizAttemptID)
+        REFERENCES quizattempts (attemptID) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 /*
@@ -327,29 +289,6 @@ CREATE TABLE IF NOT EXISTS answersubmissions (
 -- STORED PROCEDURES SECTION --
 -------------------------------
 */
-
-/********** Publish Quiz Folder **********
-Parameters: fold_id - ID of the folder which houses the questions
-            r_id - ID of the room where the quiz is being published.
-Algorithm:  INSERT publishedquizzes row using paramater r_id
-            INSERT publishedquestions row for each question which
-              has the same folderID as the parameter fold_id and
-              set the quizID for each with the quizID which was
-              generated for the row created in previous step. */
-
-
-DELIMITER $$
-CREATE PROCEDURE publish_quiz_folder
-(IN fold_id int(11), IN r_key varchar(6))
-BEGIN
-    INSERT IGNORE INTO publishedquizzes (roomKey) VALUES (r_key);
-    SELECT @qid := quizID
-      FROM publishedquizzes
-      WHERE publishedquizzes.roomKey = r_key;
-    INSERT IGNORE INTO publishedquestions (quizID, questionID, questionText)
-        SELECT @qid, questionID, questionText FROM questions WHERE questions.folderID = fold_id;
-end $$
-DELIMITER ;
 
 -- Add access permissions
 GRANT USAGE ON *.* TO 'lnsys'@'localhost' IDENTIFIED BY PASSWORD '*571B02166B46C27003D2E30B815657658C800579';
