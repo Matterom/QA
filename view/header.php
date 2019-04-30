@@ -25,12 +25,13 @@
 </head>
 <body>
 <header>
-	<div class="logo">
+<div class="nav">
+	<div class="topleft">
 		<a href="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/"><img src="<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/resources/graphics/5.png" alt="Logo"></a>
 	</div>
 	<!--Generate Login Bar based on login status, Check Viewport size and apply necisary adjustments-->
 
-	<div id="login">
+	<div class="topright"id="login">
 		<?php if (array_key_exists('loggedin', $_SESSION) == false) : ?>
 
 			<button id="loginbtn" onclick="document.getElementById('logform').style.display='block'" class="raised"><i class="fas fa-user"></i> Login</button>
@@ -83,5 +84,6 @@
             <!--Close Login Screen open Registrar Screen-->
 		</form>
 	</div>
+</div>
     <!---->
 </header>

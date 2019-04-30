@@ -10,11 +10,11 @@
       <p id="Time" class="Timer"><p>
   </div>
   <div id="AnswerGrid">
-    <button onclick="updateQuiz('User', 1)" id="A1" class="Answer">Answer</button>
-    <button onclick="updateQuiz('User', 2)" id="A2" class="Answer">Answer</button>
-    <button onclick="updateQuiz('User', 3)" id="A3" class="Answer">Answer</button>
-    <button onclick="updateQuiz('User', 4)" id="A4" class="Answer">Answer</button>
-    <button onclick="updateQuiz('User', 5)" id="A5" class="Answer">Answer</button>
+    <button onclick="updateQuiz('User', 1)" id="A1" class="RoomAnswer">Answer</button>
+    <button onclick="updateQuiz('User', 2)" id="A2" class="RoomAnswer">Answer</button>
+    <button onclick="updateQuiz('User', 3)" id="A3" class="RoomAnswer">Answer</button>
+    <button onclick="updateQuiz('User', 4)" id="A4" class="RoomAnswer">Answer</button>
+    <button onclick="updateQuiz('User', 5)" id="A5" class="RoomAnswer">Answer</button>
   </div>
 </div>
 </main>

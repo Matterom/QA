@@ -87,19 +87,18 @@ main {
 }
 #AnswerGrid button:visited {
     background-color: :#3e8e41;
-/*
+}
 
-@media screen and (max-width:950px){
+@media(max-width:600px){
     #QuestionBox{
-        width: 100%;
+        min-width: 97%;
+        margin: 0;
+        padding-left: 9px;
+        padding-right: 3px;
     }
 
     #QuestionHeader{
-        width: 70%;
-    }
-
-    #QuizHeader p{
-        width: 30%;
+        width: 100%;
     }
 
     #AnswerGrid {
@@ -107,11 +106,19 @@ main {
     }
 }
 
-
-*/
-
-
-
+.noselect {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+}
 
 
 
