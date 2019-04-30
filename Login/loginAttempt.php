@@ -53,7 +53,7 @@
         #If login attempts gt 5 or last attempt 15m ago, block attempt with a timer.
         if (true) {
             #TODO Purge login attempts for session
-            if($statement = $MYSQLi->prepare('SELECT id, account_password FROM accounts WHERE username = ?')){
+            if($statement = $MYSQLi->prepare('SELECT id, password FROM accounts WHERE username = ?')){
                 $statement->bind_param('s', $_POST['uname']);
                 $statement->execute();
                 $statement->store_result();

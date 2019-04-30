@@ -12,6 +12,7 @@ let timeKeeper;
 let time;
 let activeFolder;
 let activeSet;
+const EleArr = ["A1", "A2", "A3", "A4", "A5"];
 
 //----------------------------------//
 
@@ -557,8 +558,9 @@ async function newFolder(user) {
 
         //configure btn
         btn.setAttribute("type", "button");
+        btn.classList.add("trashbtn")
         btn.setAttribute("onclick", "deleteFolder(this, " + folderID + ", " + user + ")")
-        btn.innerText = "TRASHICON";
+        btn.innerHTML = "<i class='fas fa-trash-alt'></i> Delete";
         //assemble node
         folderbox.appendChild(node);
         node.appendChild(h1);
@@ -612,7 +614,8 @@ async function queryQuestionList(folder, user) {
             console.log("something went wrong");
         } else {
             let qList = await response.json();
-            //Itterate through the list
+            console.log(qList)
+                //Itterate through the list
             for (let i = 0; i < qList.length; i++) {
                 let Q = JSON.parse(qList[i].question);
                 let qid = qList[i].questionID;
@@ -705,7 +708,7 @@ function generateQEle(QBox, folder, user, qid, Q) {
     qString += "<button onclick='addChoice(" + qid + ")' class='hidden addChoice'>Add Answer Choice</button>"
     qString += "<button class='hidden addToSet' onclick='addToSet(" + qid + ", true)'>AddToSet</button>"
     qString += "<button class='hidden subFromSet' onclick='addToSet(" + qid + ", false)'>SubFromSet</button>"
-    qString += "<button onclick='deleteQuestion(" + qid + ", " + folder + ")'>Trash</button></div>"
+    qString += "<button onclick='deleteQuestion(" + qid + ", " + folder + ")' class='trashbtn'><i class='fas fa-trash-alt'></i> Delete</button></div>"
     Qbtn.innerHTML = qString
     QBox.appendChild(Qbtn);
     document.getElementById(qid + ":text").setAttribute("ondblclick", "convertQuestionToForm(this, 'title'," + folder + ", " + qid + ")");
@@ -729,6 +732,7 @@ function generateSEle(setID, folder, name, desc, user) {
     //configure node
     node.setAttribute("id", "QS:" + setID)
     node.setAttribute("class", "Set")
+    node.classList.add("folderIter")
     node.setAttribute("onclick", "revealSetAssoc(" + setID + ", " + folder + ")")
         //configure h1 select, type, secondary, userID, folderID, setID
     h1.setAttribute("ondblclick", "convertSetToForm(this, 'QSetN', '" + desc + "', " + user + ", " + folder + ", " + setID + ")");
@@ -741,8 +745,9 @@ function generateSEle(setID, folder, name, desc, user) {
 
     //configure btn
     btn.setAttribute("type", "button");
+    btn.classList.add("trashbtn")
     btn.setAttribute("onclick", "deleteQSet(this, " + setID + ", " + folder + ")")
-    btn.innerText = "TRASHICON";
+    btn.innerHTML = "<i class='fas fa-trash-alt'></i> Delete";
     //assemble node
     QSBox.appendChild(node);
     node.appendChild(h1);
@@ -789,17 +794,15 @@ function adjustFormToRegister() {
     Array.prototype.forEach.call(logele, function(ele) {
         ele.setAttribute("style", "display:none");
         console.log(ele);
-        console.log("i tried first");
     });
     Array.prototype.forEach.call(regele, function(ele) {
         ele.setAttribute("style", "display:block");
-        console.log("i tried");
     });
 
 
     document.getElementById("regemail").required = true;
     document.getElementById("regpswconf").required = true;
-    document.getElementById("regswitch").value == "true";
+    document.getElementById("regswitch").value = "true";
 }
 
 //Swaps the Registration form to enable login
@@ -818,7 +821,7 @@ function adjustFormToLogin() {
 
     document.getElementById("regemail").required = false;
     document.getElementById("regpswconf").required = false;
-    document.getElementById("regswitch").value == "false";
+    document.getElementById("regswitch").value = "false";
 }
 
 //----------------------------------//
