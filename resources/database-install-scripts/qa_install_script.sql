@@ -40,26 +40,26 @@ END $$
 DELIMITER ;
 
 /********** Rosters **********
-Syntax: INSERT INTO rosters (roster_host_id, roster_name) VALUES()
-Constraints:    FK for roster_host_id from accounts(id)
+Syntax: INSERT INTO rosters (rosterHostID, rosterName) VALUES()
+Constraints:    FK for rosterHostID from accounts(id)
 */
 CREATE TABLE IF NOT EXISTS rosters (
-    roster_id int(8) AUTO_INCREMENT,
-    roster_host_id int(11) NOT NULL,
-    roster_name varchar(40) NOT NULL,
+    rosterID int(8) AUTO_INCREMENT,
+    rosterHostID int(11) NOT NULL,
+    rosterName varchar(40) NOT NULL,
     attendee_count int(4) DEFAULT 0,
-    PRIMARY KEY (roster_id),
-    CONSTRAINT roster_host_id_fk FOREIGN KEY (roster_host_id)
+    PRIMARY KEY (rosterID),
+    CONSTRAINT rosterHostID_fk FOREIGN KEY (rosterHostID)
         REFERENCES accounts(id),
-    CONSTRAINT unique_roster_name_host_pair UNIQUE(roster_name,roster_host_id)
+    CONSTRAINT unique_rosterName_host_pair UNIQUE(rosterName,rosterHostID)
 ) ;
 
 
 /********** Rooms **********
-Syntax: "INSERT IGNORE INTO rooms (room_host_id, roster_id, room_key) 
+Syntax: "INSERT IGNORE INTO rooms (ownerID, rosterID, roomKey) 
             VALUES (@id, @roster, NULL)"
-Constraints: FK for roster_id (rosters)
-Trigger Algorithm:  Auto-generate a 6-digit alphanumeric key for room_key and
+Constraints: FK for rosterID (rosters)
+Trigger Algorithm:  Auto-generate a 6-digit alphanumeric key for roomKey and
                     set start_time to NOW.
 Notes:  Current_Question_ID can be is a link to the question currently posted
         in a room. When a question ceases to be available it points to the next
@@ -70,21 +70,21 @@ Notes:  Current_Question_ID can be is a link to the question currently posted
 */
 Create TABLE IF NOT EXISTS rooms (
     room_id int(11) NOT NULL AUTO_INCREMENT,
-    room_host_id int(11) NOT NULL,
-    room_key varchar(6) NOT NULL,
-    roster_id int(8), -- CAN BE NULL FOR ANONYMOUS QUIZ
+    ownerID int(11) NOT NULL,
+    roomKey varchar(6) NOT NULL,
+    rosterID int(8), -- CAN BE NULL FOR ANONYMOUS QUIZ
     start_time TIMESTAMP NOT NULL,
     active_connections int DEFAULT 0,
     current_question_id int(11) DEFAULT NULL,
     PRIMARY KEY (room_id),
-    CONSTRAINT rooms_roster_fk FOREIGN KEY (roster_id)
-        REFERENCES rosters(roster_id),
-    CONSTRAINT room_owner_fk FOREIGN KEY (room_host_id)
+    CONSTRAINT rooms_roster_fk FOREIGN KEY (rosterID)
+        REFERENCES rosters(rosterID),
+    CONSTRAINT room_owner_fk FOREIGN KEY (ownerID)
         REFERENCES accounts(id),
-    CONSTRAINT unique_room_key UNIQUE INDEX (room_key)
+    CONSTRAINT unique_roomKey UNIQUE INDEX (roomKey)
 ) ;
 
-CREATE INDEX idx_room_keys on rooms(room_key);
+CREATE INDEX idx_roomKeys on rooms(roomKey);
 
 DELIMITER $$
 CREATE TRIGGER IF NOT EXISTS rooms_config_BI
@@ -94,11 +94,11 @@ BEGIN
     declare rnd_str varchar(6);
     declare rdy int;
     set rdy = 0;
-    if isnull(NEW.room_key) THEN
+    if isnull(NEW.roomKey) THEN
         while (not rdy) do
             set rnd_str := lpad(conv(floor(rand()*pow(36,6)), 10, 36), 6, 0);
-            if not exists (select * from rooms where room_key = rnd_str) then
-                set NEW.room_key := rnd_str;
+            if not exists (select * from rooms where roomKey = rnd_str) then
+                set NEW.roomKey := rnd_str;
                 set rdy = 1;
             end if;
         end while;
@@ -109,17 +109,17 @@ DELIMITER ;
 
 
 /********** ATTENDEES **********
-Syntax: "INSERT INTO ATTENDEES (attendee_id, roster_id) VALUES ()"
-Constraints: FK for roster_id (rosters)
+Syntax: "INSERT INTO ATTENDEES (attendeeID, rosterID) VALUES ()"
+Constraints: FK for rosterID (rosters)
 Trigger Algorithm:  Increment the attendance_count of the row in rosters
-                    which matches the given roster_id.
+                    which matches the given rosterID.
 */
 CREATE TABLE IF NOT EXISTS attendees (
-    attendee_id int(11) NOT NULL,
-    roster_id int(8) NOT NULL,
-    PRIMARY KEY (attendee_id,roster_id),
-    CONSTRAINT attendee_roster_id_fk FOREIGN KEY (roster_id)
-        REFERENCES rosters(roster_id) ON DELETE CASCADE ON UPDATE CASCADE
+    attendeeID int(11) NOT NULL,
+    rosterID int(8) NOT NULL,
+    PRIMARY KEY (attendeeID,rosterID),
+    CONSTRAINT attendee_rosterID_fk FOREIGN KEY (rosterID)
+        REFERENCES rosters(rosterID) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 DELIMITER $$
@@ -128,27 +128,27 @@ BEFORE INSERT ON attendees
 FOR EACH ROW
 BEGIN   
     UPDATE rosters SET attendee_count = attendee_count + 1
-      WHERE rosters.roster_id = new.roster_id;
+      WHERE rosters.rosterID = new.rosterID;
 END $$
 DELIMITER ;
 
 
 /********** Attendance_Records **********
-Syntax: "INSERT IGNORE INTO attendancerecords (attendee_id, room_key) VALUES()"
-Constraints: FK for room_key (rooms) and attendee_id (attendees)
+Syntax: "INSERT IGNORE INTO attendancerecords (attendeeID, roomKey) VALUES()"
+Constraints: FK for roomKey (rooms) and attendeeID (attendees)
 Trigger Algorithm:  Check that attendee is a member of the roster associated with
-                    the given room_key. If so, set the date to current_date and
+                    the given roomKey. If so, set the date to current_date and
                     insert. Otherwise, send signal 45000 error.
 */
 CREATE TABLE IF NOT EXISTS attendancerecords (
-    attendee_id int(11) NOT NULL,
-    room_key varchar(6) NOT NULL,
+    attendeeID int(11) NOT NULL,
+    roomKey varchar(6) NOT NULL,
     attendance_date DATE NOT NULL,
-    PRIMARY KEY (attendee_id, room_key, attendance_date),
-    CONSTRAINT attendance_record_room_key_fk FOREIGN KEY (room_key)
-        REFERENCES rooms(room_key),
-    CONSTRAINT attendance_record_attendee_id_fk FOREIGN KEY (attendee_id)
-        REFERENCES attendees(attendee_id)
+    PRIMARY KEY (attendeeID, roomKey, attendance_date),
+    CONSTRAINT attendance_record_roomKey_fk FOREIGN KEY (roomKey)
+        REFERENCES rooms(roomKey),
+    CONSTRAINT attendance_record_attendeeID_fk FOREIGN KEY (attendeeID)
+        REFERENCES attendees(attendeeID)
 ) ;
 
 DELIMITER $$
@@ -156,12 +156,12 @@ CREATE TRIGGER IF NOT EXISTS tr_attendance_record_bi
 BEFORE INSERT ON attendancerecords
 FOR EACH ROW
 BEGIN
-    if (SELECT isnull(roster_id) FROM rooms WHERE room_key = NEW.room_key) = 0 THEN
+    if (SELECT isnull(rosterID) FROM rooms WHERE roomKey = NEW.roomKey) = 0 THEN
         set new.attendance_date = current_date();
     elseif (SELECT COUNT(*) FROM rooms join attendees 
-        WHERE rooms.room_key = new.room_key
-        AND new.attendee_id = attendees.attendee_id
-        AND rooms.roster_id = attendees.roster_id) > 0 THEN
+        WHERE rooms.roomKey = new.roomKey
+        AND new.attendeeID = attendees.attendeeID
+        AND rooms.rosterID = attendees.rosterID) > 0 THEN
             set new.attendance_date = current_date();
     else
         SIGNAL SQLSTATE '45000'
@@ -224,33 +224,27 @@ Syntax:         PublishedQuizzes are created *EXCLUSIVELY* through the stored
 Constraints:    FK for Room_ID (rooms)
 */
 CREATE TABLE IF NOT EXISTS publishedquizzes (
-    quiz_id int(11) NOT NULL AUTO_INCREMENT,
-    room_key varchar(6) NOT NULL,
+    quizID int(11) NOT NULL AUTO_INCREMENT,
+    roomKey varchar(6) NOT NULL,
     room_start_time TIMESTAMP,
-    PRIMARY KEY (quiz_id, room_key),
-    CONSTRAINT pubQuiz_room_key_fk FOREIGN KEY (room_key)
-        REFERENCES rooms(room_key)
+    PRIMARY KEY (quizID, roomKey),
+    CONSTRAINT pubQuiz_roomKey_fk FOREIGN KEY (roomKey)
+        REFERENCES rooms(roomKey)
 ) ;
 
 
 /********** PublishedQuestions **********
 Syntax:         Published Questions are created *EXCLUSIVELY* through the stored
                 procedure "publish_quiz_folder"
-Constraints:    FK for Quiz_id (PublishedQuizzes)
+Constraints:    FK for quizID (PublishedQuizzes)
 */
 CREATE TABLE IF NOT EXISTS publishedquestions (
-    quiz_id int(11) NOT NULL,
+    quizID int(11) NOT NULL,
     question_id int(11) NOT NULL AUTO_INCREMENT,
     question_text varchar(124) NOT NULL,
-    answer_a varchar(100) NOT NULL,
-    answer_b varchar(100) NOT NULL,
-    answer_c varchar(100),
-    answer_d varchar(100),
-    answer_e varchar(100),
-    correct_answer enum('a','b','c','d','e') NOT NULL,
-    PRIMARY KEY (question_id, quiz_id),
-    CONSTRAINT pubQuest_pubQuiz_fk FOREIGN KEY (quiz_id)
-        REFERENCES publishedquizzes (quiz_id) ON DELETE CASCADE
+    PRIMARY KEY (question_id, quizID),
+    CONSTRAINT pubQuest_pubQuiz_fk FOREIGN KEY (quizID)
+        REFERENCES publishedquizzes (quizID) ON DELETE CASCADE
 ) ;
 
 
@@ -265,21 +259,21 @@ CREATE TABLE questionanswers (
     );
     
 /********** Quiz Attempts **********
-Syntax:         INSERT INTO quizattempts (room_key, attendee_id, quiz_id) 
+Syntax:         INSERT INTO quizattempts (roomKey, attendeeID, quizID) 
                     VALUES (@key, @attendee, NULL)
-Constraints:    FK on quiz_id and room_key from published_quizzes
-Triggers:       Auto-fill quiz_id. Create an attendance record if non exists. Check
+Constraints:    FK on quizID and roomKey from published_quizzes
+Triggers:       Auto-fill quizID. Create an attendance record if non exists. Check
                     if attendee has access to given quiz.
 */
 CREATE TABLE quizattempts (
     attempt_id int(11) NOT NULL AUTO_INCREMENT,
-    room_key varchar(6) NOT NULL,
-    quiz_id int(11) NOT NULL,
-    attendee_id int(11) NOT NULL,
+    roomKey varchar(6) NOT NULL,
+    quizID int(11) NOT NULL,
+    attendeeID int(11) NOT NULL,
     PRIMARY KEY (attempt_id),
-    CONSTRAINT unique_quiz UNIQUE(quiz_id, attendee_id),
-    CONSTRAINT published_quiz_room_quiz_id_fk FOREIGN KEY (quiz_id, room_key)
-        REFERENCES publishedquizzes (quiz_id, room_key) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT unique_quiz UNIQUE(quizID, attendeeID),
+    CONSTRAINT published_quiz_room_quizID_fk FOREIGN KEY (quizID, roomKey)
+        REFERENCES publishedquizzes (quizID, roomKey) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 DELIMITER $$
@@ -287,31 +281,31 @@ CREATE TRIGGER IF NOT EXISTS tr_quiz_attempts_bi
 BEFORE INSERT ON quizattempts
 FOR EACH ROW
 BEGIN
-    -- Set the quiz_id value
-    SET new.quiz_id = (SELECT quiz_id FROM PublishedQuizzes 
-        WHERE room_key = new.room_key);
+    -- Set the quizID value
+    SET new.quizID = (SELECT quizID FROM PublishedQuizzes 
+        WHERE roomKey = new.roomKey);
 
     -- INSERT NEW AttendanceRecord if one doesn't already exist
     if (SELECT COUNT(*) FROM attendancerecords 
-            WHERE room_key = NEW.room_key AND 
-                attendee_id = NEW.attendee_id) = 0 THEN
-        INSERT INTO attendancerecords (room_key, attendee_id) 
-            VALUES (new.room_key, new.attendee_id);
+            WHERE roomKey = NEW.roomKey AND 
+                attendeeID = NEW.attendeeID) = 0 THEN
+        INSERT INTO attendancerecords (roomKey, attendeeID) 
+            VALUES (new.roomKey, new.attendeeID);
     end if;
 
     -- Check if the room is associated with a roster. If it is, check if the attendee has access.
-    if (SELECT isnull (roster_id) FROM rooms WHERE room_key = NEW.room_key) = 0 THEN
+    if (SELECT isnull (rosterID) FROM rooms WHERE roomKey = NEW.roomKey) = 0 THEN
         if (SELECT COUNT(*) FROM rooms join attendees 
-            WHERE room_key = new.room_key
-            AND attendee_id = new.attendee_id
-            AND rooms.roster_id = attendees.roster_id) = 0 THEN
+            WHERE roomKey = new.roomKey
+            AND attendeeID = new.attendeeID
+            AND rooms.rosterID = attendees.rosterID) = 0 THEN
                 SIGNAL SQLSTATE '45000'
                     SET MESSAGE_TEXT = 'Attendee does not have access to this room.';
         end if;
     end if;
 
     UPDATE rooms SET active_connections = active_connections +1 
-        WHERE room_key = NEW.room_key;
+        WHERE roomKey = NEW.roomKey;
 end $$
 DELIMITER ;
 
@@ -340,7 +334,7 @@ Parameters: fold_id - ID of the folder which houses the questions
 Algorithm:  INSERT publishedquizzes row using paramater r_id
             INSERT publishedquestions row for each question which
               has the same folderID as the parameter fold_id and
-              set the quiz_id for each with the quiz_id which was
+              set the quizID for each with the quizID which was
               generated for the row created in previous step. */
 
 
@@ -348,11 +342,11 @@ DELIMITER $$
 CREATE PROCEDURE publish_quiz_folder
 (IN fold_id int(11), IN r_key varchar(6))
 BEGIN
-    INSERT IGNORE INTO publishedquizzes (room_key) VALUES (r_key);
-    SELECT @qid := quiz_id
+    INSERT IGNORE INTO publishedquizzes (roomKey) VALUES (r_key);
+    SELECT @qid := quizID
       FROM publishedquizzes
-      WHERE publishedquizzes.room_key = r_key;
-    INSERT IGNORE INTO publishedquestions (quiz_id, question_id, question_text, answer_a, answer_b,
+      WHERE publishedquizzes.roomKey = r_key;
+    INSERT IGNORE INTO publishedquestions (quizID, question_id, question_text, answer_a, answer_b,
                                             answer_c, answer_d, answer_e, correct_answer)
         SELECT @qid, question_id, question_text, answer_a, answer_b, answer_c, answer_d, answer_e, correct_answer
         FROM questions WHERE questions.folderID = fold_id;

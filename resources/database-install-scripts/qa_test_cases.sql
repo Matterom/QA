@@ -93,17 +93,3 @@ INSERT INTO quizattempts (room_key, attendee_id, quiz_id) VALUES
 (@roomkey, 12345, NULL);
 /*  On first run through thiis test, it will create an attempt for user 111111 in room 1 and an
     attempt for 111111 and 12345 in room 2. */
-
--- ANSWER SUBMISSION
-INSERT INTO answersubmissions (quiz_attempt_id, question_id, answer_choice) VALUES
-(1, 1, 'b'),
-(1, 2, 'a'),
-(1, 3, 'b'),
-(1, 4, 'a'),
-(2, 1, 'a'),
-(2, 2, 'b'),
-(2, 3, 'c'),
-(2, 4, 'a'),
-(3, 1, 'b'),
-(3, 2, 'a'),
-(3, 3, 'b'),
