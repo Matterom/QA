@@ -29,7 +29,7 @@
         ?>
         <form method="post" style="hidden" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
             Account ID: <input type="text" name="attendeeID"><br>
-            Course ID: <br><input type="text" name="roomKey"><br>
+            RoomKey: <br><input type="text" name="roomKey"><br>
             <input type="submit"><br>
         </form>
         <?php if (isset($result) && $result!== "") echo $result ?>

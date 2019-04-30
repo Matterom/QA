@@ -41,9 +41,9 @@
         $result->free();
     }
     /*QUERY for empty rosters*/
-    if ($statement = $MYSQLi->prepare('SELECT rosters.rosterName FROM rosters 
-                                        WHERE rosters.attendee_count= 0
-                                        AND rosters.rosterHostID = ?')) 
+    if ($statement = $MYSQLi->prepare('SELECT rosterName FROM rosters 
+                                        WHERE attendee_count= 0
+                                        AND rosterHostID = ?')) 
     {
         $statement->bind_param('s', $user_id);
         $statement->execute();
@@ -56,6 +56,7 @@
             }
         } 
     }
+    else { printf("Trouble in empty roster land.");}
     ?>
 <!-- end of roster list population code -->
 
@@ -89,7 +90,7 @@
             echo('</span>'); 
         } ?>
         <form action="#" method="POST">
-            <input type="hidden"name="selected_roster" id="hidden_selected_roster"value = "">
+            <input type="hidden" name="selected_roster" id="hidden_selected_roster">
             <input type="text" name="new_attendeeID">
             <input type="submit" value="addAttendee" name="addAttendee">
         </form> 
@@ -103,8 +104,8 @@
         if($currently_displayed_roster) {
             $currently_displayed_roster.style.display="none";
         }
-        var $selected_roster = element.innerHTML;
-        $currently_displayed_roster = document.getElementById("att_" + $selected_roster)
+        var $selected_roster = element.innerHTML; // String of currently highlighted roster
+        $currently_displayed_roster = document.getElementById("att_" + $selected_roster);
         $currently_displayed_roster.style.display="block";
         document.getElementById("hidden_selected_roster").value = $selected_roster;
     }

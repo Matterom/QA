@@ -11,7 +11,7 @@
             printf("Connection Failed: \n", $MYSQLi->connect_error);
             die('Failed To Connect, Terminating Script');
         }
-        if ($statement = $MYSQLi->prepare('SELECT rosterName from rosters where rosterHostID = ? ORDER BY roster_name')){
+        if ($statement = $MYSQLi->prepare('SELECT rosterName from rosters where rosterHostID = ? ORDER BY rosterName')){
             $statement->bind_param('s', $user_id);
             $statement->execute();
             $result = $statement->get_result();
@@ -45,7 +45,7 @@
     </script>
 
     <div class="dash_button">
-        <span class="dash_button_text" id="dash_accounts_button" >Configure Account</span>
+        <a href="../Account"><span class="dash_button_text" id="dash_accounts_button" >Configure Account</span></a>
     </div>
     <div class="dash_button">
         <a href="../RosterConfig"><span class="dash_button_text">Configure Rosters</span></a>

@@ -7,7 +7,7 @@
 USE qaproject;
 
 -- ACCOUNTS
-INSERT INTO accounts (username, email, password) VALUES 
+INSERT IGNORE INTO accounts (username, email, password) VALUES 
 ('david', 'david@quizandattendance.com', 'alpha'),
 ('matthew', 'matt@quizandattendance.com', 'beta'),
 ('nayeli', 'nayeli@quizandattendance.com', 'gamma'),
@@ -16,7 +16,7 @@ INSERT INTO accounts (username, email, password) VALUES
 /*Successful triggers will change all passwords to 32 character keys */ 
 
 -- ROSTERS
-INSERT INTO rosters (rosterHostID, rosterName) VALUES
+INSERT IGNORE INTO rosters (rosterHostID, rosterName) VALUES
 (1, 'CSCI 4388'),
 (3, 'CINF 4324'),
 (2, 'CSCI 4391'),
@@ -45,7 +45,7 @@ INSERT IGNORE INTO ROOMS (ownerID, rosterID, roomKey) VALUES
 /* Successful triggers will auto-generate room keys for each room */
 
 -- ATTENDANCE RECORDS
-INSERT INTO attendancerecords (attendeeID, roomKey)
+INSERT IGNORE INTO attendancerecords (attendeeID, roomKey)
 SELECT attendees.attendeeID, rooms.roomKey 
 FROM attendees join rooms
 WHERE attendees.rosterID = rooms.rosterID;
@@ -55,7 +55,7 @@ WHERE attendees.rosterID = rooms.rosterID;
 */
 
 -- QUESTION FOLDERS
-INSERT INTO questionfolders (ownerID, folderName, folderDescription) VALUES
+INSERT IGNORE INTO questionfolders (ownerID, folderName, folderDescription) VALUES
 (1, 'CSCI4388 Quiz#4', 'Quiz about ethics'),
 (2, 'CINF 4324 Quiz #2', 'Quiz about DFDs'),
 (3, 'CompArch Pipelines', 'Covers chapter 4'),
@@ -63,9 +63,8 @@ INSERT INTO questionfolders (ownerID, folderName, folderDescription) VALUES
 (1, 'CSCI4388 Quiz#6', 'Quiz about ER Diagrams');
 /* PHP file which creates this must implement error checking for duplicates. */
 
--- QUESTIONS
-INSERT INTO questions (folder_id, question_text, answer_a, answer_b, answer_c,
-                        answer_d, answer_e, correct_answer) VALUES
+-- questiontable
+INSERT IGNORE INTO questiontable (folderID, question) VALUES
 (1, 'Is it good to be ethical?'),
 (1, 'Ethics is exciting'),
 (1, 'It is important to use visual aids when discussing Aristotle'),
@@ -73,23 +72,3 @@ INSERT INTO questions (folder_id, question_text, answer_a, answer_b, answer_c,
 (2, 'What is a DFD?'),
 (3, 'How many stages are there in MIPS pipelining?');
 /* PHP file which creates this must implement error checking for duplicates. */
-
--- Publishing Quizzes
-SELECT @roomkey := roomKey from rooms where room_id=1;
-CALL publish_quiz_folder(1, @roomkey);
-
-SELECT @roomkey := roomKey from rooms where room_id=2;
-CALL publish_quiz_folder(2, @roomkey);
-/* On first run through this test, it will publish quiz folder 1 to room 1 and quiz folder 2 to room 2 */
-
--- QUIZ ATTEMPT
-SELECT @roomkey := roomKey from rooms where room_id=1;
-INSERT INTO quizattempts (roomKey, attendeeID, quizID) VALUES 
-(@roomkey, 111111, NULL);
-
-SELECT @roomkey := roomKey from rooms where room_id=2;
-INSERT INTO quizattempts (roomKey, attendeeID, quizID) VALUES 
-(@roomkey, 111111, NULL),
-(@roomkey, 12345, NULL);
-/*  On first run through thiis test, it will create an attempt for user 111111 in room 1 and an
-    attempt for 111111 and 12345 in room 2. */
