@@ -640,7 +640,7 @@ async function queryQuestionList(folder, user) {
 async function queryQuizSet(folder, user) {
     const QSBox = document.getElementById('QuestionSetBox');
     //Clear box and Regenerate
-    QSBox.innerHTML = "<div id='QuestionSetHeader' class='lheader'><div id='NewSet'><button type='button' onclick='newSet(" + folder + ")'>New Set Icon</button></div></div>";
+    QSBox.innerHTML = "<div id='QuestionSetHeader' class='lheader'><div id='NewSet'><button type='button' onclick='newSet(" + folder + ")'><i class='fas fa-file-alt'></i> New Quiz Set</button></div></div>";
     let data = new FormData();
     data.append("set", true);
     data.append("query", true);
@@ -694,8 +694,8 @@ function generateQEle(QBox, folder, user, qid, Q) {
     const Qbtn = document.createElement("div");
     Qbtn.classList = "question";
     Qbtn.setAttribute("id", "Q:" + qid);
-
-    let qString = "<div class='QHead'><div id='" + qid + ":text' class='text'>" + Q.text + "</div><div onclick='toggleAnswers(" + qid + ")' class='arrow'>Arrow</div></div>"
+// <i class=’fas fa-caret-down’></i> 
+    let qString = "<div class='QHead'><div id='" + qid + ":text' class='text'>" + Q.text + "</div><div onclick='toggleAnswers(" + qid + ")' class='arrow'><i class='fas fa-caret-right'></i></div></div>"
     qString += "<div id='AB:" + qid + "' class='answerBox hidden'>"
     qString += "<div id='" + qid + ":1" + "' class='ans1 " + Q.answer.one[2] + "'>" + Q.answer.one[1] + "</div><div id='" + qid + ":ch1' class='ch1 " + Q.answer.one[2] + "'><input type='checkbox' name='answerOne' value='true' " + (Q.answer.one[0] ? "checked='true'" : "") + "/></div>"
     qString += "<div id='" + qid + ":2" + "' class='ans2 " + Q.answer.two[2] + "'>" + Q.answer.two[1] + "</div><div id='" + qid + ":ch2' class='ch2 " + Q.answer.two[2] + "'><input type='checkbox' name='answerTwo' value='true' " + (Q.answer.two[0] ? "checked='true'" : "") + "/></div>"
