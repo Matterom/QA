@@ -37,7 +37,7 @@ header #login{
 
 .raised {
     background-color:#0078ad;
-    width:100px;
+    min-width:100px;
     height:25px;
     font-size: 13px;
     color:white;
@@ -50,8 +50,10 @@ header #login{
 
 .userbtn1{
     display:inline-block;
+    width: auto;
     order:0;
 }
+
 .userbtn2{
      display:inline-block;
     order:1;

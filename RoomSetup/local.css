@@ -81,7 +81,7 @@ main {
 /* Box for each question CHANGES!!!!!!!!!!!!!!!! */
 
 .question {
-    background: rgb(208, 234, 208)
+    background: rgb(208, 234, 208);
     border-style: solid;
     border-width: 2px;
     border-color: #018744;
@@ -225,7 +225,7 @@ main {
     float: right;
 }
 
-.newfoldbtn, .trashbtn, .newsetbtn {
+.btnqa {
     background-color:#0078ad;
     width:fit-content;
     height:25px;
@@ -250,3 +250,4 @@ main {
 @media screen and (max-width:600px) {
   .left, .center, .right {
     width:100%;
+  }}

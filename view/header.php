@@ -40,7 +40,7 @@
 		<?php elseif (array_key_exists('loggedin', $_SESSION) == true) : ?>
 
 			<div class="userbtn1">
-				<button id="accountbtn" class="raised" onclick="window.location.href = '<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/Account'"><i class="fas fa-user"></i> <?php echo $_SESSION['name']?></button>
+				<button id="accountbtn" class="raised" onclick="window.location.href = '<?php $ex = explode(DIRECTORY_SEPARATOR ,__DIR__); $rev = array_reverse($ex); if (!filter_var($rev[1], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)){echo "/".$rev[1];} ?>/Dashboard'"><i class="fas fa-user"></i> <?php echo $_SESSION['name']?></button>
 			</div>
 
 			<div class="userbtn2">

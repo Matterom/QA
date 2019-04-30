@@ -220,7 +220,7 @@
     //Adds a Question to the set, should be run quite often.. need a way to diferentiate between sets for questions in multiple sets
     function addQToSet($questionID, $setID) {
         global $MYSQLi;
-        if ($statement = $MYSQLi->prepare('INSERT into questionsetpairing (qID, qsetID) VALUES (?, ?)')) {
+        if ($statement = $MYSQLi->prepare('INSERT into questionsetpairings (qID, qsetID) VALUES (?, ?)')) {
             $statement->bind_param('ss', $questionID, $setID);
             $result = $statement->execute();
             $statement->close();
@@ -234,7 +234,7 @@
     }
     function subQFromSet($questionID, $setID) {
         global $MYSQLi;
-        if($statement = $MYSQLi->prepare('DELETE LOW_PRIORITY FROM questionsetpairing WHERE qID = ? AND qsetID = ?')) {
+        if($statement = $MYSQLi->prepare('DELETE LOW_PRIORITY FROM questionsetpairings WHERE qID = ? AND qsetID = ?')) {
             $statement->bind_param('ss', $questionID, $setID);
             $result = $statement->execute();
             $statement->close();
@@ -247,7 +247,7 @@
     }
     function getQuestionsInSet($setID) {
         global $MYSQLi;
-        if($statement = $MYSQLi->prepare('SELECT qID FROM questionsetpairing WHERE qsetID = ?')) {
+        if($statement = $MYSQLi->prepare('SELECT qID FROM questionsetpairings WHERE qsetID = ?')) {
             $statement->bind_param('s', $setID);
             $statement->execute();
             $return = $statement->get_result();

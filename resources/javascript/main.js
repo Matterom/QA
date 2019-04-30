@@ -237,9 +237,11 @@ async function revealSetAssoc(setID) {
         for (let i = 0; i < qBoxes.length; ++i) {
             qid = qBoxes[i].id.split(':')[1];
             if (result.includes(qid)) {
+                console.log("Debug: Adding To Set")
                 revealChildClass("BH:" + qid, "addToSet", false);
                 revealChildClass("BH:" + qid, "subFromSet", true);
             } else {
+                console.log("Debug: Removing from Set")
                 revealChildClass("BH:" + qid, "addToSet", true);
                 revealChildClass("BH:" + qid, "subFromSet", false);
             }
@@ -440,14 +442,19 @@ function revealChildClass(parent, target, mode) {
         }
     }
 }
+// <i class=’fas fa-caret-down’></i>
+//<i class='fas fa-caret-right'></i>
 //Toggles answerbox
 function toggleAnswers(qid) {
     const ele = document.getElementById("AB:" + qid)
+    const arr = document.getElementById("QAr:" + qid)
     if (ele.classList.contains("hidden")) {
         ele.classList.remove("hidden");
+        arr.innerHTML = "<i style='font-size: 30px' class='fas fa-caret-down'></i>"
         revealChildClass("BH:" + qid, "addChoice", true)
     } else {
         ele.classList.add("hidden");
+        arr.innerHTML = "<i style='font-size: 30px' class='fas fa-caret-left'></i>"
         revealChildClass("BH:" + qid, "addChoice", false)
     }
 }
@@ -559,6 +566,7 @@ async function newFolder(user) {
         //configure btn
         btn.setAttribute("type", "button");
         btn.classList.add("trashbtn")
+        btn.classList.add("btnqa")
         btn.setAttribute("onclick", "deleteFolder(this, " + folderID + ", " + user + ")")
         btn.innerHTML = "<i class='fas fa-trash-alt'></i> Delete";
         //assemble node
@@ -640,7 +648,7 @@ async function queryQuestionList(folder, user) {
 async function queryQuizSet(folder, user) {
     const QSBox = document.getElementById('QuestionSetBox');
     //Clear box and Regenerate
-    QSBox.innerHTML = "<div id='QuestionSetHeader' class='lheader'><div id='NewSet'><button type='button' onclick='newSet(" + folder + ")'>New Set Icon</button></div></div>";
+    QSBox.innerHTML = "<div id='QuestionSetHeader' class='lheader'><div id='NewSet'><button type='button' class='btnqa' onclick='newSet(" + folder + ")'><i class='fas fa-file-alt'></i> New Quiz Set</button></div></div>";
     let data = new FormData();
     data.append("set", true);
     data.append("query", true);
@@ -667,6 +675,7 @@ async function queryQuizSet(folder, user) {
 //Function to add a question to a set
 async function addToSet(qid, insert) {
     let target;
+    console.log("Qid: " + qid + " Insert: " + insert  );
     if (insert) {
         target = "add";
     } else {
@@ -685,6 +694,7 @@ async function addToSet(qid, insert) {
         console.log("Something went wrong")
     } else {
         result = await response.text();
+        console.log(result);
         revealSetAssoc(activeSet)
     }
 
@@ -694,8 +704,9 @@ function generateQEle(QBox, folder, user, qid, Q) {
     const Qbtn = document.createElement("div");
     Qbtn.classList = "question";
     Qbtn.setAttribute("id", "Q:" + qid);
-
-    let qString = "<div class='QHead'><div id='" + qid + ":text' class='text'>" + Q.text + "</div><div onclick='toggleAnswers(" + qid + ")' class='arrow'>Arrow</div></div>"
+// <i class=’fas fa-caret-down’></i>
+//<i class='fas fa-caret-right'></i>
+    let qString = "<div class='QHead'><div id='" + qid + ":text' class='text'>" + Q.text + "</div><div id='QAr:" + qid + "' onclick='toggleAnswers(" + qid + ")' class='arrow'><i style='font-size: 30px' class='fas fa-caret-left'></i></i></div></div>"
     qString += "<div id='AB:" + qid + "' class='answerBox hidden'>"
     qString += "<div id='" + qid + ":1" + "' class='ans1 " + Q.answer.one[2] + "'>" + Q.answer.one[1] + "</div><div id='" + qid + ":ch1' class='ch1 " + Q.answer.one[2] + "'><input type='checkbox' name='answerOne' value='true' " + (Q.answer.one[0] ? "checked='true'" : "") + "/></div>"
     qString += "<div id='" + qid + ":2" + "' class='ans2 " + Q.answer.two[2] + "'>" + Q.answer.two[1] + "</div><div id='" + qid + ":ch2' class='ch2 " + Q.answer.two[2] + "'><input type='checkbox' name='answerTwo' value='true' " + (Q.answer.two[0] ? "checked='true'" : "") + "/></div>"
@@ -705,10 +716,10 @@ function generateQEle(QBox, folder, user, qid, Q) {
     qString += "</div>"
     qString += "<div id='" + qid + ":args' class='hidden'>" + "TF::" + Q.args.TF + "</div>"
     qString += "<div id='BH:" + qid + "' class='btnHolder'>"
-    qString += "<button onclick='addChoice(" + qid + ")' class='hidden addChoice'>Add Answer Choice</button>"
-    qString += "<button class='hidden addToSet' onclick='addToSet(" + qid + ", true)'>AddToSet</button>"
-    qString += "<button class='hidden subFromSet' onclick='addToSet(" + qid + ", false)'>SubFromSet</button>"
-    qString += "<button onclick='deleteQuestion(" + qid + ", " + folder + ")' class='trashbtn'><i class='fas fa-trash-alt'></i> Delete</button></div>"
+    qString += "<button onclick='addChoice(" + qid + ")' class='hidden addChoice btnqa'><i class='fas fa-plus'></i> Add Answer Choice</button>"
+    qString += "<button class='hidden addToSet btnqa' onclick='addToSet(" + qid + ", true)'><i class='fas fa-file-alt'></i> Add to Quiz</button>"
+    qString += "<button class='hidden subFromSet btnqa' onclick='addToSet(" + qid + ", false)'><i class='fas fa-file-alt'></i> Remove from Quiz</button>"
+    qString += "<button onclick='deleteQuestion(" + qid + ", " + folder + ")' class='trashbtn btnqa'><i class='fas fa-trash-alt'></i> Delete</button></div>"
     Qbtn.innerHTML = qString
     QBox.appendChild(Qbtn);
     document.getElementById(qid + ":text").setAttribute("ondblclick", "convertQuestionToForm(this, 'title'," + folder + ", " + qid + ")");
@@ -746,6 +757,7 @@ function generateSEle(setID, folder, name, desc, user) {
     //configure btn
     btn.setAttribute("type", "button");
     btn.classList.add("trashbtn")
+    btn.classList.add("btnqa");
     btn.setAttribute("onclick", "deleteQSet(this, " + setID + ", " + folder + ")")
     btn.innerHTML = "<i class='fas fa-trash-alt'></i> Delete";
     //assemble node

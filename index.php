@@ -18,7 +18,7 @@
 			<h4><u>Class Attendance</u></h4>
 			<ul>
 				<li>Generate Daily Attendance Code</li>
-				<li>Record dayily attendance</li>
+				<li>Record daily attendance</li>
 				<li>Reduce wasted time</li>
 			</ul>
 		</div>
