@@ -218,12 +218,11 @@ CREATE TABLE questionsetpairings (
         REFERENCES questionsets(questionSetID)
 );
 
-)
 /********** PublishedQuizzes **********
 Syntax:         PublishedQuizzes are created *EXCLUSIVELY* through the stored
                 procedure "publish_quiz_folder"
 Constraints:    FK for Room_ID (rooms)
-
+*/
 CREATE TABLE IF NOT EXISTS publishedquizzes (
     quiz_id int(11) NOT NULL AUTO_INCREMENT,
     room_key varchar(6) NOT NULL,
@@ -232,13 +231,13 @@ CREATE TABLE IF NOT EXISTS publishedquizzes (
     CONSTRAINT pubQuiz_room_key_fk FOREIGN KEY (room_key)
         REFERENCES rooms(room_key)
 ) ;
-*/
+
 
 /********** PublishedQuestions **********
 Syntax:         Published Questions are created *EXCLUSIVELY* through the stored
                 procedure "publish_quiz_folder"
 Constraints:    FK for Quiz_id (PublishedQuizzes)
-
+*/
 CREATE TABLE IF NOT EXISTS publishedquestions (
     quiz_id int(11) NOT NULL,
     question_id int(11) NOT NULL AUTO_INCREMENT,
@@ -253,7 +252,7 @@ CREATE TABLE IF NOT EXISTS publishedquestions (
     CONSTRAINT pubQuest_pubQuiz_fk FOREIGN KEY (quiz_id)
         REFERENCES publishedquizzes (quiz_id) ON DELETE CASCADE
 ) ;
-*/
+
 
 CREATE TABLE questionanswers (
     answerID int(11) AUTO_INCREMENT,
