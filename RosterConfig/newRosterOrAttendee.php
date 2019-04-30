@@ -6,7 +6,6 @@
          */
         if(!empty($_POST['addRoster']))
             {    
-            printf("trying to add a roster");
             $user_id = $_SESSION['id'];
             $roster_name = filter_var($_POST['roster_name'], FILTER_SANITIZE_STRING);
             $MYSQLi = new mysqli(HOST, USER, PASSWORD, DATABASE);
@@ -19,10 +18,6 @@
                 $statement->bind_param("ss", $user_id, $roster_name);
                 $statement->execute();
                 $statement->close();
-                printf("Tried!");
-            }
-            else {
-                printf("Didn't try");
             }
         }
         /*** ADD A NEW ATTENDEE TO THE SELECTED ROSTER
@@ -30,7 +25,7 @@
          *  else, find roster_id using roster_name
          *  insert into attendees (attendee_id, roster_id)
          */
-        if(!empty($_POST['addAttendee'] && $_POST['selected_roster']!== ""))
+        elseif(!empty($_POST['addAttendee'] && $_POST['selected_roster']!== ""))
         {
             $user_id = $_SESSION['id'];
             $attendee_id = filter_var($_POST['new_attendee_id'], FILTER_SANITIZE_NUMBER_INT);

@@ -9,12 +9,6 @@ DROP DATABASE IF EXISTS qaproject;
 CREATE DATABASE IF NOT EXISTS qaproject DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 USE qaproject;
 
--- Add access permissions
-GRANT USAGE ON *.* TO 'lnsys'@'localhost' IDENTIFIED BY PASSWORD '*571B02166B46C27003D2E30B815657658C800579';
-GRANT SELECT, INSERT, UPDATE ON qaproject.* TO 'lnsys'@'localhost';
-
-GRANT SELECT, INSERT, UPDATE, DELETE ON *.* TO 'quesys'@'localhost' IDENTIFIED BY PASSWORD '*D980CF29D2D015AFC048830684D401BF66FFE09D';
-
 /*
 -----------------------------------------
 -- TABLE CREATION AND TRIGGERS SECTION --
@@ -28,8 +22,8 @@ Notes:      Additional index on accounts.username
 DROP TABLE IF EXISTS accounts;
 CREATE TABLE IF NOT EXISTS accounts (
   id int(11) NOT NULL AUTO_INCREMENT,
-  username varchar(62),
-  email varchar(62) NOT NULL UNIQUE,
+  username varchar(62) NOT NULL,
+  email varchar(62) UNIQUE,
   account_password char(32) NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB;
@@ -85,6 +79,8 @@ Create TABLE IF NOT EXISTS rooms (
     PRIMARY KEY (room_id),
     CONSTRAINT rooms_roster_fk FOREIGN KEY (roster_id)
         REFERENCES rosters(roster_id),
+    CONSTRAINT room_owner_fk FOREIGN KEY (room_host_id)
+        REFERENCES accounts(id),
     CONSTRAINT unique_room_key UNIQUE INDEX (room_key)
 ) ;
 
@@ -123,7 +119,7 @@ CREATE TABLE IF NOT EXISTS attendees (
     roster_id int(8) NOT NULL,
     PRIMARY KEY (attendee_id,roster_id),
     CONSTRAINT attendee_roster_id_fk FOREIGN KEY (roster_id)
-        REFERENCES rosters(roster_id) ON DELETE CASCADE
+        REFERENCES rosters(roster_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 DELIMITER $$
@@ -176,48 +172,58 @@ DELIMITER ;
 
 -- Create User_Folder
 CREATE TABLE IF NOT EXISTS questionfolders (
-    folder_id int(11) NOT NULL AUTO_INCREMENT,
-    owner_id int(11) NOT NULL,
-    folder_name varchar(32) NOT NULL,
-    folder_description varchar(64) NOT NULL,
-    PRIMARY KEY (folder_id),
-    CONSTRAINT question_folder_owner_account_fk FOREIGN KEY (owner_id)
+    folderID int(11) NOT NULL AUTO_INCREMENT,
+    ownerID int(11) NOT NULL,
+    folderName varchar(32) NOT NULL,
+    folderDescription varchar(64) NOT NULL,
+    PRIMARY KEY (folderID),
+    CONSTRAINT question_folder_owner_account_fk FOREIGN KEY (ownerID)
         REFERENCES accounts(id)
 ) ;
 
 -- Create Question
 CREATE TABLE IF NOT EXISTS questions (
-    question_id int(11) NOT NULL AUTO_INCREMENT,
-    folder_id int(11) NOT NULL,
-    question_text varchar(250) NOT NULL,
-    answer_a varchar(100) NOT NULL,
-    answer_b varchar(100) NOT NULL,
-    answer_c varchar(100),
-    answer_d varchar(100),
-    answer_e varchar(100),
-    correct_answer enum('a','b','c','d','e') NOT NULL,
-    PRIMARY KEY (question_id),
-    Constraint question_Qfolder_fk FOREIGN KEY (folder_id)
-        REFERENCES questionfolders(folder_id) ON DELETE CASCADE
+    questionID int(11) NOT NULL AUTO_INCREMENT,
+    folderID int(11) NOT NULL,
+    questionText varchar(124) NOT NULL,
+    PRIMARY KEY (questionID),
+    Constraint question_Qfolder_fk FOREIGN KEY (folderID)
+        REFERENCES questionfolders(folderID) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 
 /********** QuestionSet **********
-Syntax: INSERT INTO questionset (col1 ,col2, col3)
+Syntax: INSERT INTO questionsets (col1 ,col2, col3)
         SELECT col1, col2, col3 FROM Questions where 
-
-CREATE TABLE IF NOT EXISTS questionset ( -- ON THE FENCE AS TO WHETHER WE NEED THIS OR NOT
-    
-);
-    -- FK QUESTION ON DELETE CASCADE
 */
+CREATE TABLE IF NOT EXISTS questionsets (  
+    questionSetID int(11) AUTO_INCREMENT,
+    questionSetName varchar(31) NOT NULL,
+    folderID int(11) NOT NULL,
+    PRIMARY KEY (questionSetID),
+    CONSTRAINT questionSet_folder_fk FOREIGN KEY (folderID)
+        REFERENCES questionfolders(folderID)
+);
 
+/********** QuestionSetPairings **********
+*/
+CREATE TABLE questionsetpairings (
+    pairingID int(11) AUTO_INCREMENT,
+    questionID int(11) NOT NULL,
+    questionSetID int(11) NOT NULL,
+    PRIMARY KEY (pairingID),
+    CONSTRAINT qsp_question FOREIGN KEY (questionID)
+        REFERENCES questions(questionID),
+    CONSTRAINT qsp_qSet_fk FOREIGN KEY (questionSetID)
+        REFERENCES questionsets(questionSetID)
+);
 
+)
 /********** PublishedQuizzes **********
 Syntax:         PublishedQuizzes are created *EXCLUSIVELY* through the stored
                 procedure "publish_quiz_folder"
 Constraints:    FK for Room_ID (rooms)
-*/
+
 CREATE TABLE IF NOT EXISTS publishedquizzes (
     quiz_id int(11) NOT NULL AUTO_INCREMENT,
     room_key varchar(6) NOT NULL,
@@ -226,16 +232,17 @@ CREATE TABLE IF NOT EXISTS publishedquizzes (
     CONSTRAINT pubQuiz_room_key_fk FOREIGN KEY (room_key)
         REFERENCES rooms(room_key)
 ) ;
+*/
 
 /********** PublishedQuestions **********
 Syntax:         Published Questions are created *EXCLUSIVELY* through the stored
                 procedure "publish_quiz_folder"
 Constraints:    FK for Quiz_id (PublishedQuizzes)
-*/
+
 CREATE TABLE IF NOT EXISTS publishedquestions (
     quiz_id int(11) NOT NULL,
     question_id int(11) NOT NULL AUTO_INCREMENT,
-    question_text varchar(250) NOT NULL,
+    question_text varchar(124) NOT NULL,
     answer_a varchar(100) NOT NULL,
     answer_b varchar(100) NOT NULL,
     answer_c varchar(100),
@@ -246,8 +253,18 @@ CREATE TABLE IF NOT EXISTS publishedquestions (
     CONSTRAINT pubQuest_pubQuiz_fk FOREIGN KEY (quiz_id)
         REFERENCES publishedquizzes (quiz_id) ON DELETE CASCADE
 ) ;
+*/
 
-
+CREATE TABLE questionanswers (
+    answerID int(11) AUTO_INCREMENT,
+    answerPOS set('1', '2', '3','4','5'),
+    questionID int(11),
+    answer varchar(124),
+    PRIMARY KEY (answerID),
+    CONSTRAINT answer_question_fk FOREIGN KEY (questionID)
+    	REFERENCES questions(questionID)
+    );
+    
 /********** Quiz Attempts **********
 Syntax:         INSERT INTO quizattempts (room_key, attendee_id, quiz_id) 
                     VALUES (@key, @attendee, NULL)
@@ -263,7 +280,7 @@ CREATE TABLE quizattempts (
     PRIMARY KEY (attempt_id),
     CONSTRAINT unique_quiz UNIQUE(quiz_id, attendee_id),
     CONSTRAINT published_quiz_room_quiz_id_fk FOREIGN KEY (quiz_id, room_key)
-        REFERENCES publishedquizzes (quiz_id, room_key) ON DELETE CASCADE
+        REFERENCES publishedquizzes (quiz_id, room_key) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 DELIMITER $$
@@ -307,7 +324,7 @@ CREATE TABLE IF NOT EXISTS answersubmissions (
     answer_choice ENUM('a', 'b', 'c', 'd','e'),
     PRIMARY KEY (ans_submit_id),
     CONSTRAINT ans_sub_quiz_attempt_fk FOREIGN KEY (quiz_attempt_id)
-        REFERENCES quizattempts (attempt_id) ON DELETE CASCADE,
+        REFERENCES quizattempts (attempt_id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT ans_question_fk FOREIGN KEY (question_id)
         REFERENCES publishedquestions (question_id)
 ) ;
@@ -323,7 +340,7 @@ Parameters: fold_id - ID of the folder which houses the questions
             r_id - ID of the room where the quiz is being published.
 Algorithm:  INSERT publishedquizzes row using paramater r_id
             INSERT publishedquestions row for each question which
-              has the same folder_id as the parameter fold_id and
+              has the same folderID as the parameter fold_id and
               set the quiz_id for each with the quiz_id which was
               generated for the row created in previous step. */
 
@@ -339,6 +356,12 @@ BEGIN
     INSERT IGNORE INTO publishedquestions (quiz_id, question_id, question_text, answer_a, answer_b,
                                             answer_c, answer_d, answer_e, correct_answer)
         SELECT @qid, question_id, question_text, answer_a, answer_b, answer_c, answer_d, answer_e, correct_answer
-        FROM questions WHERE questions.folder_id = fold_id;
+        FROM questions WHERE questions.folderID = fold_id;
 end $$
 DELIMITER ;
+
+-- Add access permissions
+GRANT USAGE ON *.* TO 'lnsys'@'localhost' IDENTIFIED BY PASSWORD '*571B02166B46C27003D2E30B815657658C800579';
+GRANT SELECT, INSERT, UPDATE ON qaproject.* TO 'lnsys'@'localhost';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON *.* TO 'quesys'@'localhost' IDENTIFIED BY PASSWORD '*D980CF29D2D015AFC048830684D401BF66FFE09D';

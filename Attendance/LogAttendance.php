@@ -3,9 +3,9 @@
     $result = "";
     #TODO Cleanup the error code 
     if($_SERVER["REQUEST_METHOD"] == "POST") {
-        include_once 'psl-config.php';
+        include_once '../model/database.php';
         $MYSQLi = new mysqli(HOST,USER,PASSWORD,DATABASE);
-        if($statement = $MYSQLi->prepare('INSERT INTO AttendanceRecords Values (?, ?)')) {
+        if($statement = $MYSQLi->prepare('INSERT IGNORE INTO AttendanceRecords Values (?, ?)')) {
             $attendee_id = filter_var($_POST['attendee_id'], FILTER_SANITIZE_NUMBER_INT);
             $course_key = filter_var($_POST['course_key'], FILTER_SANITIZE_STRING);
             $statement->bind_param('ds', $attendee_id, $course_key);

@@ -61,7 +61,7 @@
                     $statement->bind_result($id, $password);
                     $statement->fetch();
 
-                    if(password_verify($_POST['psw'], $password)) {
+                    if(password_verify(md5($_POST['psw']), $password)) {
                         
                         session_regenerate_id();
                         $_SESSION['loggedin'] = 'true';
@@ -70,7 +70,7 @@
                         echo 'Login Successful';
                         header("Location: ./Dashboard/index.php");
                     }
-                    else if ($_POST['psw'] == $password) {
+                    else if (md5($_POST['psw']) == $password) {
                         #Remove when encryption enabled
                         session_regenerate_id();
                         $_SESSION['loggedin'] = 'true';

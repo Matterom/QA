@@ -1,0 +1,53 @@
+.updateContainer{
+    position:       relative;
+    background:     #018744;
+    border-radius:  25px;
+    width:          600px;
+    margin:         20px 0px 0px 0px;
+    display:        block;
+    float:          left;
+    height:         240px;
+    clear:          both;
+}
+input[type=text] {
+    width:      100%;
+    clear:      right;
+}
+input [type=submit ] {
+    align-self:     center;
+    width:          40%;
+}
+.change_un_email {
+    color:          peachpuff;
+    position:       absolute;
+    width:          44%;
+    border-radius:  24px;
+    margin:         0px 4%;
+    box-sizing:     border-box;
+}
+.change_pw {
+    color:          peachpuff;
+    position:       absolute;
+    width:          44%;
+    left:           280px;
+    border-radius:  24px;
+    margin:         0px 4%;
+    box-sizing:     border-box;
+}
+.submit_container {
+    margin:         0px;
+    position:       absolute;
+    clear:          both;
+    text-align:     center;
+    top:            200px;
+    left:           10%;
+    width:          80%;
+    box-sizing:     border-box;
+}
+h4 {
+    color: peachpuff;
+    text-align: left;
+    font-size:  1em;
+    line-height: 1em;
+    margin:     1em 0px 0px 0px;
+}

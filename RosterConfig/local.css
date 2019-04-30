@@ -11,10 +11,13 @@
 .roster_text {
     color:          #0078AD;
     font-size:      1.5em;
-    text-align:     center;
+    text-align:     left;
     width:          65%;
-    margin:         0px 0px 0px 5%;
+    margin:         0px 0px 0px 6%;
     display:        block;
+}
+input {
+    margin:         0px 0px 0px 6%;
 }
 
 .attendee_col {
@@ -29,9 +32,9 @@
 .attendee_text {
     color:          #0078AD;
     font-size:      1.5em;
-    text-align:     center;
+    text-align:     left;
     width:          65%;
-    margin:         0px 0px 0px 5%;
+    margin:         0px 0px 0px 6%;
     float:          left;
 }
 
