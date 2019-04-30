@@ -16,17 +16,17 @@ INSERT INTO accounts (username, email, account_password) VALUES
 /*Successful triggers will change all passwords to 32 character keys */ 
 
 -- ROSTERS
-INSERT INTO rosters (roster_host_id, roster_name) VALUES
+INSERT INTO rosters (rosterHostID, rosterName) VALUES
 (6, 'CSCI 4388'),
 (6, 'CINF 4324'),
 (7, 'CSCI 4391'),
 (7, 'CENG 3351'),
 (8, 'ENGL 1135'),
 (9, 'MATH 2405');
--- Roster_id should be auto-set. Attendee_count should default to 0.
+-- rosterID should be auto-set. Attendee_count should default to 0.
 
 -- Attendees
-INSERT IGNORE INTO ATTENDEES (attendee_id, roster_id) VALUES 
+INSERT IGNORE INTO ATTENDEES (attendeeID, rosterID) VALUES 
 (111111, 1),
 (111111, 2),
 (111111, 3),
@@ -36,7 +36,7 @@ INSERT IGNORE INTO ATTENDEES (attendee_id, roster_id) VALUES
 /* When finished, the attendee_count of 1, 2, and 3 will be updated to 1, 2, and 3*/
 
 -- ROOMS
-INSERT IGNORE INTO ROOMS (room_host_id, roster_id, room_key) VALUES
+INSERT IGNORE INTO ROOMS (ownerID, rosterID, roomKey) VALUES
 (1, 1, NULL),
 (2, 2, NULL),
 (3, 6, NULL),
@@ -45,17 +45,17 @@ INSERT IGNORE INTO ROOMS (room_host_id, roster_id, room_key) VALUES
 /* Successful triggers will auto-generate room keys for each room */
 
 -- ATTENDANCE RECORDS
-INSERT INTO attendancerecords (attendee_id, room_key)
-SELECT attendees.attendee_id, rooms.room_key 
+INSERT INTO attendancerecords (attendeeID, roomKey)
+SELECT attendees.attendeeID, rooms.roomKey 
 FROM attendees join rooms
-WHERE attendees.roster_id = rooms.roster_id;
+WHERE attendees.rosterID = rooms.rosterID;
 /*  Creates an attendancerecord for every attendee on every room where they both have
-    the same roster_id. 
+    the same rosterID. 
     Successful trigger will generate the current_date
 */
 
 -- QUESTION FOLDERS
-INSERT INTO questionfolders (owner_id, folder_name, folder_description) VALUES
+INSERT INTO questionfolders (ownerID, folderName, folderDescription) VALUES
 (1, 'CSCI4388 Quiz#4', 'Quiz about ethics'),
 (2, 'CINF 4324 Quiz #2', 'Quiz about DFDs'),
 (3, 'CompArch Pipelines', 'Covers chapter 4'),
@@ -75,20 +75,20 @@ INSERT INTO questions (folder_id, question_text, answer_a, answer_b, answer_c,
 /* PHP file which creates this must implement error checking for duplicates. */
 
 -- Publishing Quizzes
-SELECT @roomkey := room_key from rooms where room_id=1;
+SELECT @roomkey := roomKey from rooms where room_id=1;
 CALL publish_quiz_folder(1, @roomkey);
 
-SELECT @roomkey := room_key from rooms where room_id=2;
+SELECT @roomkey := roomKey from rooms where room_id=2;
 CALL publish_quiz_folder(2, @roomkey);
 /* On first run through this test, it will publish quiz folder 1 to room 1 and quiz folder 2 to room 2 */
 
 -- QUIZ ATTEMPT
-SELECT @roomkey := room_key from rooms where room_id=1;
-INSERT INTO quizattempts (room_key, attendee_id, quiz_id) VALUES 
+SELECT @roomkey := roomKey from rooms where room_id=1;
+INSERT INTO quizattempts (roomKey, attendeeID, quizID) VALUES 
 (@roomkey, 111111, NULL);
 
-SELECT @roomkey := room_key from rooms where room_id=2;
-INSERT INTO quizattempts (room_key, attendee_id, quiz_id) VALUES 
+SELECT @roomkey := roomKey from rooms where room_id=2;
+INSERT INTO quizattempts (roomKey, attendeeID, quizID) VALUES 
 (@roomkey, 111111, NULL),
 (@roomkey, 12345, NULL);
 /*  On first run through thiis test, it will create an attempt for user 111111 in room 1 and an

@@ -61,11 +61,11 @@ Syntax: "INSERT IGNORE INTO rooms (ownerID, rosterID, roomKey)
 Constraints: FK for rosterID (rosters)
 Trigger Algorithm:  Auto-generate a 6-digit alphanumeric key for roomKey and
                     set start_time to NOW.
-Notes:  Current_Question_ID can be is a link to the question currently posted
+Notes:  Current_questionID can be is a link to the question currently posted
         in a room. When a question ceases to be available it points to the next
         question. If it is NULL, no questions will be accessible. 
         ******** THIS LOGIC MUST BE IMPLEMENTED IN PHP ********
-        To do so, the attendees' page will need to select the current_question_id
+        To do so, the attendees' page will need to select the current_questionID
         and then select that value from publishedquestions.questionID.
 */
 Create TABLE IF NOT EXISTS rooms (
@@ -75,7 +75,7 @@ Create TABLE IF NOT EXISTS rooms (
     rosterID int(8), -- CAN BE NULL FOR ANONYMOUS QUIZ
     start_time TIMESTAMP NOT NULL,
     active_connections int DEFAULT 0,
-    current_question_id int(11) DEFAULT NULL,
+    current_questionID int(11) DEFAULT NULL,
     PRIMARY KEY (room_id),
     CONSTRAINT rooms_roster_fk FOREIGN KEY (rosterID)
         REFERENCES rosters(rosterID),
@@ -240,9 +240,9 @@ Constraints:    FK for quizID (PublishedQuizzes)
 */
 CREATE TABLE IF NOT EXISTS publishedquestions (
     quizID int(11) NOT NULL,
-    question_id int(11) NOT NULL AUTO_INCREMENT,
-    question_text varchar(124) NOT NULL,
-    PRIMARY KEY (question_id, quizID),
+    questionID int(11) NOT NULL AUTO_INCREMENT,
+    questionText varchar(124) NOT NULL,
+    PRIMARY KEY (questionID, quizID),
     CONSTRAINT pubQuest_pubQuiz_fk FOREIGN KEY (quizID)
         REFERENCES publishedquizzes (quizID) ON DELETE CASCADE
 ) ;
@@ -266,11 +266,11 @@ Triggers:       Auto-fill quizID. Create an attendance record if non exists. Che
                     if attendee has access to given quiz.
 */
 CREATE TABLE quizattempts (
-    attempt_id int(11) NOT NULL AUTO_INCREMENT,
+    attemptID int(11) NOT NULL AUTO_INCREMENT,
     roomKey varchar(6) NOT NULL,
     quizID int(11) NOT NULL,
     attendeeID int(11) NOT NULL,
-    PRIMARY KEY (attempt_id),
+    PRIMARY KEY (attemptID),
     CONSTRAINT unique_quiz UNIQUE(quizID, attendeeID),
     CONSTRAINT published_quiz_room_quizID_fk FOREIGN KEY (quizID, roomKey)
         REFERENCES publishedquizzes (quizID, roomKey) ON DELETE CASCADE ON UPDATE CASCADE
@@ -311,15 +311,15 @@ DELIMITER ;
 
 -- Create AnswerSubmission (a answer the the attendee provides, linked to a quiz attempt)
 CREATE TABLE IF NOT EXISTS answersubmissions (
-    ans_submit_id int(11) AUTO_INCREMENT,
-    quiz_attempt_id int(11) NOT NULL,
-    question_id int(11) NOT NULL,
+    answerSubmitID int(11) AUTO_INCREMENT,
+    quizAttemptID int(11) NOT NULL,
+    questionID int(11) NOT NULL,
     answer_choice ENUM('a', 'b', 'c', 'd','e'),
     PRIMARY KEY (ans_submit_id),
-    CONSTRAINT ans_sub_quiz_attempt_fk FOREIGN KEY (quiz_attempt_id)
-        REFERENCES quizattempts (attempt_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT ans_question_fk FOREIGN KEY (question_id)
-        REFERENCES publishedquestions (question_id)
+    CONSTRAINT ans_sub_quiz_attempt_fk FOREIGN KEY (quiz_attemptID)
+        REFERENCES quizattempts (attemptID) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT ans_question_fk FOREIGN KEY (questionID)
+        REFERENCES publishedquestions (questionID)
 ) ;
 
 /*
@@ -346,10 +346,8 @@ BEGIN
     SELECT @qid := quizID
       FROM publishedquizzes
       WHERE publishedquizzes.roomKey = r_key;
-    INSERT IGNORE INTO publishedquestions (quizID, question_id, question_text, answer_a, answer_b,
-                                            answer_c, answer_d, answer_e, correct_answer)
-        SELECT @qid, question_id, question_text, answer_a, answer_b, answer_c, answer_d, answer_e, correct_answer
-        FROM questions WHERE questions.folderID = fold_id;
+    INSERT IGNORE INTO publishedquestions (quizID, questionID, questionText)
+        SELECT @qid, questionID, questionText FROM questions WHERE questions.folderID = fold_id;
 end $$
 DELIMITER ;
 
