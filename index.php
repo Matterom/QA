@@ -1,6 +1,6 @@
 <?php include 'view/header.php';?>
 <main>
-	<div class="sections" style="display:block;">
+	<div class="sections" >
 		<div class="Quiz">
 			<button id="Q" onclick="window.location.href = 'RoomSetup'">Q</button>
 		</div>
