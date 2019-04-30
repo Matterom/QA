@@ -9,7 +9,7 @@
             <div id="HeaderBox" class="lheader">
                 <!--TODO check user for login status-->
                 <div id="NewFolder">
-                    <button type="button" class ="newfoldbtn" onclick="newFolder(<?php echo $_SESSION['id'] ?>)"><i class="fas fa-folder-plus"> New Quiz</i></button>
+                    <button type="button" class ="newfoldbtn" onclick="newFolder(<?php echo $_SESSION['id'] ?>)"><i class="fas fa-folder-plus"> Classroom Quiz Folder</i></button>
                 </div>
             </div>
             <!--Pull Folders From User-->

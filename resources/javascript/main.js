@@ -705,9 +705,9 @@ function generateQEle(QBox, folder, user, qid, Q) {
     qString += "</div>"
     qString += "<div id='" + qid + ":args' class='hidden'>" + "TF::" + Q.args.TF + "</div>"
     qString += "<div id='BH:" + qid + "' class='btnHolder'>"
-    qString += "<button onclick='addChoice(" + qid + ")' class='hidden addChoice'>Add Answer Choice</button>"
-    qString += "<button class='hidden addToSet' onclick='addToSet(" + qid + ", true)'>AddToSet</button>"
-    qString += "<button class='hidden subFromSet' onclick='addToSet(" + qid + ", false)'>SubFromSet</button>"
+    qString += "<button onclick='addChoice(" + qid + ")' class='hidden addChoice'><i class='fas fa-plus'></i>Add Answer Choice</button>"
+    qString += "<button class='hidden addToSet' onclick='addToSet(" + qid + ", true)'><i class='fas fa-file-alt'></i>  Add to Quiz</button>"
+    qString += "<button class='hidden subFromSet' onclick='addToSet(" + qid + ", false)'><i class='fas fa-minus'></i>Remove Answer Choice</button>"
     qString += "<button onclick='deleteQuestion(" + qid + ", " + folder + ")' class='trashbtn'><i class='fas fa-trash-alt'></i> Delete</button></div>"
     Qbtn.innerHTML = qString
     QBox.appendChild(Qbtn);
