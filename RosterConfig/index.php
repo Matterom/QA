@@ -16,10 +16,10 @@
     $roster_array = array();
     $roster_list = array();
     /*QUERY for filled rosters*/
-    if ($statement = $MYSQLi->prepare('SELECT rosters.roster_name, attendees.attendee_id FROM attendees join rosters 
-                                        WHERE rosters.roster_host_id = ? 
-                                        AND attendees.roster_id = rosters.roster_id
-                                        ORDER BY roster_name'))
+    if ($statement = $MYSQLi->prepare('SELECT rosters.rosterName, attendees.attendeeID FROM attendees join rosters 
+                                        WHERE rosters.rosterHostID = ? 
+                                        AND attendees.rosterID = rosters.rosterID
+                                        ORDER BY rosterName'))
     {
         $statement->bind_param('s', $user_id);
         $statement->execute();
@@ -29,21 +29,21 @@
         $result = $statement->get_result();
     
         while($r=$result->fetch_assoc()) {
-            if (array_key_exists($r['roster_name'], $roster_array)) {
-                $roster_array[$r['roster_name']] .= $r['attendee_id']."<br>";
+            if (array_key_exists($r['rosterName'], $roster_array)) {
+                $roster_array[$r['rosterName']] .= $r['attendeeID']."<br>";
             }
             else {
-                $roster_array[$r['roster_name']] = $r['attendee_id']."<br>";
-                $roster_list[] = $r['roster_name'];
+                $roster_array[$r['rosterName']] = $r['attendeeID']."<br>";
+                $roster_list[] = $r['rosterName'];
             }
         }
         $statement->close(); 
         $result->free();
     }
     /*QUERY for empty rosters*/
-    if ($statement = $MYSQLi->prepare('SELECT rosters.roster_name FROM rosters 
+    if ($statement = $MYSQLi->prepare('SELECT rosters.rosterName FROM rosters 
                                         WHERE rosters.attendee_count= 0
-                                        AND rosters.roster_host_id = ?')) 
+                                        AND rosters.rosterHostID = ?')) 
     {
         $statement->bind_param('s', $user_id);
         $statement->execute();
@@ -51,8 +51,8 @@
         
         
         while($r=$result->fetch_assoc()) {
-            if (!array_key_exists($r['roster_name'], $roster_array)) {
-                $roster_list[] = $r['roster_name'];
+            if (!array_key_exists($r['rosterName'], $roster_array)) {
+                $roster_list[] = $r['rosterName'];
             }
         } 
     }
@@ -74,7 +74,7 @@
             }
             ?>
         <form action="#" method="POST">
-            <input type="text" placeholder="New Roster?" name="roster_name">
+            <input type="text" placeholder="New Roster?" name="rosterName">
             <input type="submit" value="addRoster" name="addRoster">
         </form>
         </span>
@@ -90,7 +90,7 @@
         } ?>
         <form action="#" method="POST">
             <input type="hidden"name="selected_roster" id="hidden_selected_roster"value = "">
-            <input type="text" name="new_attendee_id">
+            <input type="text" name="new_attendeeID">
             <input type="submit" value="addAttendee" name="addAttendee">
         </form> 
     </div>

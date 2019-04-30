@@ -13,8 +13,8 @@
             if (!empty($_POST['curr_pw']) && !empty($_POST['new_pw_1']) && !empty($_POST['new_pw_2']) 
                     && ($_POST['new_pw_1'] == $_POST['new_pw_2'])) 
             {
-                if($statement = $MYSQLi->prepare('UPDATE accounts set account_password = ? 
-                                                    WHERE id = ? AND account_password = ?')) 
+                if($statement = $MYSQLi->prepare('UPDATE accounts set password = ? 
+                                                    WHERE id = ? AND password = ?')) 
                 {
                     $new_password = filter_var(md5($_POST['new_pw_1']), FILTER_SANITIZE_STRIPPED);
                     $old_password = md5($_POST['curr_pw']);

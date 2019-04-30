@@ -6,9 +6,9 @@
         include_once '../model/database.php';
         $MYSQLi = new mysqli(HOST,USER,PASSWORD,DATABASE);
         if($statement = $MYSQLi->prepare('INSERT IGNORE INTO AttendanceRecords Values (?, ?)')) {
-            $attendee_id = filter_var($_POST['attendee_id'], FILTER_SANITIZE_NUMBER_INT);
-            $course_key = filter_var($_POST['course_key'], FILTER_SANITIZE_STRING);
-            $statement->bind_param('ds', $attendee_id, $course_key);
+            $attendeeID = filter_var($_POST['attendeeID'], FILTER_SANITIZE_NUMBER_INT);
+            $roomKey = filter_var($_POST['roomKey'], FILTER_SANITIZE_STRING);
+            $statement->bind_param('ds', $attendeeID, $roomKey);
             if(!$statement->execute()) {
                 if(substr($statement->error,0,9)=='Duplicate') {
                     $result = "Successfully logged in";
@@ -28,8 +28,8 @@
     else {
         ?>
         <form method="post" style="hidden" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-            Account ID: <input type="text" name="attendee_id"><br>
-            Course ID: <br><input type="text" name="course_key"><br>
+            Account ID: <input type="text" name="attendeeID"><br>
+            Course ID: <br><input type="text" name="roomKey"><br>
             <input type="submit"><br>
         </form>
         <?php if (isset($result) && $result!== "") echo $result ?>

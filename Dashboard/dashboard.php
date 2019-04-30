@@ -1,7 +1,7 @@
 <main>
     <?php $user_id = $_SESSION['id']; ?>
     <script>
-    function collectRoomInfo() {
+        function collectRoomInfo() {
 
         <?php 
         include_once '../model/database.php';
@@ -11,7 +11,7 @@
             printf("Connection Failed: \n", $MYSQLi->connect_error);
             die('Failed To Connect, Terminating Script');
         }
-        if ($statement = $MYSQLi->prepare('SELECT roster_name from rosters where roster_host_id = ? ORDER BY roster_name')){
+        if ($statement = $MYSQLi->prepare('SELECT rosterName from rosters where rosterHostID = ? ORDER BY roster_name')){
             $statement->bind_param('s', $user_id);
             $statement->execute();
             $result = $statement->get_result();
@@ -48,7 +48,7 @@
         <span class="dash_button_text" id="dash_accounts_button" >Configure Account</span>
     </div>
     <div class="dash_button">
-        <a href="../RosterConfig"><span class="dash_button_text">Configure Rosters!!</span></a>
+        <a href="../RosterConfig"><span class="dash_button_text">Configure Rosters</span></a>
     </div>
     <div class="dash_button">
         <span class="dash_button_text" id="dash_rooms_button" onclick="collectRoomInfo()">Start Classroom</span>

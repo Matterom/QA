@@ -7,7 +7,7 @@
 USE qaproject;
 
 -- ACCOUNTS
-INSERT INTO accounts (username, email, account_password) VALUES 
+INSERT INTO accounts (username, email, password) VALUES 
 ('david', 'david@quizandattendance.com', 'alpha'),
 ('matthew', 'matt@quizandattendance.com', 'beta'),
 ('nayeli', 'nayeli@quizandattendance.com', 'gamma'),
@@ -17,12 +17,12 @@ INSERT INTO accounts (username, email, account_password) VALUES
 
 -- ROSTERS
 INSERT INTO rosters (rosterHostID, rosterName) VALUES
-(6, 'CSCI 4388'),
-(6, 'CINF 4324'),
-(7, 'CSCI 4391'),
-(7, 'CENG 3351'),
-(8, 'ENGL 1135'),
-(9, 'MATH 2405');
+(1, 'CSCI 4388'),
+(3, 'CINF 4324'),
+(2, 'CSCI 4391'),
+(2, 'CENG 3351'),
+(1, 'ENGL 1135'),
+(1, 'MATH 2405');
 -- rosterID should be auto-set. Attendee_count should default to 0.
 
 -- Attendees
