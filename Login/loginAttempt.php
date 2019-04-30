@@ -53,7 +53,7 @@
         #If login attempts gt 5 or last attempt 15m ago, block attempt with a timer.
         if (true) {
             #TODO Purge login attempts for session
-            if($statement = $MYSQLi->prepare('SELECT id, password FROM accounts WHERE username = ?')){
+            if($statement = $MYSQLi->prepare('SELECT id, account_password FROM accounts WHERE username = ?')){
                 $statement->bind_param('s', $_POST['uname']);
                 $statement->execute();
                 $statement->store_result();
@@ -61,23 +61,23 @@
                     $statement->bind_result($id, $password);
                     $statement->fetch();
 
-                    if(password_verify($_POST['psw'], $password)) {
+                    if(password_verify(md5($_POST['psw']), $password)) {
                         
                         session_regenerate_id();
                         $_SESSION['loggedin'] = 'true';
                         $_SESSION['name'] = $_POST['uname'];
                         $_SESSION['id'] = $id;
                         echo 'Login Successful';
-                        header("Location: ../index.php");
+                        header("Location: ./Dashboard/index.php");
                     }
-                    else if ($_POST['psw'] == $password) {
+                    else if (md5($_POST['psw']) == $password) {
                         #Remove when encryption enabled
                         session_regenerate_id();
                         $_SESSION['loggedin'] = 'true';
                         $_SESSION['name'] = $_POST['uname'];
                         $_SESSION['id'] = $id;
                         echo 'Login Successful';
-                        header("Location: ../index.php");
+                        header("Location: ../Dashboard/index.php");
                     }
                     else{
                         echo 'Incorrect Login Information ID:PASSWORD(REMOVE ID BIT ON RELEASE)';

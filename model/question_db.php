@@ -73,7 +73,7 @@
     //Returns a list of Questions provided folder,
     function getQuestions($folder) {
         global $MYSQLi;
-        if ($statement = $MYSQLi->prepare('SELECT questionID, question FROM questiontable WHERE folderID = ?')) {
+        if ($statement = $MYSQLi->prepare('SELECT questionID, questionText FROM questions WHERE folderID = ?')) {
             $statement->bind_param('i', $folder);
             $statement->execute();
             $return = $statement->get_result();
