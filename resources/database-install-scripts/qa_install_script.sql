@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS accounts (
   id int(11) NOT NULL AUTO_INCREMENT,
   username varchar(62) NOT NULL,
   email varchar(62) UNIQUE,
-  account_password char(32) NOT NULL,
+  password char(32) NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 -- Index on accounts.username
@@ -35,7 +35,7 @@ CREATE TRIGGER hash_passwords
 BEFORE INSERT ON accounts
 FOR EACH ROW
 BEGIN
-    set new.account_password = md5(new.account_password);
+    set new.password = md5(new.password);
 END $$
 DELIMITER ;
 
