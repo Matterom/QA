@@ -9,7 +9,7 @@
             <div id="HeaderBox" class="lheader">
                 <!--TODO check user for login status-->
                 <div id="NewFolder">
-                    <button type="button" class ="newfoldbtn" onclick="newFolder(<?php echo $_SESSION['id'] ?>)"><i class="fas fa-folder-plus"> Classroom Quiz Folder</i></button>
+                    <button type="button" class ="newfoldbtn btnqa" onclick="newFolder(<?php echo $_SESSION['id'] ?>)"><i class="fas fa-folder-plus"> Classroom Quiz Folder</i></button>
                 </div>
             </div>
             <!--Pull Folders From User-->
@@ -20,7 +20,7 @@
                         <div class="folderIter dragable" onclick="queryQuestionList(<?php echo $index['folderID']?>, <?php echo $_SESSION['id']?>)">
                             <h1 ondblclick="convertFolderToForm(this, 'folderN', '<?php echo $index['folderDescription']?>', '<?php echo $_SESSION['id']?>', '<?php echo $index['folderID']; ?>')" class="renameable"><?php echo $index['folderName'];?></h1>
                             <p ondblclick="convertFolderToForm(this, 'folderD', '<?php echo $index['folderName']?>', '<?php echo $_SESSION['id']?>', '<?php echo $index['folderID']; ?>')" class="renamable"><?php echo $index['folderDescription'];?></p>
-                            <button type="button" class="trashbtn" onclick="deleteFolder(this, <?php echo $index['folderID']; ?>, <?php echo $_SESSION['id']?>)"><i class="fas fa-trash-alt"></i> Delete</button>
+                            <button type="button" class="trashbtn btnqa" onclick="deleteFolder(this, <?php echo $index['folderID']; ?>, <?php echo $_SESSION['id']?>)"><i class="fas fa-trash-alt"></i> Delete</button>
                         </div>
             <?php endforeach; endif;?>
         </div>
