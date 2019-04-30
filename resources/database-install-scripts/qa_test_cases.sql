@@ -66,12 +66,12 @@ INSERT INTO questionfolders (owner_id, folder_name, folder_description) VALUES
 -- QUESTIONS
 INSERT INTO questions (folder_id, question_text, answer_a, answer_b, answer_c,
                         answer_d, answer_e, correct_answer) VALUES
-(1, 'Is it good to be ethical?', 'yes', 'no', 'usually' ,NULL, NULL, 'a'),
-(1, 'Ethics is exciting', 'true', 'false', NULL, NULL, NULL, 'b'),
-(1, 'It is important to use visual aids when discussing Aristotle', 'true', 'false', NULL, NULL, NULL, 'b'),
-(1, 'Is murder bad?', 'yes', 'no', 'depends on the situation','depends on the victim', 'C or D', 'a'),
-(2, 'What is a DFD?', 'Data Flow Diagram', 'Digital Fluid Drawing', 'Dinosaur Filing Designation', NULL, NULL, 'a'),
-(3, 'How many stages are there in MIPS pipelining?', '2', '4', '6', '5', '3', 'd');
+(1, 'Is it good to be ethical?'),
+(1, 'Ethics is exciting'),
+(1, 'It is important to use visual aids when discussing Aristotle'),
+(1, 'Is murder bad?'),
+(2, 'What is a DFD?'),
+(3, 'How many stages are there in MIPS pipelining?');
 /* PHP file which creates this must implement error checking for duplicates. */
 
 -- Publishing Quizzes
