@@ -20,5 +20,4 @@ function setTimeRemaining($roomID) {
 function answerQuestion($roomID, $questionID, $answerID) {
 
 }
-
 ?>

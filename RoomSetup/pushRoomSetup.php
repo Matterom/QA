@@ -3,21 +3,13 @@
     include '../model/classes.php';
 
     if($func = filter_input(INPUT_POST, "folder")){
-        if ($type = filter_input(INPUT_POST, "folderN")) {
+        if ($type = filter_input(INPUT_POST, "update")) {
             $userID = filter_input(INPUT_POST, "user");
             $folderID = filter_input(INPUT_POST, "folderID");
-            $folderName = $type;
-            $folderDesc = filter_input(INPUT_POST, "alternative");
+            $folderName = filter_input(INPUT_POST, "name");
+            $folderDesc = filter_input(INPUT_POST, "desc");
             $result = updateFolder($userID, $folderID, $folderName, $folderDesc);
-            echo $userID." ".$folderID." ".$folderName." ".$folderDesc." Result: ".$result;
-        }
-        elseif ($type = filter_input(INPUT_POST, "folderD")) {
-            $userID = filter_input(INPUT_POST, "user");
-            $folderID = filter_input(INPUT_POST, "folderID");
-            $folderName = filter_input(INPUT_POST, "alternative");
-            $folderDesc = $type;
-            $result = updateFolder($userID, $folderID, $folderName, $folderDesc);
-            echo $userID." ".$folderID." ".$folderName." ".$folderDesc." Result: ".$result;
+            echo $result;
         }
         elseif ($user = filter_input(INPUT_POST, "newFold")) {
             $userID = $user;
