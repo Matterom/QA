@@ -2,10 +2,10 @@
 <main>
 	<div class="sections" >
 		<div class="Quiz">
-			<button id="Q" onclick="window.location.href = 'RoomSetup'">Q</button>
+			<button id="Q" class="grid"><img class=LeftBracket src="resources/graphics/button1.png"><img class="CentralContent" src="resources/graphics/button2.png"id="Qimg"><img class="RightBracket" src="resources/graphics/button4.png"></button>
 		</div>
 		<div class="Answer">
-			<button id="A" ondblclick="window.location.href = 'Room'">Mark Yourself Present!<?php include 'Attendance/LogAttendance.php' ?></button>
+			<button id="A" class="grid" onclick="expandA()"><img class="LeftBracket" src="resources/graphics/button1.png"><img class="CentralContent" src="resources/graphics/button3.png" id="Aimg"><div id="LoginHolder" class="CentralContent" style="display: none;"><?php include 'Attendance/LogAttendance.php' ?></div><img class="RightBracket" src="resources/graphics/button4.png"></div></button>
 		</div>
 	</div>
 

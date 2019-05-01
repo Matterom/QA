@@ -9,6 +9,7 @@
 
 const modal = document.getElementById('id01');
 let timeKeeper;
+let logloop;
 let time;
 let activeFolder;
 let activeSet;
@@ -46,10 +47,10 @@ function logicLoop(arg) {
             logloop = setInterval(updateQuiz(mode), 1000);
             break;
         case "clear":
-            clearInterval(timeKeeper)
+            clearInterval(logloop)
             time = 0
         case "pause":
-            clearInterval(timeKeeper)
+            clearInterval(logloop)
     }
 }
 
@@ -300,11 +301,22 @@ async function revealSetAssoc(setID) {
 
 //Closes window, TODO replace with new code, used as test
 window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
+    if (event.target == modal) {
+        modal.style.display = "none";
     }
-    //DBLclick function to convert the folder name or description to a form
+}
+
+function expandA() {
+    const box = document.getElementById("A");
+    const a = document.getElementById("Aimg");
+    const hold = document.getElementById("LoginHolder");
+    box.style = "width:400px"
+    a.style = "display:none";
+    hold.style = "display:box";
+    
+}
+
+//DBLclick function to convert the folder name or description to a form
 function convertFolderToForm(select, type, secondary, userID, folderID) {
     select.setAttribute("style", "display:none")
     let input;
