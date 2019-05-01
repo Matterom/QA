@@ -65,7 +65,7 @@ async function updateQuiz(mode, target) {
         // Check Quiz State, If Time Remaining < 0, Move to next Question, 
         const data = new FormData();
         data.append("QMrequest", true);
-        const response = await fetch("pushRoomSetup.php", {
+        const response = await fetch("roomLogic.php", {
             method: 'POST',
             body: data
         });
@@ -73,8 +73,6 @@ async function updateQuiz(mode, target) {
             //throw error
         } else {
             //set content to be loaded by room clients.
-
-
             const Q = JSON.parse(response);
             buildQuestion(Q, "Host");
         }
@@ -112,8 +110,57 @@ function enableQuestion() {
 
 }
 //Build the Dom of a Question
-function buildQuestion(Q, Style) {
+function buildQuestion(Q) {
+    const QText = getElementById("QText");
+    const A1 = getElementById("A1");
+    const A2 = getElementById("A2");
+    const A3 = getElementById("A3");
+    const A4 = getElementById("A4");
+    const A5 = getElementById("A5");
 
+    QText.innerHTML = Q.text
+    
+    A1.innerHTML = Q.answer.one[1]
+    if (Q.answer.one[2].contains("hidden")) {
+        A1.classList.add("hidden")
+    }
+    else if (A1.classList.contains("hidden")) {
+        A1.classList.remove("hidden");
+    }
+    A2.innerHTML = Q.answer.two[1]
+    if (Q.answer.two[2].contains("hidden")) {
+        A2.classList.add("hidden")
+    }
+    else if (A2.classList.contains("hidden")) {
+        A2.classList.remove("hidden");
+    }
+    A3.innerHTML = Q.answer.three[1]
+    if (Q.answer.three[2].contains("hidden")) {
+        A3.classList.add("hidden")
+    }
+    else if (A3.classList.contains("hidden")) {
+        A3.classList.remove("hidden");
+    }
+    A4.innerHTML = Q.answer.four[1]
+    if (Q.answer.four[2].contains("hidden")) {
+        A4.classList.add("hidden")
+    }
+    else if (A4.classList.contains("hidden")) {
+        A4.classList.remove("hidden");
+    }
+    A5.innerHTML = Q.answer.five[1]
+    if (Q.answer.five[2].contains("hidden")) {
+        A5.classList.add("hidden")
+    }
+    else if (A5.classList.contains("hidden")) {
+        A5.classList.remove("hidden");
+    }
+    
+    // Just in case honestly
+    //if (style == "Host") {
+    //}
+    //else if (style == "User") {
+    //}
 }
 //----------------------------------//
 ////////////////////////////
