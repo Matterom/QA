@@ -57,7 +57,6 @@
             }
         } 
     }
-    else { printf("Trouble in empty roster land.");}
     ?>
 <!-- end of roster list population code -->
 

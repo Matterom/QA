@@ -54,6 +54,6 @@
         <span class="dash_button_text" id="dash_rooms_button" onclick="collectRoomInfo()">Start Classroom</span>
     </div>
     <div class="dash_button">
-        <span class="dash_button_text">Quiz Reports</span>
+        <a href="../RoomSetup"><span class="dash_button_text">Quiz Setup</span></a>
     </div>
 </main>
