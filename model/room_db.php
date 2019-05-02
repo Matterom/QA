@@ -23,8 +23,12 @@ function getQuestionIDList($qSetID) {
         $stmt->bind_param('s', $qSetID);
         $stmt->execute();
         $result = $stmt->get_result();
-        $questionList = $result->fetch_all(MYSQLI_NUM);
-        return $questionList;
+        $questionIDList = [];
+        while ($row = $result->fetch_row())
+        {
+            $questionIDList[] = $row[0];
+        }
+        return $questionIDList;
     }
     else
     {
