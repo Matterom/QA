@@ -4,7 +4,11 @@
 * Purpose:  Consolidated SQL install script
 ****************************************************/
 
--- Create Database
+/*
+-----------------------------------------
+-- DATABASE DROP AND CREATE -------------
+-----------------------------------------
+*/
 DROP DATABASE IF EXISTS qaproject; 
 CREATE DATABASE IF NOT EXISTS qaproject DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 USE qaproject;
@@ -73,6 +77,7 @@ Create TABLE IF NOT EXISTS rooms (
     ownerID int(11) NOT NULL,
     roomKey varchar(6) NOT NULL,
     rosterID int(8) DEFAULT NULL, -- CAN BE NULL FOR ANONYMOUS QUIZ
+    qSetID int(11),
     start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     active_connections int DEFAULT 0,
     current_questionID int(11) DEFAULT NULL,
@@ -81,6 +86,8 @@ Create TABLE IF NOT EXISTS rooms (
         REFERENCES rosters(rosterID),
     CONSTRAINT room_owner_fk FOREIGN KEY (ownerID)
         REFERENCES accounts(id),
+    CONSTRAINT room_qSet_fk FOREIGN KEY(qSetID)
+        REFERENCES questionsets(qSetID),
     CONSTRAINT unique_roomKey UNIQUE INDEX (roomKey)
 ) ;
 
@@ -134,6 +141,16 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP TRIGGER IF EXISTS tr_attendees_update_roster_bd;
+DELIMITER $$
+CREATE TRIGGER tr_attendees_update_roster_bd
+BEFORE DELETE ON attendees
+FOR EACH ROW
+BEGIN
+    UPDATE rosters set attendee_count = attendee_count - 1
+        WHERE rosters.rosterID = OLD.rosterID;
+END $$
+DELIMETER ;
 
 /********** Attendance_Records **********
 Syntax: "INSERT IGNORE INTO attendancerecords (attendeeID, roomKey) VALUES()"
@@ -206,7 +223,8 @@ CREATE TABLE IF NOT EXISTS questionsets (
     folderID int(11) NOT NULL,
     PRIMARY KEY (qSetID),
     CONSTRAINT questionSet_folder_fk FOREIGN KEY (folderID)
-        REFERENCES questionfolders(folderID)
+        REFERENCES questionfolders(folderID),
+    CONSTRAINT un_qSet_folderID UNIQUE (qSetName, folderID)
 );
 
 /********** QuestionSetPairings **********
@@ -236,6 +254,18 @@ CREATE TABLE quizattempts (
     CONSTRAINT quizattempt_roomkey_fk FOREIGN KEY (roomKey) 
         REFERENCES rooms (roomKey)
 ) ;
+
+DROP TRIGGER IF EXISTS trg_create_quiz_from_roomkey_bi;
+DELIMETER $$
+CREATE TRIGGER trg_create_quiz_from_roomkey_bi 
+BEFORE INSERT ON quizattempts
+FOR EACH ROW
+BEGIN
+    if (isnull(new.quizID)) THEN
+        SELECT qSetID INTO new.quizID FROM rooms WHERE roomID = new.roomID;
+    end if;
+END $$
+DELIMETER ;
 
 /* Doesn't work - connected to prior table called PublishedQuizzes
 DROP TRIGGER IF EXISTS tr_quiz_attempts_bi;
