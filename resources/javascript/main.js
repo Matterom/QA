@@ -120,6 +120,26 @@ async function startQuiz() {
     quiz.classList.remove("hidden");
     // }
 }
+
+async function getRoomInfo() {
+    if (roomID) {
+        const data = new FormData()
+        data.append("Room", true);
+        data.append("get", true);
+        const response = await fetch(roomLogic.php, {
+            method: 'POST',
+            body: data
+        });
+        if (!response.ok) {
+            console.log("Respone from server lost")
+        } else {
+            result = await response;
+            return result;
+        }
+    }
+}
+
+
 //User Side, Enables the Quiz when teach starts
 function enableQuestion() {
 
@@ -128,17 +148,39 @@ function enableQuestion() {
 //Push User's room to new question
 async function nextQuestion() {
     //Pull Current Question data and push it to server, just in case. 
-
+    const data = new FormData()
+    data.append("Room", true);
+    data.append("Question", true);
+    data.append("Next", true);
     //Pull the question object and refresh the relevant DOM
+    const response = await fetch(roomLogic.php, {
+        method: 'POST',
+        body: data
+    });
+    if (!response.ok) {
+        console.log("Respone from server lost")
+    } else {
 
+    }
 
 }
 
 async function prevQuestion() {
     //Pull Current Question data and push it to server, just in case. 
-
+    const data = new FormData()
+    data.append("Room", true);
+    data.append("Question", true);
+    data.append("Prev", true);
     //Pull the question object and refresh the relevant DOM
+    const response = await fetch(roomLogic.php, {
+        method: 'POST',
+        body: data
+    });
+    if (!response.ok) {
+        console.log("Respone from server lost")
+    } else {
 
+    }
 
 }
 

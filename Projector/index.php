@@ -4,9 +4,13 @@
 </head>
 <script>
     const mode = "Host";
+    const QList = <?php echo $_SESSION['qSetIDList'] ?>
+    const RKey = <?php echo $_SESSION['roomKey'] ?>
+    const timer = <?php echo $_SESSION['timer'] ?>
 </script>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <main>
+    <div id="RoomKeyBox"><?php echo $_SESSION['roomKey'] ?></div> 
     <div id="StartBox" onclick="startQuiz()">Start Quiz?</div>
     <div id="QuestionBox" class="hidden">
         <table style="width:100%">
