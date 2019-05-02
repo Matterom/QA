@@ -13,6 +13,7 @@ let logloop;
 let time;
 let activeFolder;
 let activeSet;
+let quizList;
 const EleArr = ["A1", "A2", "A3", "A4", "A5"];
 
 //----------------------------------//
@@ -65,7 +66,8 @@ async function updateQuiz(mode, target) {
     if (mode == "Host") {
         // Check Quiz State, If Time Remaining < 0, Move to next Question, 
         const data = new FormData();
-        data.append("QMrequest", true);
+        data.append("Quiz", true);
+        data.append("", true);
         const response = await fetch("roomLogic.php", {
             method: 'POST',
             body: data
@@ -98,6 +100,28 @@ async function updateQuiz(mode, target) {
     }
 
 }
+//Start Quiz
+async function startQuiz() {
+
+    const data = new FormData();
+    data.append("Quiz", true);
+    data.append("QSetRqst", true);
+    data.append("roomID", roomID);
+    // const response = await fetch("roomLogic.php", {
+    //      method: 'POST',
+    //      body: data
+    //  });
+    // if (!response.ok) {} else {
+    //const Q = JSON.parse(response);
+    logicLoop("start");
+    const ele = document.getElementById("StartBox");
+    const quiz = document.getElementById("QuestionBox");
+    ele.style = "display: none;";
+    quiz.classList.remove("hidden");
+    // }
+}
+
+
 //Push User's room to new question
 async function nextQuestion() {
     //Pull Current Question data and push it to server, just in case. 
@@ -106,6 +130,15 @@ async function nextQuestion() {
 
 
 }
+
+async function prevQuestion() {
+    //Pull Current Question data and push it to server, just in case. 
+
+    //Pull the question object and refresh the relevant DOM
+
+
+}
+
 //Enable Question skipping this for now
 function enableQuestion() {
 
@@ -120,43 +153,38 @@ function buildQuestion(Q) {
     const A5 = getElementById("A5");
 
     QText.innerHTML = Q.text
-    
+
     A1.innerHTML = Q.answer.one[1]
     if (Q.answer.one[2].contains("hidden")) {
         A1.classList.add("hidden")
-    }
-    else if (A1.classList.contains("hidden")) {
+    } else if (A1.classList.contains("hidden")) {
         A1.classList.remove("hidden");
     }
     A2.innerHTML = Q.answer.two[1]
     if (Q.answer.two[2].contains("hidden")) {
         A2.classList.add("hidden")
-    }
-    else if (A2.classList.contains("hidden")) {
+    } else if (A2.classList.contains("hidden")) {
         A2.classList.remove("hidden");
     }
     A3.innerHTML = Q.answer.three[1]
     if (Q.answer.three[2].contains("hidden")) {
         A3.classList.add("hidden")
-    }
-    else if (A3.classList.contains("hidden")) {
+    } else if (A3.classList.contains("hidden")) {
         A3.classList.remove("hidden");
     }
     A4.innerHTML = Q.answer.four[1]
     if (Q.answer.four[2].contains("hidden")) {
         A4.classList.add("hidden")
-    }
-    else if (A4.classList.contains("hidden")) {
+    } else if (A4.classList.contains("hidden")) {
         A4.classList.remove("hidden");
     }
     A5.innerHTML = Q.answer.five[1]
     if (Q.answer.five[2].contains("hidden")) {
         A5.classList.add("hidden")
-    }
-    else if (A5.classList.contains("hidden")) {
+    } else if (A5.classList.contains("hidden")) {
         A5.classList.remove("hidden");
     }
-    
+
     // Just in case honestly
     //if (style == "Host") {
     //}
@@ -313,7 +341,7 @@ function expandA() {
     box.style = "width:400px"
     a.style = "display:none";
     hold.style = "display:box";
-    
+
 }
 
 //DBLclick function to convert the folder name or description to a form
@@ -374,7 +402,7 @@ async function updateFolderFromForm(origin, type, target, userID, folderID, clic
             fdesc = document.getElementById("FD:" + folderID).innerHTML;
             let data = new FormData();
             data.append("folder", true);
-            data.append("update",true);
+            data.append("update", true);
             data.append("name", fname);
             data.append("desc", fdesc);
             data.append("user", userID);
@@ -669,7 +697,7 @@ async function queryQuestionList(folder, user) {
             console.log("something went wrong");
         } else {
             let qList = await response.json();
-                //Itterate through the list
+            //Itterate through the list
             for (let i = 0; i < qList.length; i++) {
                 let Q = JSON.parse(qList[i].question);
                 let qid = qList[i].questionID;
@@ -748,8 +776,8 @@ function generateQEle(QBox, folder, user, qid, Q) {
     const Qbtn = document.createElement("div");
     Qbtn.classList = "question";
     Qbtn.setAttribute("id", "Q:" + qid);
-// <i class=’fas fa-caret-down’></i>
-//<i class='fas fa-caret-right'></i>
+    // <i class=’fas fa-caret-down’></i>
+    //<i class='fas fa-caret-right'></i>
     let qString = "<div class='QHead'><div id='" + qid + ":text' class='text'>" + Q.text + "</div><div id='QAr:" + qid + "' onclick='toggleAnswers(" + qid + ")' class='arrow'><i style='font-size: 30px' class='fas fa-caret-left'></i></i></div></div>"
     qString += "<div id='AB:" + qid + "' class='answerBox hidden'>"
     qString += "<div id='" + qid + ":1" + "' class='ans1 " + Q.answer.one[2] + "'>" + Q.answer.one[1] + "</div><div id='" + qid + ":ch1' class='ch1 " + Q.answer.one[2] + "'><input type='checkbox' name='answerOne' value='true' " + (Q.answer.one[0] ? "checked='true'" : "") + "/></div>"
@@ -790,13 +818,13 @@ function generateSEle(setID, folder, name, desc, user) {
     node.classList.add("folderIter")
     node.setAttribute("onclick", "revealSetAssoc(" + setID + ", " + folder + ")")
         //configure h1 select, type, secondary, userID, folderID, setID
-    h1.setAttribute("id", "QSN:"+setID)
-    h1.setAttribute("ondblclick", "convertSetToForm(this, 'QSetN', '" + "QSD: +"+ setID + "', " + user + ", " + folder + ", " + setID + ")");
+    h1.setAttribute("id", "QSN:" + setID)
+    h1.setAttribute("ondblclick", "convertSetToForm(this, 'QSetN', '" + "QSD: +" + setID + "', " + user + ", " + folder + ", " + setID + ")");
     h1.setAttribute("class", "renamable")
     h1.innerText = name;
     //configure p
-    p.setAttribute("id", "QSD:"+setID)
-    p.setAttribute("ondblclick", "convertSetToForm(this, 'QSetD', '" + "QSN:"+ setID + "', " + user + ", " + folder + ", " + setID + ")");
+    p.setAttribute("id", "QSD:" + setID)
+    p.setAttribute("ondblclick", "convertSetToForm(this, 'QSetD', '" + "QSN:" + setID + "', " + user + ", " + folder + ", " + setID + ")");
     p.setAttribute("class", "renamable")
     p.innerText = desc;
 

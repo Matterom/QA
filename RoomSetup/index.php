@@ -3,6 +3,7 @@
 <!--This is where successful login attempts are sent, This is the configuration hub for new "Questions" and rooms owned by the user-->
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <main>
+
 <div class="row">
     <div id="FolderColumn" class="column left">
         <div id="FolderBox" class="box" style="overflow-y: scroll">

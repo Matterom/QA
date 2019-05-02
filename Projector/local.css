@@ -27,7 +27,6 @@ main {
     overflow: hidden;
     justify-items: center;
     row-gap: 30px;
-
 }
 
 #QuestionHeader {
@@ -38,7 +37,7 @@ main {
     background: white;
     display: grid;
     justify-items: center;
-    border-style:solid;
+    border-style: solid;
     border-color: #3e8e41;
 }
 
@@ -46,8 +45,8 @@ main {
     border: none;
     border-radius: 15px;
     background: white;
-    padding-left:5px;
-    padding-right:5px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 #AnswerGrid {
@@ -85,25 +84,28 @@ main {
     box-shadow: 0 1px #666;
     transform: translateY(4px);
 }
+
 #AnswerGrid button:visited {
-    background-color: :#3e8e41;
+    background-color: #3e8e41;
 }
 
-@media(max-width:600px){
-    #QuestionBox{
+@media(max-width:600px) {
+    #QuestionBox {
         min-width: 97%;
         margin: 0;
         padding-left: 9px;
         padding-right: 3px;
     }
-
-    #QuestionHeader{
+    #QuestionHeader {
         width: 100%;
     }
-
     #AnswerGrid {
         width: 100%;
     }
+}
+
+.hidden {
+    display: none !important;
 }
 
 .noselect {
@@ -120,11 +122,13 @@ main {
     user-select: none;
 }
 
-
-
-
-
-
-
-
-
+#StartBox {
+    position: fixed;
+    top: 25%;
+    right: 25%;
+    width: 50%;
+    height: 25%;
+    background: green;
+    text-align: center;
+    display: flex;
+}
