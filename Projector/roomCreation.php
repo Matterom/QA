@@ -7,6 +7,16 @@
 *  Parameters:  id - PK of user (accounts.id)
 *               rosterName - name of roster (may be anonymous)
 *               qSetID - PK of questionset (questionsets.qSetID) 
+*  Function: Saves the following variables into $_SESSION
+        'roomID'        from $MYSQLi->insert_id
+        'roomKey'       from SELECT WHERE roomID = $roomID  
+        'rosterName'    from $_POST
+        'rosterID'      from SELECT where rosterName = $rosterName
+        'qSetName'      from $_POST
+        'qSetID'        from SELECT WHERE qSetName = $qSetName
+        'qSetIDList'    from getQuestionIDList($qSetID)
+        'timer'         from $_POST
+
 */ -->
 
 <?php 
@@ -14,7 +24,6 @@
     // Initialize database connection variables
     include_once '../model/database.php';
     include_once '../model/room_db.php';
-    $_SESSION['thisSucks'] = False;
 
     //Initializes connection to database
     $MYSQLi = new mysqli(HOST,USER,PASSWORD,DATABASE);
@@ -27,9 +36,10 @@
     {
         global $MYSQLi;
 
-        // Set local variables from filtered post variables
+        // Sanitize all inputs
         $rosterName = filter_input(INPUT_POST, 'rosterName', FILTER_SANITIZE_STRING);
         $qSetName = filter_input(INPUT_POST, 'qSetName', FILTER_SANITIZE_STRING);
+        $timer = filter_input(INPUT_POST, 'timer', FILTER_SANITIZE_NUMBER_INT);
         $userID = $_SESSION['id'];
         // If rosterName is anonymous
         if($stmt = $MYSQLi->prepare('SELECT qSetID from questionsets WHERE qSetName = ?'))
@@ -81,6 +91,9 @@
         $_SESSION['qSetName'] = $qSetName;
         $_SESSION['qSetIDList'] = getQuestionIDList($qSetID);
         $_SESSION['rosterID'] = $rosterID;
+        $_SESSION['rosterName'] = $rosterName;
+        $_SESSION['timer'] = $timer;
+
     }
     header('Location: index.php');
 ?>

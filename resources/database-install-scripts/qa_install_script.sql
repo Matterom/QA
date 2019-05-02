@@ -39,7 +39,7 @@ CREATE TRIGGER hash_passwords
 BEFORE INSERT ON accounts
 FOR EACH ROW
 BEGIN
-    set new.password = md5(new.password);
+    set NEW.password = md5(NEW.password);
 END $$
 DELIMITER ;
 
@@ -86,8 +86,6 @@ Create TABLE IF NOT EXISTS rooms (
         REFERENCES rosters(rosterID),
     CONSTRAINT room_owner_fk FOREIGN KEY (ownerID)
         REFERENCES accounts(id),
-    CONSTRAINT room_qSet_fk FOREIGN KEY(qSetID)
-        REFERENCES questionsets(qSetID),
     CONSTRAINT unique_roomKey UNIQUE INDEX (roomKey)
 ) ;
 
@@ -111,7 +109,7 @@ BEGIN
             end if;
         end while;
     end if;
-    set new.start_time = NOW();
+    set NEW.start_time = NOW();
 END $$
 DELIMITER ;
 
@@ -137,7 +135,7 @@ BEFORE INSERT ON attendees
 FOR EACH ROW
 BEGIN   
     UPDATE rosters SET attendee_count = attendee_count + 1
-      WHERE rosters.rosterID = new.rosterID;
+      WHERE rosters.rosterID = NEW.rosterID;
 END $$
 DELIMITER ;
 
@@ -150,7 +148,7 @@ BEGIN
     UPDATE rosters set attendee_count = attendee_count - 1
         WHERE rosters.rosterID = OLD.rosterID;
 END $$
-DELIMETER ;
+DELIMITER ;
 
 /********** Attendance_Records **********
 Syntax: "INSERT IGNORE INTO attendancerecords (attendeeID, roomKey) VALUES()"
@@ -177,12 +175,12 @@ BEFORE INSERT ON attendancerecords
 FOR EACH ROW
 BEGIN
     if (SELECT isnull(rosterID) FROM rooms WHERE roomKey = NEW.roomKey) = 0 THEN
-        set new.attendance_date = current_date();
+        set NEW.attendance_date = current_date();
     elseif (SELECT COUNT(*) FROM rooms join attendees 
-        WHERE rooms.roomKey = new.roomKey
-        AND new.attendeeID = attendees.attendeeID
+        WHERE rooms.roomKey = NEW.roomKey
+        AND NEW.attendeeID = attendees.attendeeID
         AND rooms.rosterID = attendees.rosterID) > 0 THEN
-            set new.attendance_date = current_date();
+            set NEW.attendance_date = current_date();
     else
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Attendee does not have access to this room.';
@@ -256,16 +254,16 @@ CREATE TABLE quizattempts (
 ) ;
 
 DROP TRIGGER IF EXISTS trg_create_quiz_from_roomkey_bi;
-DELIMETER $$
+DELIMITER $$
 CREATE TRIGGER trg_create_quiz_from_roomkey_bi 
 BEFORE INSERT ON quizattempts
 FOR EACH ROW
 BEGIN
-    if (isnull(new.quizID)) THEN
-        SELECT qSetID INTO new.quizID FROM rooms WHERE roomID = new.roomID;
+    if (isnull(NEW.quizID)) THEN
+        SET NEW.quizID =(SELECT qSetID FROM rooms WHERE rooms.roomKey = NEW.roomKey);
     end if;
 END $$
-DELIMETER ;
+DELIMITER ;
 
 /* Doesn't work - connected to prior table called PublishedQuizzes
 DROP TRIGGER IF EXISTS tr_quiz_attempts_bi;
@@ -275,22 +273,22 @@ BEFORE INSERT ON quizattempts
 FOR EACH ROW
 BEGIN
     -- Set the quizID value
-    SET new.quizID = (SELECT quizID FROM PublishedQuizzes 
-        WHERE roomKey = new.roomKey);
+    SET NEW.quizID = (SELECT quizID FROM PublishedQuizzes 
+        WHERE roomKey = NEW.roomKey);
 
     -- INSERT NEW AttendanceRecord if one doesn't already exist
     if (SELECT COUNT(*) FROM attendancerecords 
             WHERE roomKey = NEW.roomKey AND 
                 attendeeID = NEW.attendeeID) = 0 THEN
         INSERT INTO attendancerecords (roomKey, attendeeID) 
-            VALUES (new.roomKey, new.attendeeID);
+            VALUES (NEW.roomKey, NEW.attendeeID);
     end if;
 
     -- Check if the room is associated with a roster. If it is, check if the attendee has access.
     if (SELECT isnull (rosterID) FROM rooms WHERE roomKey = NEW.roomKey) = 0 THEN
         if (SELECT COUNT(*) FROM rooms join attendees 
-            WHERE roomKey = new.roomKey
-            AND attendeeID = new.attendeeID
+            WHERE roomKey = NEW.roomKey
+            AND attendeeID = NEW.attendeeID
             AND rooms.rosterID = attendees.rosterID) = 0 THEN
                 SIGNAL SQLSTATE '45000'
                     SET MESSAGE_TEXT = 'Attendee does not have access to this room.';
@@ -314,6 +312,10 @@ CREATE TABLE IF NOT EXISTS answersubmissions (
         REFERENCES quizattempts (attemptID) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
+
+ALTER TABLE rooms 
+ADD CONSTRAINT room_qSet_fk FOREIGN KEY(qSetID)
+        REFERENCES questionsets(qSetID);
 /*
 -------------------------------
 -- STORED PROCEDURES SECTION --
