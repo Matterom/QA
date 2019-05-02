@@ -5,6 +5,7 @@
 <script>
     const mode = "Host";
 </script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <main>
     <div id="StartBox" onclick="startQuiz()">Start Quiz?</div>
     <div id="QuestionBox" class="hidden">
@@ -26,8 +27,8 @@
                 </th>
                 <th style="width=25%">
                     <div id="dirQBox">
-                        <button id="btnQPrev" class="QBtn">Previous Question</button>
-                        <button id="btnNext" class="QBtn">Next Question</button>
+                        <button id="btnQPrev" class="QBtn"><i class="fas fa-angle-double-left"></i></button>
+                        <button id="btnNext" class="QBtn"><i class="fas fa-angle-double-right"></i></button>
                     </div>
                 </th>
             </tr>
