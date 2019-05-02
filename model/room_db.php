@@ -9,6 +9,29 @@ if ($MYSQLi->connect_errno) {
     die('Failed To Connect, Terminating Script');
 }
 
+/*** Get QuestionID List ***
+ *  Purpose: Used to create a list of all IDs for a given quiz.
+ *  Parameters: $qSetID - ID of the Question Set
+ *  Returns: $questionList - An array of all question IDs for a given questionSet.
+ */
+function getQuestionIDList($qSetID) {
+    global $MYSQLi;
+    $qsetID = filter_var($qSetID, FILTER_SANITIZE_NUMBER_INT);
+    if($stmt = $MYSQLi->prepare('SELECT qID FROM questionsetpairings 
+        WHERE questionsetpairings.qSetID = ?'))
+    {
+        $stmt->bind_param('s', $qSetID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $questionList = $result->fetch_all(MYSQLI_NUM);
+        return $questionList;
+    }
+    else
+    {
+        return "";
+    }
+
+}
 /*** Get User Counts ***
  *  Purpose: Gets the count of connections to a room.
  *  Parameters: $roomID - The Primary Key associated with the room.
