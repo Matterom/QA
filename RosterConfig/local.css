@@ -1,12 +1,15 @@
 .roster_col {
     position:       relative;
     float:          left;
-    margin:         5px;
+    font-size:      20px;
+    margin:         15px;
     padding:        10px;
-    border-width:   5px;
-    border-radius:  25px;
-    width:          200px;
-    background:     peachpuff;
+    border-style:   solid;
+    border-color:   #3e8e41;
+    border-width:   3px;
+    border-radius:  15px;
+    width:          400px;
+    background:     white;
 }
 .roster_text {
     color:          #0078AD;
@@ -22,12 +25,15 @@ input {
 
 .attendee_col {
     float:          left;
-    margin:         5px;
+    font-size:      20px;
+    margin:         15px;
     padding:        10px;
-    border-width:   5px;
-    border-radius:  25px;
-    width:          200px;
-    background:     peachpuff;
+    border-style:   solid;
+    border-color:   #3e8e41;
+    border-width:   3px;
+    border-radius:  15px;
+    width:          400px;
+    background:     white;
 }
 .attendee_text {
     color:          #0078AD;
@@ -38,7 +44,22 @@ input {
     float:          left;
 }
 
+
+h2{
+    font-size: 35px;
+    text-align: center;
+    color: white;
+}
+
 h3 {
     color:          #0078AD;
     line-height:    1.5rem;
+}
+
+main {
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+
 }

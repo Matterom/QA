@@ -62,10 +62,12 @@
 
 
 <!-- MAIN PAGE SECTION -->
-<h2 style="color:white;margin-left:15px">Add or Modify Rosters</h2>
+<main>
+<h2> Add or Modify Rosters</h2>
+    <body class="center-wrapper">
     <div class="roster_col" >
         <span id="rcol">
-            <h3 style="color:#0078AD">Rosters</h3><br>
+            <h3>Rosters</h3><br>
             <?php foreach($roster_list as $roster) {
                 echo('<span class="roster_text" id="rost_');
                 echo($roster);
@@ -95,7 +97,8 @@
             <input type="submit" value="addAttendee" name="addAttendee">
         </form> 
     </div>
-
+    <body>
+<main>
 
 <!-- displayRoster() is used to populate the list of students who are members of the selected roster -->
 <script>
