@@ -85,9 +85,13 @@ main {
     box-shadow: 0 1px #666;
     transform: translateY(4px);
 }
-#AnswerGrid button:visited {
+
+/*
+#AnswerGrid button:hover {
     background-color: :#3e8e41;
-}
+    box-shadow: 0 1px #666;
+    transform: translateY(4px);
+*/
 
 @media(max-width:600px){
     #QuestionBox{
