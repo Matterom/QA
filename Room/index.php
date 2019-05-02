@@ -9,7 +9,7 @@
       <p id="QText" class="Question">Question</p>
       <p id="Time" class="Timer"><p>
   </div>
-  <div id="AnswerGrid">
+  <div id="AnswerGrid" class="GridButtons">
     <button onclick="updateQuiz('User', 1)" id="A1" class="RoomAnswer">Answer</button>
     <button onclick="updateQuiz('User', 2)" id="A2" class="RoomAnswer">Answer</button>
     <button onclick="updateQuiz('User', 3)" id="A3" class="RoomAnswer">Answer</button>

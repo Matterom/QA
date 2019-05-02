@@ -58,8 +58,8 @@
         var roomsElement = document.getElementById("dash_rooms_button");
         roomsElement.className = "dash_form_text";
         roomsElement.innerHTML = 
-            '<form action="../Room/" method="POST">' +
-            'Roster: <select name="select_roster">' +
+            '<form action="../Projector/roomCreation.php" method="POST">' +
+            'Roster: <select name="rosterName">' +
             '<?php echo($drop_options_string) ?>' +
             '</select><br>' +
             'Question Set: <select name="select_qset"><?php echo($drop_qSet_string) ?></select><br>' +

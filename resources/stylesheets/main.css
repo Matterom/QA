@@ -76,11 +76,13 @@ header #login{
 .box1{
     float: left;
     width: 25%;
+    background-color: white;
 }
 
 .box2{
     display: inline-block;
     width:25%;
+    background-color: white;
 }
 
 .box3 {
