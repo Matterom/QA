@@ -114,7 +114,7 @@ ul {
     width:100%;
     flex-flow:row wrap;
     align-content: center;
-    justify-content: space-around;
+    justify-content: space-evenly;
     height: 600px;
 }
 
@@ -262,4 +262,7 @@ img.LeftBracket, img.CentralContent{
      #logform{
      width:100%;
      }
+
+     .noselect {
+}
 }
