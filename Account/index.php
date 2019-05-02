@@ -31,6 +31,7 @@
         Reenter Password: <input type="text" name="new_pw_2"><br>
         </div>
         <br>
+        <br>
         <div class="submit_container">
         <input type="submit">
         </div>

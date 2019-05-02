@@ -9,7 +9,7 @@
     border-width:   3px;
     border-radius:  15px;
     width:          400px;
-    background:     white;
+    background:     #f5f4f4;
 }
 .roster_text {
     color:          #0078AD;
@@ -19,8 +19,22 @@
     margin:         0px 0px 0px 6%;
     display:        block;
 }
-input {
+input[type=submit]{
     margin:         0px 0px 0px 6%;
+    background-color:#0078ad;
+    min-width:100px;
+    height:25px;
+    font-size: 13px;
+    color:white;
+    font-weight:bold;
+}
+
+input[type=submit]:hover{
+    background-color: #018744;
+}
+
+input[type=submit]:visited{
+    background-color: #018744;
 }
 
 .attendee_col {
@@ -33,7 +47,7 @@ input {
     border-width:   3px;
     border-radius:  15px;
     width:          400px;
-    background:     white;
+    background:     #f5f4f4;
 }
 .attendee_text {
     color:          #0078AD;
@@ -60,6 +74,3 @@ main {
     font-family: 'Poppins', sans-serif;
 }
 
-body {
-
-}
