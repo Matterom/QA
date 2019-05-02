@@ -9,6 +9,7 @@
 
 const modal = document.getElementById('id01');
 let timeKeeper;
+let logloop;
 let time;
 let activeFolder;
 let activeSet;
@@ -46,10 +47,10 @@ function logicLoop(arg) {
             logloop = setInterval(updateQuiz(mode), 1000);
             break;
         case "clear":
-            clearInterval(timeKeeper)
+            clearInterval(logloop)
             time = 0
         case "pause":
-            clearInterval(timeKeeper)
+            clearInterval(logloop)
     }
 }
 
@@ -65,7 +66,7 @@ async function updateQuiz(mode, target) {
         // Check Quiz State, If Time Remaining < 0, Move to next Question, 
         const data = new FormData();
         data.append("QMrequest", true);
-        const response = await fetch("pushRoomSetup.php", {
+        const response = await fetch("roomLogic.php", {
             method: 'POST',
             body: data
         });
@@ -73,8 +74,6 @@ async function updateQuiz(mode, target) {
             //throw error
         } else {
             //set content to be loaded by room clients.
-
-
             const Q = JSON.parse(response);
             buildQuestion(Q, "Host");
         }
@@ -107,13 +106,62 @@ async function nextQuestion() {
 
 
 }
-//Enable Question
+//Enable Question skipping this for now
 function enableQuestion() {
 
 }
 //Build the Dom of a Question
-function buildQuestion(Q, Style) {
+function buildQuestion(Q) {
+    const QText = getElementById("QText");
+    const A1 = getElementById("A1");
+    const A2 = getElementById("A2");
+    const A3 = getElementById("A3");
+    const A4 = getElementById("A4");
+    const A5 = getElementById("A5");
 
+    QText.innerHTML = Q.text
+    
+    A1.innerHTML = Q.answer.one[1]
+    if (Q.answer.one[2].contains("hidden")) {
+        A1.classList.add("hidden")
+    }
+    else if (A1.classList.contains("hidden")) {
+        A1.classList.remove("hidden");
+    }
+    A2.innerHTML = Q.answer.two[1]
+    if (Q.answer.two[2].contains("hidden")) {
+        A2.classList.add("hidden")
+    }
+    else if (A2.classList.contains("hidden")) {
+        A2.classList.remove("hidden");
+    }
+    A3.innerHTML = Q.answer.three[1]
+    if (Q.answer.three[2].contains("hidden")) {
+        A3.classList.add("hidden")
+    }
+    else if (A3.classList.contains("hidden")) {
+        A3.classList.remove("hidden");
+    }
+    A4.innerHTML = Q.answer.four[1]
+    if (Q.answer.four[2].contains("hidden")) {
+        A4.classList.add("hidden")
+    }
+    else if (A4.classList.contains("hidden")) {
+        A4.classList.remove("hidden");
+    }
+    A5.innerHTML = Q.answer.five[1]
+    if (Q.answer.five[2].contains("hidden")) {
+        A5.classList.add("hidden")
+    }
+    else if (A5.classList.contains("hidden")) {
+        A5.classList.remove("hidden");
+    }
+    
+    // Just in case honestly
+    //if (style == "Host") {
+    //}
+    //else if (style == "User") {
+    //}
 }
 //----------------------------------//
 ////////////////////////////
@@ -158,7 +206,6 @@ function getQObjFromQID(qid) {
     Q.answer.three = ans3;
     Q.answer.four = ans4;
     Q.answer.five = ans5;
-    console.log(Q);
     return Q;
 }
 // Compresses an Element based on an ID
@@ -180,14 +227,12 @@ function compressQuestion(qid) {
 
     for (let i = 0; i < ansArr.length; i++) {
         if (ansArr[i].innerHTML == "") {
-            console.log(i);
             if (!((i + 1) == ansArr.length) && !ansArr[i + 1].classList.contains("hidden")) {
                 ansArr[i].innerHTML = ansArr[i + 1].innerHTML;
                 ansArr[i + 1].innerHTML = "";
                 chArr[i].firstChild.checked = chArr[i + 1].firstChild.checked
                 ansArr[i + 1].nextSibling.firstChild.checked = false;
             } else {
-                console.log("Hiding");
                 ansArr[i].innerHTML = reset;
                 ansArr[i].classList.add("hidden");
                 chArr[i].classList.add("hidden");
@@ -237,11 +282,9 @@ async function revealSetAssoc(setID) {
         for (let i = 0; i < qBoxes.length; ++i) {
             qid = qBoxes[i].id.split(':')[1];
             if (result.includes(qid)) {
-                console.log("Debug: Adding To Set")
                 revealChildClass("BH:" + qid, "addToSet", false);
                 revealChildClass("BH:" + qid, "subFromSet", true);
             } else {
-                console.log("Debug: Removing from Set")
                 revealChildClass("BH:" + qid, "addToSet", true);
                 revealChildClass("BH:" + qid, "subFromSet", false);
             }
@@ -258,11 +301,22 @@ async function revealSetAssoc(setID) {
 
 //Closes window, TODO replace with new code, used as test
 window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
+    if (event.target == modal) {
+        modal.style.display = "none";
     }
-    //DBLclick function to convert the folder name or description to a form
+}
+
+function expandA() {
+    const box = document.getElementById("A");
+    const a = document.getElementById("Aimg");
+    const hold = document.getElementById("LoginHolder");
+    box.style = "width:400px"
+    a.style = "display:none";
+    hold.style = "display:box";
+    
+}
+
+//DBLclick function to convert the folder name or description to a form
 function convertFolderToForm(select, type, secondary, userID, folderID) {
     select.setAttribute("style", "display:none")
     let input;
@@ -292,7 +346,6 @@ function convertQuestionToForm(select, type, folderID, questionID) {
 }
 //DBLclick function to convert the set name or description to a form
 function convertSetToForm(select, type, secondary, userID, folderID, setID) {
-    console.log("UserID:" + userID + " FolderID: " + folderID + " setID: " + setID)
     select.setAttribute("style", "display:none");
     let input;
     if (type == "QSetN") {
@@ -310,17 +363,20 @@ function convertSetToForm(select, type, secondary, userID, folderID, setID) {
     select.parentNode.insertBefore(input, select.nextSibling);
 }
 //Updates parent elements from input data, updates the sql to reflect new form data. carries on.
-async function updateFolderFromForm(origin, type, secondary, userID, folderID, clickoff) {
+async function updateFolderFromForm(origin, type, target, userID, folderID, clickoff) {
     if ((!event.shiftKey & event.keyCode == 13) || clickoff) {
         target = origin.previousSibling;
         //Replace content from input to dom
-        if (!origin.innerHTML == 0) {
+        if (!origin.innerHTML == 0 || !origin.value == 0) {
             origin.previousSibling.innerHTML = origin.value;
             //Send to server
+            fname = document.getElementById("FN:" + folderID).innerHTML;
+            fdesc = document.getElementById("FD:" + folderID).innerHTML;
             let data = new FormData();
-            data.append("folder", "true");
-            data.append(type, origin.value);
-            data.append("alternative", secondary);
+            data.append("folder", true);
+            data.append("update",true);
+            data.append("name", fname);
+            data.append("desc", fdesc);
             data.append("user", userID);
             data.append("folderID", folderID);
             // Fetch implementation
@@ -375,8 +431,6 @@ async function updateQuestionFromForm(origin, type, folderID, questionID, clicko
             console.log("something went wrong");
         } else {
             let result = await response.text();
-            console.log(result)
-
             //remove form and reenable node if successful
             if (!target.classList.contains("hidden")) {
                 target.setAttribute("style", "display:block");
@@ -392,17 +446,8 @@ async function updateSetFromForm(origin, type, secondary, userId, folderID, setI
         target = origin.previousSibling;
         val = origin.value.replace(/(\r\n|\n|\r)/gm, "");
         origin.previousSibling.innerHTML = val;
-        let name;
-        let desc;
-        console.log(type);
-        if (type == "QSetN") {
-            name = val
-            desc = secondary
-        } else {
-            name = secondary;
-            desc = val
-        }
-        console.log(setID)
+        let name = document.getElementById("QSN:" + setID).innerHTML;
+        let desc = document.getElementById("QSD:" + setID).innerHTML;
         let data = new FormData();
         data.append("set", true);
         data.append("update", true);
@@ -555,11 +600,13 @@ async function newFolder(user) {
         node.setAttribute("class", "folderIter dragable")
         node.setAttribute("onclick", "queryQuestionList(" + folderID + ", " + user + ")")
             //configure h1
-        h1.setAttribute("ondblclick", "convertFolderToForm(this, 'folderN', '" + tempFolDesc + "', " + user + ", " + folderID + ")");
+        h1.setAttribute("id", "FN:" + folderID);
+        h1.setAttribute("ondblclick", "convertFolderToForm(this, 'folderN', 'FD:" + folderID + "', " + user + ", " + folderID + ")");
         h1.setAttribute("class", "renamable")
         h1.innerText = tempFolName;
         //configure p
-        p.setAttribute("ondblclick", "convertFolderToForm(this, 'folderD', '" + tempFolName + "', " + user + ", " + folderID + ")");
+        p.setAttribute("id", "FD:" + folderID);
+        p.setAttribute("ondblclick", "convertFolderToForm(this, 'folderD', 'FN:" + folderID + "', " + user + ", " + folderID + ")");
         p.setAttribute("class", "renamable")
         p.innerText = tempFolDesc;
 
@@ -622,7 +669,6 @@ async function queryQuestionList(folder, user) {
             console.log("something went wrong");
         } else {
             let qList = await response.json();
-            console.log(qList)
                 //Itterate through the list
             for (let i = 0; i < qList.length; i++) {
                 let Q = JSON.parse(qList[i].question);
@@ -675,7 +721,6 @@ async function queryQuizSet(folder, user) {
 //Function to add a question to a set
 async function addToSet(qid, insert) {
     let target;
-    console.log("Qid: " + qid + " Insert: " + insert  );
     if (insert) {
         target = "add";
     } else {
@@ -694,7 +739,6 @@ async function addToSet(qid, insert) {
         console.log("Something went wrong")
     } else {
         result = await response.text();
-        console.log(result);
         revealSetAssoc(activeSet)
     }
 
@@ -746,11 +790,13 @@ function generateSEle(setID, folder, name, desc, user) {
     node.classList.add("folderIter")
     node.setAttribute("onclick", "revealSetAssoc(" + setID + ", " + folder + ")")
         //configure h1 select, type, secondary, userID, folderID, setID
-    h1.setAttribute("ondblclick", "convertSetToForm(this, 'QSetN', '" + desc + "', " + user + ", " + folder + ", " + setID + ")");
+    h1.setAttribute("id", "QSN:"+setID)
+    h1.setAttribute("ondblclick", "convertSetToForm(this, 'QSetN', '" + "QSD: +"+ setID + "', " + user + ", " + folder + ", " + setID + ")");
     h1.setAttribute("class", "renamable")
     h1.innerText = name;
     //configure p
-    p.setAttribute("ondblclick", "convertSetToForm(this, 'QSetD', '" + desc + "', " + user + ", " + folder + ", " + setID + ")");
+    p.setAttribute("id", "QSD:"+setID)
+    p.setAttribute("ondblclick", "convertSetToForm(this, 'QSetD', '" + "QSN:"+ setID + "', " + user + ", " + folder + ", " + setID + ")");
     p.setAttribute("class", "renamable")
     p.innerText = desc;
 
@@ -805,7 +851,6 @@ function adjustFormToRegister() {
 
     Array.prototype.forEach.call(logele, function(ele) {
         ele.setAttribute("style", "display:none");
-        console.log(ele);
     });
     Array.prototype.forEach.call(regele, function(ele) {
         ele.setAttribute("style", "display:block");

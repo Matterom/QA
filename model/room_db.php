@@ -97,5 +97,4 @@ function answerQuestion($attemptID, $questionID, $answerID) {
         return 0;
     }
 }
-
 ?>
