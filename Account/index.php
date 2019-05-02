@@ -34,7 +34,7 @@
         <br>
         <div class="submit_container">
         <br>
-        <input type="submit">
+        <input type="submit" value="Update Account">
         </div>
           
     </form>

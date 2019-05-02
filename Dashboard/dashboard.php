@@ -62,7 +62,9 @@
             'Roster: <select name="rosterName">' +
             '<?php echo($drop_options_string) ?>' +
             '</select><br>' +
-            'Question Set: <select name="qSetName"><?php echo($drop_qSet_string) ?></select><br><input type="submit" value="Start Room">' +
+            'Question Set: <select name="select_qset"><?php echo($drop_qSet_string) ?></select><br>' +
+            'Time Per Question in Seconds: <input type="number" name="timer" value="60" min="0" max="999" maxlength="3"><br>' + 
+            '<input type="submit" value="Start Room">' +
             '</form>';
         
         roomsElement.removeAttribute('onclick');
