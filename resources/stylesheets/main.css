@@ -123,28 +123,27 @@ ul {
     justify-content: space-evenly;
 }
 
-/*
+
 #Q {
     font-size:40px;
     border-radius: 25px;
     width: 250px;
     height: 250px;
 }
-*/
+
 
 .Answer {
     display: inline-flex;
     justify-content: center;
 }
 
-/*
+
 #A {
     font-size:40px;
     border-radius: 25px;
     width: 250px;
     height: 250px;
   }
-*/
 
   .Answer #A {
     font-size:larger;
@@ -153,6 +152,7 @@ ul {
 }
 
 /* Button Region */
+/*
 .grid {
     display: grid;
     grid-template-columns: 1auto 1auto 1auto;
@@ -168,6 +168,8 @@ ul {
   .RightBracket { grid-area: RightBracket; height: 100%;}
   
   .CentralContent { grid-area: CentralContent; height: 90%; }
+
+  */
 
 /* MainMenu Region */
 
