@@ -80,18 +80,12 @@ main {
     font-weight: bold;
 }
 
-#AnswerGrid button:active {
+#AnswerGrid button:active, #AnswerGrid button:hover {
     background-color: #3e8e41;
     box-shadow: 0 1px #666;
     transform: translateY(4px);
 }
 
-/*
-#AnswerGrid button:hover {
-    background-color: :#3e8e41;
-    box-shadow: 0 1px #666;
-    transform: translateY(4px);
-*/
 
 @media(max-width:600px){
     #QuestionBox{
