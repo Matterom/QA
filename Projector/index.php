@@ -23,7 +23,7 @@
             <th style="width=25%">
                 <div id="dirQBox">
                     <button id="btnQPrev" class="QBtn">Previous Question</button>
-                    <button id="btnNext" class="QBtn">Next Question</button>
+                    <button id="btnQNext" class="QBtn">Next Question</button>
                 </div>
             </th>
         </tr>
