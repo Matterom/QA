@@ -30,7 +30,7 @@
         <form method="post" style="hidden" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
             RoomKey:<br><input type="text" name="roomKey"><br>
             ID Key:<br><input type="text" name="attendeeID"><br>
-            <input type="submit"><br>
+            <input type="submit" class="raised" value="Enter Room"><br>
         </form>
         <?php if (isset($result) && $result!== "") echo $result ?>
         <?php

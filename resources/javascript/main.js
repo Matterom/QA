@@ -120,7 +120,10 @@ async function startQuiz() {
     quiz.classList.remove("hidden");
     // }
 }
+//User Side, Enables the Quiz when teach starts
+function enableQuestion() {
 
+}
 
 //Push User's room to new question
 async function nextQuestion() {
@@ -139,10 +142,6 @@ async function prevQuestion() {
 
 }
 
-//Enable Question skipping this for now
-function enableQuestion() {
-
-}
 //Build the Dom of a Question
 function buildQuestion(Q) {
     const QText = getElementById("QText");
