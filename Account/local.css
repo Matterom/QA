@@ -25,6 +25,14 @@ input[type=submit] {
     color:white;
     font-weight:bold;
 }
+input[type=submit]:hover{
+    background-color: #018744;
+}
+
+input[type=submit]:visited{
+    background-color: #018744;
+}
+
 .change_un_email {
     color:          black;
     position:       absolute;
