@@ -6,7 +6,7 @@
     const mode = "Host";
 </script>
 <main>
-    <div id="StartBox" onclick="startQuiz()" style="margin: 0 auto; width: 50%; height: 25%; background: green; display:flex;">Start Quiz?</div>
+    <div id="StartBox" onclick="startQuiz()">Start Quiz?</div>
     <div id="QuestionBox" class="hidden">
         <table style="width:100%">
             <tr>

@@ -15,6 +15,20 @@ main {
     background-color: #E4E4E4;
 }
 
+button {
+    background-color:#0078ad;
+    min-width:100px;
+    height:25px;
+    font-size: 13px;
+    color:white;
+    font-weight:bold;
+}
+
+button:hover{
+    background-color:#018744;
+} 
+
+}
 #QuestionBox {
     max-width: 50%;
     min-height: 75%;
@@ -128,7 +142,9 @@ main {
     right: 25%;
     width: 50%;
     height: 25%;
-    background: green;
+    background-color: white;
+    border-style: solid;
+    border-color: #3e8e41;
     text-align: center;
     display: flex;
 }
