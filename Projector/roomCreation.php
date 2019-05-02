@@ -41,20 +41,20 @@
         $qSetName = filter_input(INPUT_POST, 'qSetName', FILTER_SANITIZE_STRING);
         $timer = filter_input(INPUT_POST, 'timer', FILTER_SANITIZE_NUMBER_INT);
         $userID = $_SESSION['id'];
-        // If rosterName is anonymous
         if($stmt = $MYSQLi->prepare('SELECT qSetID from questionsets WHERE qSetName = ?'))
         {
             $stmt->bind_param('s', $qSetName);
             $stmt->execute();
             $qSetID = $stmt->get_result()->fetch_assoc()['qSetID'];
-            $_SESSION['qSetID'] = $qSetID;
         }
+
+        // If rosterName is anonymous
         if ($rosterName == "Anonymous")
         {
-            if($stmt = $MYSQLi->prepare('INSERT INTO rooms (ownerID, qSetID, rosterID, roomKey)
-                VALUES (?, ?, NULL, NULL)'))
+            if($stmt = $MYSQLi->prepare('INSERT INTO rooms (ownerID, qSetID, timer, rosterID, roomKey)
+                VALUES (?, ?, ?, NULL, NULL)'))
             {
-                $stmt->bind_param('ss', $userID, $qSetID);
+                $stmt->bind_param('sss', $userID, $qSetID, $timer);
                 $stmt->execute();
                 $roomID = $MYSQLi->insert_id;
             }
@@ -69,15 +69,15 @@
                 
             }
 
-            if($stmt = $MYSQLi->prepare('INSERT INTO rooms (ownerID, qSetID, rosterID, roomKey)
-                VALUES (?, ?, ?, NULL)'))
+            if($stmt = $MYSQLi->prepare('INSERT INTO rooms (ownerID, qSetID, timer, rosterID, roomKey)
+                VALUES (?, ?, ?, ?, NULL)'))
             {
-                $stmt->bind_param('sss', $userID, $qSetID, $rosterID);
+                $stmt->bind_param('ssss', $userID, $qSetID, $timer, $rosterID);
                 $stmt->execute();
                 $roomID = $MYSQLi->insert_id;
             }
         }
-        if ($stmt->prepare('SELECT roomKey FROM rooms WHERE roomID = ?'))
+        if ($stmt = $MYSQLi->prepare('SELECT roomKey FROM rooms WHERE roomID = ?'))
         {
             $stmt->bind_param('s', $roomID);
             $stmt->execute();

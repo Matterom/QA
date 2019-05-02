@@ -81,6 +81,7 @@ Create TABLE IF NOT EXISTS rooms (
     start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     active_connections int DEFAULT 0,
     current_questionID int(11) DEFAULT NULL,
+    timer int(3) DEFAULT 60,
     PRIMARY KEY (roomID),
     CONSTRAINT rooms_roster_fk FOREIGN KEY (rosterID)
         REFERENCES rosters(rosterID),
