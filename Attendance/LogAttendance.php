@@ -28,8 +28,8 @@
     else {
         ?>
         <form method="post" style="hidden" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-            <br><br>
-            RoomKey:<input type="text" name="roomKey"><br>
+            <br>
+            RoomKey:<br><input type="text" name="roomKey"><br>
             ID Key:<br><input type="text" name="attendeeID"><br>
             <input type="submit"><br>
         </form>

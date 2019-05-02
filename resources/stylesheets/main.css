@@ -171,6 +171,14 @@ ul {
 
   */
 
+img.LeftBracket, img.CentralContent{
+    width:100% ;
+    height:100% ;
+    margin: 0 auto;
+    justify-content: center;
+    
+}
+
 /* MainMenu Region */
 
 .noselect {
