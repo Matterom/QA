@@ -11,13 +11,14 @@
             printf("Connection Failed: \n", $MYSQLi->connect_error);
             die('Failed To Connect, Terminating Script');
         }
-        if ($statement = $MYSQLi->prepare('SELECT rosterName from rosters where rosterHostID = ? ORDER BY rosterName')){
+        if ($statement = $MYSQLi->prepare('SELECT rosterName from rosters where rosterHostID = ? ORDER BY rosterName'))
+        {
             $statement->bind_param('s', $user_id);
             $statement->execute();
             $result = $statement->get_result();
         }
             
-            $drop_options_string = "<option>Anonymous</option>";
+            $drop_options_string = "<option>Select a Room</option><option>Anonymous</option>";
             while ($row = $result->fetch_array(MYSQLI_NUM)) {
                 foreach($row as $r){            
                     $drop_options_string .= '<option>';
@@ -28,6 +29,29 @@
 
             $result->free();
             $statement->close();
+            
+            $drop_qSet_string = "<option>Select a Set</option>";
+            if($qSetQuery = $MYSQLi->prepare('SELECT qSetID, qSetName FROM questionsets JOIN questionfolders
+                                                WHERE questionsets.folderID = questionfolders.folderID
+                                                AND ownerID = ? ORDER BY qSetName'))
+            {
+                $qSetQuery->bind_param('s', $user_id);
+                $qSetQuery->execute();
+                $qSetResults = $qSetQuery->get_result();
+                /*$qSetRow = $qSetResults->fetch_assoc();
+                $drop_qSet_string .= $qSetRow['qSetName'];
+                $drop_qSet_string .= $qSetRow['qSetID'];
+                */
+                while($qSetRow = $qSetResults->fetch_assoc())
+                {
+                    $drop_qSet_string .= '<option id="';
+                    $drop_qSet_string .= $qSetRow['qSetID'];
+                    $drop_qSet_string .= '">'.$qSetRow['qSetName'];
+                    $drop_qSet_string .= '</option>';
+                }
+            }
+
+            
             $MYSQLi->close();
     ?>
         
@@ -35,9 +59,10 @@
         roomsElement.className = "dash_form_text";
         roomsElement.innerHTML = 
             '<form action="../Room/" method="POST">' +
-            'Roster: <select name="select_roster"><option value="choose one">Select a Roster: </option>' +
+            'Roster: <select name="select_roster">' +
             '<?php echo($drop_options_string) ?>' +
-            '</select><br><input type="submit" value="Start Room">' +
+            '</select><br>' +
+            'Question Set: <select name="select_qset"><?php echo($drop_qSet_string) ?></select><br><input type="submit" value="Start Room">' +
             '</form>';
         
         roomsElement.removeAttribute('onclick');
