@@ -1,0 +1,130 @@
+/* TODO Device Styling */
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    background-color: #E4E4E4;
+}
+
+main {
+    height: 100%;
+    overflow: visible;
+    background-color: #E4E4E4;
+}
+
+#QuestionBox {
+    max-width: 50%;
+    min-height: 75%;
+    margin-top: 5%;
+    margin-left: 25%;
+    margin-right: 25%;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto;
+    overflow: hidden;
+    justify-items: center;
+    row-gap: 30px;
+
+}
+
+#QuestionHeader {
+    width: 95%;
+    height: 100%;
+    border: none;
+    border-radius: 15px;
+    background: white;
+    display: grid;
+    justify-items: center;
+    border-style:solid;
+    border-color: #3e8e41;
+}
+
+#QuestionHeader p {
+    border: none;
+    border-radius: 15px;
+    background: white;
+    padding-left:5px;
+    padding-right:5px;
+}
+
+#AnswerGrid {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 100%;
+    grid-template-rows: auto;
+    overflow: hidden;
+    justify-items: center;
+    row-gap: 15px;
+}
+
+#AnswerGrid button {
+    background-color: #0078ad;
+    min-width: 50px;
+    max-height: 60%;
+    height: 60%;
+    width: 80%;
+    min-height: 30px;
+    padding: -10px;
+    margin: 20px;
+    border: none;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 3px #999;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#AnswerGrid button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 1px #666;
+    transform: translateY(4px);
+}
+#AnswerGrid button:visited {
+    background-color: :#3e8e41;
+}
+
+@media(max-width:600px){
+    #QuestionBox{
+        min-width: 97%;
+        margin: 0;
+        padding-left: 9px;
+        padding-right: 3px;
+    }
+
+    #QuestionHeader{
+        width: 100%;
+    }
+
+    #AnswerGrid {
+        width: 100%;
+    }
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+}
+
+
+
+
+
+
+
+
+
