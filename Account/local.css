@@ -5,17 +5,17 @@
     border-style:   solid;
     border-color:   #3e8e41;
     width:          600px;
+    height:         270px;
     margin:         20px 0px 0px 0px;
     display:        block;
     float:          left;
-    height:         240px;
     clear:          both;
 }
 input[type=text] {
     width:      100%;
     clear:      right;
 }
-input [type=submit] {
+input[type=submit] {
     align-self:     center;
     width:          40%;
     background-color:#0078ad;
