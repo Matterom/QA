@@ -7,7 +7,7 @@
     <div id="QuestionBox">
     <table style="width:100%">
         <tr>
-            <th style="width=25%">
+            <th style="width:25%">
                 <div id="popBox">
                     <p>Students Present</p>
                     <p id="popCurrent" class="pop"></p>
@@ -20,10 +20,10 @@
                     <p id="Time" class="Timer"></p>
                 </div>
             </th>
-            <th style="width=25%">
+            <th style="width:25%">
                 <div id="dirQBox">
                     <button id="btnQPrev" class="QBtn">Previous Question</button>
-                    <button id="btnNext" class="QBtn">Next Question</button>
+                    <button id="btnQNext" class="QBtn">Next Question</button>
                 </div>
             </th>
         </tr>

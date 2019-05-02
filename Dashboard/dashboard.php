@@ -68,17 +68,18 @@
         roomsElement.removeAttribute('onclick');
     }
     </script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
     <div class="dash_button">
-        <a href="../Account"><span class="dash_button_text" id="dash_accounts_button" >Configure Account</span></a>
+        <a href="../Account"><span class="dash_button_text" id="dash_accounts_button" ><i class="fas fa-user-cog"></i> Configure Account</span></a>
     </div>
     <div class="dash_button">
-        <a href="../RosterConfig"><span class="dash_button_text">Configure Rosters</span></a>
+        <a href="../RosterConfig"><span class="dash_button_text"><i class="fas fa-address-book"></i> Configure Rosters</span></a>
     </div>
     <div class="dash_button">
-        <span class="dash_button_text" id="dash_rooms_button" onclick="collectRoomInfo()">Start Classroom</span>
+        <span class="dash_button_text" id="dash_rooms_button" onclick="collectRoomInfo()"><i class="fas fa-school"></i> Start Classroom</span>
     </div>
     <div class="dash_button">
-        <a href="../RoomSetup"><span class="dash_button_text">Quiz Setup</span></a>
+        <a href="../RoomSetup"><span class="dash_button_text"><i class="fas fa-folder-plus"></i> Quiz Setup</span></a>
     </div>
 </main>
