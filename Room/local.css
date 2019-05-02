@@ -60,7 +60,7 @@ main {
     row-gap: 15px;
 }
 
-#AnswerGrid button {
+.GridButtons button {
     background-color: #0078ad;
     min-width: 50px;
     max-height: 60%;
@@ -80,7 +80,7 @@ main {
     font-weight: bold;
 }
 
-#AnswerGrid button:active, #AnswerGrid button:hover {
+.GridButtons button:active, .GridButtons button:hover {
     background-color: #3e8e41;
     box-shadow: 0 1px #666;
     transform: translateY(4px);
