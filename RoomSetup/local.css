@@ -231,12 +231,15 @@ main {
     height:25px;
     font-size: 13px;
     color:white;
-    font-weight:bold;
-    float: right;
+    font-weight:bold
 
     
 }
 
+button.trashbtn.btnqa{
+    float: right;
+    margin: 0 auto;
+}
 .newsetbtn {
 
 }
