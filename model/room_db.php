@@ -113,8 +113,8 @@ function answerQuestion($attemptID, $questionID, $answerID) {
     global $MYSQLi;
     $attemptID = filter_var($attemptID, FILTER_SANITIZE_NUMBER_INT);
     $questionID = filter_var($questionID, FILTER_SANITIZE_NUMBER_INT);
-    if($stmt = $MYSQLi->prepare('INSERT INTO answersubmissions (quizAttemptID, questionID, answer_choice)
-                                    VALUES (?, ?, ?)'))
+    if($stmt = $MYSQLi->prepare('INSERT INTO answersubmissions (quizAttemptID, questionID, answer_choice) VALUES (?, ?, ?) 
+                                    ON DUPLICATE KEY UPDATE quizAttemptID = ?, questionID = ?, answer_choice = ?'))
     {
         $stmt->bind_param('sss', $attemptID, $questionID, $answerID);
         $result = $stmt->execute();
