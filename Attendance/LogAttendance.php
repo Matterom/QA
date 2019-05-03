@@ -2,10 +2,10 @@
 
     $result = "";
     #TODO Cleanup the error code 
-    if($_SERVER["REQUEST_METHOD"] == "POST") {
-        include_once '../model/database.php';
+    if($_SERVER["REQUEST_METHOD"] == "POST" && array_key_exists('markAttendance',$_POST)) {
+        include_once './model/database.php';
         $MYSQLi = new mysqli(HOST,USER,PASSWORD,DATABASE);
-        if($statement = $MYSQLi->prepare('INSERT IGNORE INTO AttendanceRecords Values (?, ?)')) {
+        if($statement = $MYSQLi->prepare('INSERT IGNORE INTO AttendanceRecords(AttendeeID, RoomKey) Values (?, ?)')) {
             $attendeeID = filter_var($_POST['attendeeID'], FILTER_SANITIZE_NUMBER_INT);
             $roomKey = filter_var($_POST['roomKey'], FILTER_SANITIZE_STRING);
             $statement->bind_param('ds', $attendeeID, $roomKey);
@@ -13,36 +13,25 @@
                 if(substr($statement->error,0,9)=='Duplicate') {
                     $result = "Successfully logged in";
                 }
-                else if ($statement->affected_rows >0) {
-                    $result = "Successfully logged in.";
+                else
+                {
+                    $result = '<font color="red">Incorrect RoomKey/Password<br>Please Try Again!</font>';
                 }
             }
-            else {
-                printf("<h2>Login Error: Please re-enter your information.</h2>");
+            else
+            {
+                $result = "Successfully logged in.";
             }
-            $statement->close();
+        }   
+        else
+        {
+            $result = "Please Try Again";
         }
+    }?>
 
-        
-    }
-    else {
-        ?>
-        <form method="post" style="hidden" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-            RoomKey:<br><input type="text" name="roomKey"><br>
-            ID Key:<br><input type="text" name="attendeeID"><br>
-            <input type="submit" class="raised" value="Enter Room"><br>
-        </form>
-        <?php if (isset($result) && $result!== "") echo $result ?>
-        <?php
-    }
-    
-
-    function test_input($data) {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
-    }
-
-
-?>
+    <form method="post" style="hidden" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+        RoomKey:<br><input type="text" name="roomKey"><br>
+        ID Key:<br><input type="text" name="attendeeID"><br>
+        <input type="submit" name = "markAttendance" class="raised" value="Enter Room"><br>
+    </form><br>
+    <?php echo $result;?>
