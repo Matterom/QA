@@ -15,6 +15,7 @@
             $questionID = filter_input(INPUT_POST, "qid");
             $answer = filter_input(INPUT_POST, "aid");
             $result = answerQuestion($attemptID, $questionID, $answer);
+            echo $result;
         }
     }
     elseif ($func = filter_input(INPUT_POST, "Room")) {

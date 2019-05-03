@@ -1,4 +1,20 @@
 /* TODO Device Styling */
+.grid-container {
+  display: grid;
+  grid-template-columns: 0.8fr 1.4fr 0.8fr;
+  grid-template-rows: 0.6fr 1.4fr;
+  grid-template-areas: "popBox QuestionHeader dirQBox" "RoomKeyBox AnswerGrid .";
+}
+
+.popBox { grid-area: popBox; }
+
+.QuestionHeader { grid-area: QuestionHeader; }
+
+.dirQBox { grid-area: dirQBox; }
+
+.AnswerGrid { grid-area: AnswerGrid; }
+
+.RoomKeyBox { grid-area: RoomKeyBox; }
 
 html {
     height: 100%;
@@ -30,7 +46,7 @@ button:hover{
 
 }
 #QuestionBox {
-    max-width: 50%;
+    max-width: 60%;
     min-height: 75%;
     margin-top: 5%;
     margin-left: 25%;
@@ -44,7 +60,7 @@ button:hover{
 }
 
 #QuestionHeader {
-    width: 95%;
+    width: 50%;
     height: 100%;
     border: none;
     border-radius: 15px;
@@ -65,7 +81,7 @@ button:hover{
 
 #AnswerGrid {
     display: grid;
-    width: 100%;
+    width: 50%;
     grid-template-columns: 100%;
     grid-template-rows: auto;
     overflow: hidden;

@@ -249,7 +249,7 @@ CREATE TABLE quizattempts (
     PRIMARY KEY (attemptID),
     CONSTRAINT unique_quiz UNIQUE(quizID, attendeeID),
     CONSTRAINT quizattempt_quizID_fk FOREIGN KEY (quizID)
-        REFERENCES questionsetpairings (qID) ON DELETE CASCADE ON UPDATE CASCADE,
+        REFERENCES rooms (qSetID) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT quizattempt_roomkey_fk FOREIGN KEY (roomKey) 
         REFERENCES rooms (roomKey)
 ) ;
@@ -263,6 +263,8 @@ BEGIN
     if (isnull(NEW.quizID)) THEN
         SET NEW.quizID =(SELECT qSetID FROM rooms WHERE rooms.roomKey = NEW.roomKey);
     end if;
+    INSERT IGNORE INTO attendancerecords (attendeeID, roomKey, attendance_date)
+        VALUES (NEW.attendeeID, NEW.roomKey, NULL);
 END $$
 DELIMITER ;
 

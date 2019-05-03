@@ -2,10 +2,13 @@
 <main>
 	<div class="sections" >
 		<div class="Quiz">
-			<button id="Q" class="grid"><img class=LeftBracket src="resources/graphics/qbtn.png"></button>
+			<button id="Q" class="grid" onclick="expandQ()"><img class=LeftBracket src="resources/graphics/qbtn.png" id="Qimg">
+				<div id="RoomLoginHolder" class="LeftBracket" style="display: none;"><?php include 'Room/joinRoom.php' ?></div>
+			</button>
 		</div>
 		<div class="Answer">
-			<button id="A" class="grid" onclick="expandA()"><img class="CentralContent" src="resources/graphics/abtn.png" id="Aimg"><div id="LoginHolder" class="CentralContent" style="display: none;"><?php include 'Attendance/LogAttendance.php' ?></div></div></button>
+			<button id="A" class="grid" onclick="expandA()"><img class="CentralContent" src="resources/graphics/abtn.png" id="Aimg">
+				<div id="LoginHolder" class="CentralContent" style="display: none;"><?php include 'Attendance/LogAttendance.php' ?></div></button>
 		</div>
 	</div>
 
