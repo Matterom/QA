@@ -221,10 +221,6 @@ main {
     grid-area: btnholder;
 }
 
-.btnholder button {
-    float: right;
-}
-
 .btnqa {
     background-color:#0078ad;
     width:fit-content;
@@ -236,10 +232,6 @@ main {
     
 }
 
-button.trashbtn.btnqa{
-    float: right;
-    margin: 0 auto;
-}
 .newsetbtn {
 
 }
