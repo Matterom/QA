@@ -67,7 +67,9 @@
     <body class="center-wrapper">
     <div class="roster_col" >
         <span id="rcol">
-            <h3>Rosters</h3><br>
+            <h3><u>Rosters</u></h3>
+            <p style="font-size: 13px"><b>To create a roster:</b>Enter the name of the roster and click 'addRoster'.
+                <b>To see attendees in roster:</b> Click on roster name. Enrolled attendees will appear.</p>
             <?php foreach($roster_list as $roster) {
                 echo('<span class="roster_text" id="rost_');
                 echo($roster);
@@ -83,7 +85,11 @@
         </span>
     </div>
     <div class="attendee_col">
-        <h3>Attendee List</h3><br>
+        <h3><u>Attendee List</h3></u>
+        <p style="font-size: 13px"><b>To add an attendee to roster:</b>
+            1)Click on roster name.
+            2)Type in students ID and press 'addAttendee'.
+            3)Repeat for every student.</p>
         <?php foreach($roster_array as $key => $value) {
             echo('<span style="display:none" class="attendee_text" id="att_');
             echo($key);
