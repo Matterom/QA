@@ -87,7 +87,8 @@ Create TABLE IF NOT EXISTS rooms (
         REFERENCES rosters(rosterID),
     CONSTRAINT room_owner_fk FOREIGN KEY (ownerID)
         REFERENCES accounts(id),
-    CONSTRAINT unique_roomKey UNIQUE INDEX (roomKey)
+    CONSTRAINT unique_roomKey UNIQUE INDEX (roomKey),
+    CONSTRAINT unique_qSetID UNIQUE INDEX (qSetID)
 ) ;
 
 CREATE INDEX idx_roomKeys on rooms(roomKey);
