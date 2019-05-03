@@ -25,8 +25,8 @@
             	<p id="Time" class="Timer"></p>
         	</div>
         	<div id="dirQBox" class="dirQBox">
-				<button id="btnQPrev" class="QBtn" onclick="nextQuestion(True)"><i class="fas fa-angle-double-left"></i></button>
-            	<button id="btnNext" class="QBtn" onclick="nextQuestion(False)"><i class="fas fa-angle-double-right"></i></button>
+				<button id="btnQPrev" class="QBtn" onclick="nextQuestion(true)"><i class="fas fa-angle-double-left"></i></button>
+            	<button id="btnNext" class="QBtn" onclick="nextQuestion(false)"><i class="fas fa-angle-double-right"></i></button>
         	</div>
         	<div id="RoomKeyBox" class="RoomKeyBox"><?php echo $_SESSION['roomKey'] ?></div>
         	<div id="AnswerGrid" class="AnswerGrid">
