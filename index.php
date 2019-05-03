@@ -45,7 +45,7 @@
 			<h4><u>Increase Participation</u></h4>
 			<ul>
 				<li>Students become more involved</li>
-				<li>Encourages dialoge among students</li>
+				<li>Encourages dialog among students</li>
 				<li>Receive instant lesson feedback </li>
 			</ul>
 		</div>
