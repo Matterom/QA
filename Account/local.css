@@ -1,15 +1,19 @@
 .updateContainer{
-    position:       relative;
+    position:       absolute;
+    margin:         auto;
+    top:            0;
+    right:          0;
+    bottom:         0;
+    left:           0;
+    width:          600px;
+    height:         270px;
     background:     #f5f4f4;
     border-radius:  15px;
     border-style:   solid;
     border-color:   #3e8e41;
-    width:          600px;
-    height:         270px;
-    margin:         20px 0px 0px 0px;
     display:        block;
-    float:          left;
     clear:          both;
+
 }
 input[type=text] {
     width:      100%;
