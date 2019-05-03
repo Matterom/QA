@@ -37,13 +37,13 @@
 
 		<div class="box3">
 			<div class="picture">
-			<img src="resources/graphics/report.png" width="100" height="100">
+			<img src="resources/graphics/participation.png" width="100" height="100">
 			</div>
-			<h4><u>Class Reports</u></h4>
+			<h4><u>Increase Participation</u></h4>
 			<ul>
-				<li>Generate Attendance Reports</li>
-				<li>Generate Quiz Reports</li>
-				<li>Track both individual and class progress</li>
+				<li>Students become more involved</li>
+				<li>Encourages dialoge among students</li>
+				<li>Receive instant lesson feedback </li>
 			</ul>
 		</div>
 
