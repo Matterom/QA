@@ -356,6 +356,16 @@ window.onclick = function(event) {
     }
 }
 
+function expandQ() {
+    const box = document.getElementById("Q");
+    const q = document.getElementById("Qimg");
+    const hold = document.getElementById("RoomLoginHolder");
+    box.style = "width:400px"
+    q.style = "display:none";
+    hold.style = "display:box";
+
+}
+
 function expandA() {
     const box = document.getElementById("A");
     const a = document.getElementById("Aimg");

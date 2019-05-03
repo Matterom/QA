@@ -66,8 +66,8 @@
                 $stmt->bind_param('s', $rosterName);
                 $stmt->execute();
                 $result = $stmt->get_result()->fetch_assoc();
-                $_SESSION['rosterID'] = $result['rosterID'];
-                $_SESSION['attendeeCountM'] = $result['attendee_count'];
+                $rosterID = $result['rosterID'];
+                $_SESSION['attendeeCount'] = $result['attendee_count'];
             }
             if($stmt = $MYSQLi->prepare('INSERT INTO rooms (ownerID, qSetID, timer, rosterID, roomKey)
                 VALUES (?, ?, ?, ?, NULL)'))
@@ -96,6 +96,7 @@
         $_SESSION['qSetID'] = $qSetID;
         $_SESSION['qSetName'] = $qSetName;
         $_SESSION['qSetIDList'] = getQuestionIDList($qSetID);
+        $_SESSION['rosterID'] = $rosterID;
         $_SESSION['rosterName'] = $rosterName;
         $_SESSION['timer'] = $timer;
 
