@@ -20,7 +20,7 @@
             	<p class="pop">---</p>
             	<p id="popExpected" class="pop"><?php echo $_SESSION['attendeeCountM'];?></p>
         	</div>
-        	<div id="QuestionHeader" class="QuestionHeader>
+        	<div id="QuestionHeader" class="QuestionHeader">
             	<p id="QText" class="Question">Question</p>
             	<p id="Time" class="Timer"></p>
         	</div>

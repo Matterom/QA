@@ -44,10 +44,10 @@ function timer(arg) {
     }
 }
 
-function logicLoop(arg) {
+async function logicLoop(arg) {
     switch (arg) {
         case "start":
-            logloop = setInterval(updateQuiz(mode), 1000);
+            logloop = setTimeout(update, 1000);
             break;
         case "clear":
             clearInterval(logloop)
@@ -56,7 +56,6 @@ function logicLoop(arg) {
         case "pause":
             clearInterval(logloop)
             break;
-
     }
 }
 
@@ -66,10 +65,17 @@ function updateClock(mode) {
     time += mode * 1;
 }
 
+function update() {
+    updateQuiz(mode);
+    console.log("Ho");
+    logloop = setTimeout(update, 1000);
+}
+
 async function updateQuiz(mode) {
     const room = await getRoomInfo()
     console.log(room);
-    console.log(mode);
+
+
     //Note, in the future, check against website or php variable to prevent errors
     if (mode == "Host") {
         // Check Quiz State, If Time Remaining < 0, Move to next Question
@@ -84,11 +90,11 @@ async function updateQuiz(mode) {
             //If Question is not current question
             submitAnswer();
             currentQuestion = room.currentQuestion
-            let Q = getQuestion(currentQuestion);
+            let Q = await getQuestion(currentQuestion);
             buildQuestion(Q);
         } else if (!currentQuestion && room.currentQuestion) {
             currentQuestion = room.currentQuestion
-            let Q = getQuestion(currentQuestion);
+            let Q = await getQuestion(currentQuestion);
             buildQuestion(Q);
         } else {
             // Run down timer;
@@ -96,8 +102,9 @@ async function updateQuiz(mode) {
     } else {
         //nothinh happens
     }
-
+    console.log("Hi")
 }
+
 //Start Quiz
 async function startQuiz() {
     // Get first question and update server
@@ -126,7 +133,7 @@ async function getRoomInfo() {
     if (roomID) {
         const data = new FormData()
         data.append("Room", true);
-        data.append("get", true);
+        data.append("getRoom", true);
         data.append("roomID", roomID);
         const response = await fetch("roomLogic.php", {
             method: 'POST',
@@ -237,7 +244,6 @@ function buildQuestion(Q) {
     QText.innerHTML = Q.text
 
     A1.innerHTML = Q.answer.one[1]
-    console.log(Q.answer.one[2].includes(""));
     if (Q.answer.one[2].includes("hidden")) {
         A1.classList.add("hidden")
     } else if (A1.classList.contains("hidden")) {
