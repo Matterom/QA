@@ -86,14 +86,14 @@
         }
     }
     //Returns Single Question Data
-    function getQuestion($folder, $questionID) {
+    function getQuestion($questionID) {
         global $MYSQLi;
-        if ($statement = $MYSQLi->prepare('SELECT question FROM questiontable WHERE folderID = ? AND questionID = ?')) {
-            $statement->bind_param('ss', $folder, $questionID);
+        if ($statement = $MYSQLi->prepare('SELECT question FROM questiontable WHERE questionID = ?')) {
+            $statement->bind_param('s', $questionID);
             $statement->execute();
             $return = $statement->get_result();
             $statement->close();
-            return $return->fetch();
+            return json_encode($return->fetch_assoc());
         }
         else {
             //Throw Error

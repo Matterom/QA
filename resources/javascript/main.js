@@ -209,7 +209,7 @@ async function nextQuestion(back) {
 async function getQuestion(QID) {
     const data = new FormData()
     data.append("Room", true);
-    data.append("GetQuestion", true);
+    data.append("getQuest", true);
     data.append("qID", QID);
     //Pull the question object and refresh the relevant DOM
     const response = await fetch("roomLogic.php", {
@@ -219,9 +219,8 @@ async function getQuestion(QID) {
     if (!response.ok) {
         console.log("Respone from server lost")
     } else {
-        let result = await response.text();
-        console.log(QList);
-        return JSON.parse(result);
+        let result = await response.json();
+        return JSON.parse(result.question);
     }
 }
 
@@ -238,31 +237,32 @@ function buildQuestion(Q) {
     QText.innerHTML = Q.text
 
     A1.innerHTML = Q.answer.one[1]
-    if (Q.answer.one[2].contains("hidden")) {
+    console.log(Q.answer.one[2].includes(""));
+    if (Q.answer.one[2].includes("hidden")) {
         A1.classList.add("hidden")
     } else if (A1.classList.contains("hidden")) {
         A1.classList.remove("hidden");
     }
     A2.innerHTML = Q.answer.two[1]
-    if (Q.answer.two[2].contains("hidden")) {
+    if (Q.answer.two[2].includes("hidden")) {
         A2.classList.add("hidden")
     } else if (A2.classList.contains("hidden")) {
         A2.classList.remove("hidden");
     }
     A3.innerHTML = Q.answer.three[1]
-    if (Q.answer.three[2].contains("hidden")) {
+    if (Q.answer.three[2].includes("hidden")) {
         A3.classList.add("hidden")
     } else if (A3.classList.contains("hidden")) {
         A3.classList.remove("hidden");
     }
     A4.innerHTML = Q.answer.four[1]
-    if (Q.answer.four[2].contains("hidden")) {
+    if (Q.answer.four[2].includes("hidden")) {
         A4.classList.add("hidden")
     } else if (A4.classList.contains("hidden")) {
         A4.classList.remove("hidden");
     }
     A5.innerHTML = Q.answer.five[1]
-    if (Q.answer.five[2].contains("hidden")) {
+    if (Q.answer.five[2].includes("hidden")) {
         A5.classList.add("hidden")
     } else if (A5.classList.contains("hidden")) {
         A5.classList.remove("hidden");

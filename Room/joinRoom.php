@@ -31,6 +31,6 @@
         <form action="Room/joinRoom.php" method="POST">
         RoomKey: <input type="text" name="joinroom_roomKey" value=""><br>
         ID Key: <input type="text" name="joinroom_idKey" value=""><br>
-        <input type="submit" name="joinRoom" value="Join Quiz">
+        <input type="submit" name="joinRoom" class = "raised" value="Join Quiz">
         </form>
 <?php }?>

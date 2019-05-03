@@ -136,7 +136,10 @@ ul {
     height: 250px;
 }
 
-
+#Q.grid{
+    font-size: larger;
+    font-weight: bold;
+}
 .Answer {
     display: inline-flex;
     justify-content: center;
