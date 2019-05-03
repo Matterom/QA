@@ -10,7 +10,8 @@
 const modal = document.getElementById('id01');
 let timeKeeper;
 let logloop;
-let time;
+let time = 99999;
+let timeStep = -1;
 let activeFolder;
 let activeSet;
 let quizList;
@@ -34,7 +35,7 @@ window.addEventListener("load", function() {
 function timer(arg) {
     switch (arg) {
         case "start":
-            timeKeeper = setInterval(updateClock(-1), 1000);
+            timeKeeper = setInterval(updateClock, 1000);
             break;
         case "clear":
             clearInterval(timeKeeper)
@@ -44,14 +45,14 @@ function timer(arg) {
     }
 }
 
-async function logicLoop(arg) {
+function logicLoop(arg) {
     switch (arg) {
         case "start":
             logloop = setTimeout(update, 1000);
             break;
         case "clear":
             clearInterval(logloop)
-            time = 0
+            time = 99999
             break;
         case "pause":
             clearInterval(logloop)
@@ -59,27 +60,32 @@ async function logicLoop(arg) {
     }
 }
 
-function updateClock(mode) {
-    var watch = document.getElementById("Watch");
+function updateClock() {
+    var watch = document.getElementById("Time");
     watch.innerHTML = "Time: " + time;
-    time += mode * 1;
+    time += timeStep;
 }
 
 function update() {
     updateQuiz(mode);
-    console.log("Ho");
     logloop = setTimeout(update, 1000);
 }
 
 async function updateQuiz(mode) {
     const room = await getRoomInfo()
-    console.log(room);
-
 
     //Note, in the future, check against website or php variable to prevent errors
     if (mode == "Host") {
         // Check Quiz State, If Time Remaining < 0, Move to next Question
-
+        if (time == 99999) {
+            time = room.timer
+            timer("start");
+        } else if (time < 0) {
+            nextQuestion(false);
+            timer("clear")
+            time = room.timer;
+            timer("start")
+        }
     } else if (mode == "Review") {
         //TODO review mode for looking back
     } else if (mode == "User") {
@@ -102,7 +108,6 @@ async function updateQuiz(mode) {
     } else {
         //nothinh happens
     }
-    console.log("Hi")
 }
 
 //Start Quiz
@@ -199,9 +204,10 @@ async function nextQuestion(back) {
         step = -1;
     }
     if (mode == "Host") {
-        if (!QList.length == QList.indexOf(currentQuestion) && !(back && QList.indexOf(currentQuestion) == 0)) {
+        if ((back || !((QList.length - 1) == (QList.indexOf(currentQuestion)))) && !(back && QList.indexOf(currentQuestion) == 0)) {
             currentQuestion = QList[QList.indexOf(currentQuestion) + step];
-            let Q = getQuestion(currentQuestion);
+            let Q = await getQuestion(currentQuestion);
+            buildQuestion(Q);
         } else {
             // END OF QUIZ LOGIC
 

@@ -6,6 +6,7 @@
 <script>
   const mode = "User";
   const RKey = '<?php echo $_SESSION['roomKey'] ?>';
+  const attemptID = <?php echo $_SESSION['attemptID'] ?>;
 </script>
 <main>
 <div id="Hold">
