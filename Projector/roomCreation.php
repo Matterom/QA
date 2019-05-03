@@ -72,12 +72,9 @@
             if($stmt = $MYSQLi->prepare('INSERT INTO rooms (ownerID, qSetID, timer, rosterID, roomKey)
                 VALUES (?, ?, ?, ?, NULL)'))
             {
-                echo $userID." ".$qSetID." ".$timer." ".$rosterID;
-
                 $stmt->bind_param('ssss', $userID, $qSetID, $timer, $rosterID);
                 $stmt->execute();
                 $roomID = $MYSQLi->insert_id;
-                echo $roomID;
             }
             else {
                 echo "Failure";
@@ -89,7 +86,6 @@
             $stmt->execute();
             $roomKey = $stmt->get_result()->fetch_assoc()['roomKey'];
         }
-        echo $roomKey;
         // Set session variables from post
         $_SESSION['roomID'] = $roomID;
         $_SESSION['roomKey'] = $roomKey;

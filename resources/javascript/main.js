@@ -69,6 +69,7 @@ function updateClock(mode) {
 async function updateQuiz(mode) {
     const room = await getRoomInfo()
     console.log(room);
+    console.log(mode);
     //Note, in the future, check against website or php variable to prevent errors
     if (mode == "Host") {
         // Check Quiz State, If Time Remaining < 0, Move to next Question
@@ -76,11 +77,19 @@ async function updateQuiz(mode) {
     } else if (mode == "Review") {
         //TODO review mode for looking back
     } else if (mode == "User") {
-        if (room.currentQuestion) {} else if (currentQuestion != room.current_questionID) {
-            //
-            submitAnswer();
-            nextQuestion();
+        if (!room.currentQuestion) {
+            //If room doesn't have a question, Idle
 
+        } else if (currentQuestion != room.current_questionID) {
+            //If Question is not current question
+            submitAnswer();
+            currentQuestion = room.currentQuestion
+            let Q = getQuestion(currentQuestion);
+            buildQuestion(Q);
+        } else if (!currentQuestion && room.currentQuestion) {
+            currentQuestion = room.currentQuestion
+            let Q = getQuestion(currentQuestion);
+            buildQuestion(Q);
         } else {
             // Run down timer;
         }
@@ -103,7 +112,7 @@ async function startQuiz() {
         body: data
     });
     if (!response.ok) {} else {
-        const Q = getQuestion(currentQuestion);
+        const Q = await getQuestion(currentQuestion);
         buildQuestion(Q);
         logicLoop("start");
         const ele = document.getElementById("StartBox");
@@ -133,7 +142,7 @@ async function getRoomInfo() {
 }
 
 //Answers Question
-function answerQuestion(aID) {
+async function answerQuestion(aID) {
     currentAnswer = aID;
     const data = new FormData();
     data.append("Quiz", true);
@@ -153,7 +162,7 @@ function answerQuestion(aID) {
 }
 
 //Submits Answer
-function submitAnswer() {
+async function submitAnswer() {
     const data = new FormData();
     data.append("Quiz", true);
     data.append("Answer", true);
@@ -190,9 +199,7 @@ async function nextQuestion(back) {
             // END OF QUIZ LOGIC
 
         }
-    } else if (mode == "User") {
-
-    }
+    } else if (mode == "User") {}
 
     //Pull Current Question data and push it to server, just in case.
 
@@ -212,19 +219,21 @@ async function getQuestion(QID) {
     if (!response.ok) {
         console.log("Respone from server lost")
     } else {
-        let result = await response.json();
+        let result = await response.text();
+        console.log(QList);
         return JSON.parse(result);
     }
 }
 
 //Build the Dom of a Question
 function buildQuestion(Q) {
-    const QText = getElementById("QText");
-    const A1 = getElementById("A1");
-    const A2 = getElementById("A2");
-    const A3 = getElementById("A3");
-    const A4 = getElementById("A4");
-    const A5 = getElementById("A5");
+    console.log(Q);
+    const QText = document.getElementById("QText");
+    const A1 = document.getElementById("A1");
+    const A2 = document.getElementById("A2");
+    const A3 = document.getElementById("A3");
+    const A4 = document.getElementById("A4");
+    const A5 = document.getElementById("A5");
 
     QText.innerHTML = Q.text
 

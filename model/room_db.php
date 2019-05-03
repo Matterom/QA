@@ -32,7 +32,7 @@ function getQuestionIDList($qSetID) {
     }
     else
     {
-        return "";
+        return "Error";
     }
 
 }
