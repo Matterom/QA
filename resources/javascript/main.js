@@ -14,6 +14,8 @@ let time;
 let activeFolder;
 let activeSet;
 let quizList;
+let currentQuestion;
+let currentAnswer;
 const EleArr = ["A1", "A2", "A3", "A4", "A5"];
 
 //----------------------------------//
@@ -64,7 +66,7 @@ function updateClock(mode) {
     time += mode * 1;
 }
 
-async function updateQuiz(mode, target) {
+async function updateQuiz(mode) {
     const room = await getRoomInfo()
     console.log(room);
     //Note, in the future, check against website or php variable to prevent errors
@@ -74,7 +76,14 @@ async function updateQuiz(mode, target) {
     } else if (mode == "Review") {
         //TODO review mode for looking back
     } else if (mode == "User") {
+        if (room.currentQuestion) {} else if (currentQuestion != room.current_questionID) {
+            //
+            submitAnswer();
+            nextQuestion();
 
+        } else {
+            // Run down timer;
+        }
     } else {
         //nothinh happens
     }
@@ -83,22 +92,25 @@ async function updateQuiz(mode, target) {
 //Start Quiz
 async function startQuiz() {
     // Get first question and update server
+    currentQuestion = QList[0];
     const data = new FormData();
-    data.append("Quiz", true);
-    data.append("QSetRqst", true);
+    data.append("Room", true);
+    data.append("Update", true)
     data.append("roomID", roomID);
-    // const response = await fetch("roomLogic.php", {
-    //      method: 'POST',
-    //      body: data
-    //  });
-    // if (!response.ok) {} else {
-    //const Q = JSON.parse(response);
-    logicLoop("start");
-    const ele = document.getElementById("StartBox");
-    const quiz = document.getElementById("QuestionBox");
-    ele.style = "display: none;";
-    quiz.classList.remove("hidden");
-    // }
+    data.append("question", currentQuestion);
+    const response = await fetch("roomLogic.php", {
+        method: 'POST',
+        body: data
+    });
+    if (!response.ok) {} else {
+        const Q = getQuestion(currentQuestion);
+        buildQuestion(Q);
+        logicLoop("start");
+        const ele = document.getElementById("StartBox");
+        const quiz = document.getElementById("QuestionBox");
+        ele.style = "display: none;";
+        quiz.classList.remove("hidden");
+    }
 }
 
 async function getRoomInfo() {
@@ -120,6 +132,44 @@ async function getRoomInfo() {
     }
 }
 
+//Answers Question
+function answerQuestion(aID) {
+    currentAnswer = aID;
+    const data = new FormData();
+    data.append("Quiz", true);
+    data.append("Answer", true);
+    data.append("qid", currentQuestion)
+    data.append("aid", aID);
+    const response = await fetch("roomLogic.php", {
+        method: 'POST',
+        body: data
+    });
+    if (!response.ok) {
+        console.log("Respone from server lost")
+    } else {
+        let result = await response.text();
+        console.log(result);
+    }
+}
+
+//Submits Answer
+function submitAnswer() {
+    const data = new FormData();
+    data.append("Quiz", true);
+    data.append("Answer", true);
+    data.append("qid", currentQuestion)
+    data.append("aid", currentAnswer);
+    const response = await fetch("roomLogic.php", {
+        method: 'POST',
+        body: data
+    });
+    if (!response.ok) {
+        console.log("Respone from server lost")
+    } else {
+        let result = await response.text();
+        console.log(result);
+    }
+}
 
 //User Side, Enables the Quiz when teach starts
 function enableQuestion() {
@@ -127,12 +177,33 @@ function enableQuestion() {
 }
 
 //Push User's room to new question
-async function nextQuestion() {
-    //Pull Current Question data and push it to server, just in case. 
+async function nextQuestion(back) {
+    let step = 1;
+    if (back) {
+        step = -1;
+    }
+    if (mode == "Host") {
+        if (!QList.length == QList.indexOf(currentQuestion) && !(back && QList.indexOf(currentQuestion) == 0)) {
+            currentQuestion = QList[QList.indexOf(currentQuestion) + step];
+            let Q = getQuestion(currentQuestion);
+        } else {
+            // END OF QUIZ LOGIC
+
+        }
+    } else if (mode == "User") {
+
+    }
+
+    //Pull Current Question data and push it to server, just in case.
+
+
+}
+
+async function getQuestion(QID) {
     const data = new FormData()
     data.append("Room", true);
-    data.append("Question", true);
-    data.append("Next", true);
+    data.append("GetQuestion", true);
+    data.append("qID", QID);
     //Pull the question object and refresh the relevant DOM
     const response = await fetch("roomLogic.php", {
         method: 'POST',
@@ -141,28 +212,9 @@ async function nextQuestion() {
     if (!response.ok) {
         console.log("Respone from server lost")
     } else {
-
+        let result = await response.json();
+        return JSON.parse(result);
     }
-
-}
-
-async function prevQuestion() {
-    //Pull Current Question data and push it to server, just in case. 
-    const data = new FormData()
-    data.append("Room", true);
-    data.append("Question", true);
-    data.append("Prev", true);
-    //Pull the question object and refresh the relevant DOM
-    const response = await fetch(roomLogic.php, {
-        method: 'POST',
-        body: data
-    });
-    if (!response.ok) {
-        console.log("Respone from server lost")
-    } else {
-
-    }
-
 }
 
 //Build the Dom of a Question
