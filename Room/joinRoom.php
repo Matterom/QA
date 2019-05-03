@@ -20,6 +20,13 @@
             $quizID = $stmt->get_result()->fetch_assoc()['quizID'];
             $_SESSION['quizID'] = $quizID;
         }
+        if($stmt = $MYSQL->prepare('SELECT roomID FROM rooms WHERE roomKey = ?'))
+        {
+            $stmt->bind_param('s', $roomKey);
+            $stmt->execute();
+            $roomID = $stmt->get_result->fetch_assoc()['roomID'];
+            $_SESSION['roomID'] = $roomID;
+        }
         $_SESSION['attemptID'] = $attemptID;
         $_SESSION['attendeeID'] = $attendeeID;
         $_SESSION['roomKey'] = $roomKey;
