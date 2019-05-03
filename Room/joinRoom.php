@@ -1,4 +1,7 @@
 <?php
+    if(session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
     if($_SERVER['REQUEST_METHOD']=='POST' && array_key_exists('joinRoom',$_POST))
     {
         $attendeeID = filter_input(INPUT_POST, 'joinroom_idKey', FILTER_SANITIZE_NUMBER_INT);
@@ -20,13 +23,14 @@
             $quizID = $stmt->get_result()->fetch_assoc()['quizID'];
             $_SESSION['quizID'] = $quizID;
         }
-        if($stmt = $MYSQL->prepare('SELECT roomID FROM rooms WHERE roomKey = ?'))
+        if($stmt = $MYSQLi->prepare('SELECT roomID FROM rooms WHERE roomKey = ?'))
         {
             $stmt->bind_param('s', $roomKey);
             $stmt->execute();
-            $roomID = $stmt->get_result->fetch_assoc()['roomID'];
+            $roomID = $stmt->get_result()->fetch_assoc()['roomID'];
             $_SESSION['roomID'] = $roomID;
         }
+        $_SESSION['roomID'] = $roomID;
         $_SESSION['attemptID'] = $attemptID;
         $_SESSION['attendeeID'] = $attendeeID;
         $_SESSION['roomKey'] = $roomKey;

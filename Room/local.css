@@ -27,7 +27,6 @@ main {
     overflow: hidden;
     justify-items: center;
     row-gap: 30px;
-
 }
 
 #QuestionHeader {
@@ -38,7 +37,7 @@ main {
     background: white;
     display: grid;
     justify-items: center;
-    border-style:solid;
+    border-style: solid;
     border-color: #3e8e41;
 }
 
@@ -46,8 +45,8 @@ main {
     border: none;
     border-radius: 15px;
     background: white;
-    padding-left:5px;
-    padding-right:5px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 #AnswerGrid {
@@ -80,25 +79,23 @@ main {
     font-weight: bold;
 }
 
-.GridButtons button:active, .GridButtons button:hover {
+.GridButtons button:active,
+.GridButtons button:hover {
     background-color: #3e8e41;
     box-shadow: 0 1px #666;
     transform: translateY(4px);
 }
 
-
-@media(max-width:600px){
-    #QuestionBox{
+@media(max-width:600px) {
+    #QuestionBox {
         min-width: 97%;
         margin: 0;
         padding-left: 9px;
         padding-right: 3px;
     }
-
-    #QuestionHeader{
+    #QuestionHeader {
         width: 100%;
     }
-
     #AnswerGrid {
         width: 100%;
     }
@@ -118,11 +115,6 @@ main {
     user-select: none;
 }
 
-
-
-
-
-
-
-
-
+.hidden {
+    display: none !important;
+}

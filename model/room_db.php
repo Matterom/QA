@@ -154,15 +154,12 @@ function getRoom($roomID) {
 
 function setNextQuestion($roomID, $questionID) {
     global $MYSQLi;
-    if($stmt = $MYSQLi->prepare('UPDATE rooms SET current_QuestionID = ? WHERE roomID = ?'))
-    {
+    if($stmt = $MYSQLi->prepare('UPDATE rooms SET current_QuestionID = ? WHERE roomID = ?')) {
         $stmt->bind_param('ss', $questionID, $roomID);
-        $stmt->execute();
-        if($MYSQLi->affected_rows >0) {
-            return 1;
-        }
+        $result = $stmt->execute();
+        return $questionID;
+
     }
-    return 0;
 }
 
 

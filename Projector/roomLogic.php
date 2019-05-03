@@ -7,8 +7,11 @@
         if($type = filter_input(INPUT_POST, "Update")) {
 
         }
-        elseif ($type = filter_input(INPUT_POST, "Question")) {
-
+        elseif ($type = filter_input(INPUT_POST, "setQuest")) {
+            $roomID = filter_input(INPUT_POST, "roomID");
+            $questionID = filter_input(INPUT_POST, "qID");
+            $result = setNextQuestion($roomID, $questionID);
+            echo $result;
         }
         elseif ($type = filter_input(INPUT_POST, "Answer")) {
             $attemptID = 

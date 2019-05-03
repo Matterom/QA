@@ -15,7 +15,7 @@ let timeStep = -1;
 let activeFolder;
 let activeSet;
 let quizList;
-let currentQuestion;
+let currentQuest;
 let currentAnswer;
 const EleArr = ["A1", "A2", "A3", "A4", "A5"];
 
@@ -26,7 +26,9 @@ const EleArr = ["A1", "A2", "A3", "A4", "A5"];
 //////////////////////
 
 window.addEventListener("load", function() {
-
+    if (typeof mode === 'undefined') {} else if (mode == "User") {
+        logicLoop("start");
+    }
 }, false);
 
 //////////////////
@@ -89,18 +91,24 @@ async function updateQuiz(mode) {
     } else if (mode == "Review") {
         //TODO review mode for looking back
     } else if (mode == "User") {
-        if (!room.currentQuestion) {
+        console.log(room);
+        console.log(room.current_questionID)
+        if (typeof room.current_questionID === 'null') {
             //If room doesn't have a question, Idle
-
-        } else if (currentQuestion != room.current_questionID) {
+            console.log(true);
+        } else if (currentQuest != room.current_questionID) {
             //If Question is not current question
-            submitAnswer();
-            currentQuestion = room.currentQuestion
-            let Q = await getQuestion(currentQuestion);
+            console.log("PartTwo")
+            if (answerQuestion) {
+                submitAnswer();
+            }
+            currentQuest = room.current_questionID
+            let Q = await getQuestion(currentQuest);
             buildQuestion(Q);
-        } else if (!currentQuestion && room.currentQuestion) {
-            currentQuestion = room.currentQuestion
-            let Q = await getQuestion(currentQuestion);
+        } else if (!currentQuest && room.current_questionID) {
+            console.log("PartThree")
+            currentQuest = room.current_questionID
+            let Q = await getQuestion(currentQuest);
             buildQuestion(Q);
         } else {
             // Run down timer;
@@ -113,18 +121,19 @@ async function updateQuiz(mode) {
 //Start Quiz
 async function startQuiz() {
     // Get first question and update server
-    currentQuestion = QList[0];
+    currentQuest = QList[0];
     const data = new FormData();
-    data.append("Room", true);
-    data.append("Update", true)
+    data.append("Quiz", true);
+    data.append("setQuest", true);
     data.append("roomID", roomID);
-    data.append("question", currentQuestion);
+    data.append("qID", currentQuest);
     const response = await fetch("roomLogic.php", {
         method: 'POST',
         body: data
     });
     if (!response.ok) {} else {
-        const Q = await getQuestion(currentQuestion);
+        console.log(await response.text())
+        const Q = await getQuestion(currentQuest);
         buildQuestion(Q);
         logicLoop("start");
         const ele = document.getElementById("StartBox");
@@ -155,11 +164,12 @@ async function getRoomInfo() {
 
 //Answers Question
 async function answerQuestion(aID) {
+    console.log("answer Attempt");
     currentAnswer = aID;
     const data = new FormData();
     data.append("Quiz", true);
     data.append("Answer", true);
-    data.append("qid", currentQuestion)
+    data.append("qid", currentQuest)
     data.append("aid", aID);
     const response = await fetch("roomLogic.php", {
         method: 'POST',
@@ -178,7 +188,7 @@ async function submitAnswer() {
     const data = new FormData();
     data.append("Quiz", true);
     data.append("Answer", true);
-    data.append("qid", currentQuestion)
+    data.append("qid", currentQuest)
     data.append("aid", currentAnswer);
     const response = await fetch("roomLogic.php", {
         method: 'POST',
@@ -204,15 +214,30 @@ async function nextQuestion(back) {
         step = -1;
     }
     if (mode == "Host") {
-        if ((back || !((QList.length - 1) == (QList.indexOf(currentQuestion)))) && !(back && QList.indexOf(currentQuestion) == 0)) {
-            currentQuestion = QList[QList.indexOf(currentQuestion) + step];
-            let Q = await getQuestion(currentQuestion);
+        if ((back || !((QList.length - 1) == (QList.indexOf(currentQuest)))) && !(back && QList.indexOf(currentQuest) == 0)) {
+            currentQuest = QList[QList.indexOf(currentQuest) + step];
+            let Q = await getQuestion(currentQuest);
             buildQuestion(Q);
+            const data = new FormData()
+            data.append("Quiz", true);
+            data.append("setQuest", true);
+            data.append("roomID", roomID);
+            data.append("qID", currentQuest);
+            const response = await fetch("roomLogic.php", {
+                method: 'POST',
+                body: data
+            });
+            if (!response.ok) {
+                console.log("Respone from server lost")
+            }
         } else {
             // END OF QUIZ LOGIC
 
         }
-    } else if (mode == "User") {}
+    } else if (mode == "User") {
+        let Q = await getQuestion(currentQuest);
+        buildQuestion(Q)
+    }
 
     //Pull Current Question data and push it to server, just in case.
 
@@ -220,6 +245,7 @@ async function nextQuestion(back) {
 }
 
 async function getQuestion(QID) {
+    console.log(QID);
     const data = new FormData()
     data.append("Room", true);
     data.append("getQuest", true);
@@ -274,7 +300,9 @@ function buildQuestion(Q) {
         A4.classList.remove("hidden");
     }
     A5.innerHTML = Q.answer.five[1]
+    console.log(Q.answer.five[2].includes("hidden"))
     if (Q.answer.five[2].includes("hidden")) {
+        console.log("hidding");
         A5.classList.add("hidden")
     } else if (A5.classList.contains("hidden")) {
         A5.classList.remove("hidden");

@@ -10,12 +10,7 @@
 </script>
 <main>
 <div id="Hold">
-<script>
-// Test if There is a Quiz
 
-// Start Logic
-logicLoop("start");
-</script>
 </div>
 <div id="QuestionBox">
   <div id="QuestionHeader">
