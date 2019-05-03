@@ -265,6 +265,7 @@ BEGIN
     end if;
     INSERT IGNORE INTO attendancerecords (attendeeID, roomKey, attendance_date)
         VALUES (NEW.attendeeID, NEW.roomKey, NULL);
+    UPDATE rooms SET active_connections = active_connections + 1 WHERE roomKey = NEW.roomKey;
 END $$
 DELIMITER ;
 

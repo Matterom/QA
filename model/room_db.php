@@ -41,7 +41,7 @@ function getQuestionIDList($qSetID) {
  *  Parameters: $roomID - The Primary Key associated with the room.
  *  Returns:    $userCount - The count of students in the room.
  */
-function getUserCounts($roomID) {
+function getCurrentUserCount($roomID) {
     global $MYSQLi;
     if ($statement = $MYSQLi->prepare('SELECT active_connections FROM rooms
                                     WHERE roomID = ?;'))
@@ -63,7 +63,23 @@ function getUserCounts($roomID) {
     }
     else
     {
-        return "Failed to prepare SQL SELECT statement.";
+        return -1;
+    }
+}
+
+function getTotalUserCount($roomID) {
+    global $MYSQLi;
+    if ($statement = $MYSQLi->prepare('SELECT attendee_count FROM rosters JOIN rooms
+        WHERE rooms.roomID = ? AND rosters.rosterID = rooms.rosterID;'))
+    {
+        $statement->bind_param('s', $roomID);
+        $statement->execute();
+        $attendeeCount = $statement->get_result()->fetch_assoc()['attendeeCount'];
+        return $attendeeCount;
+    }
+    else
+    {
+        return -1;
     }
 }
 
