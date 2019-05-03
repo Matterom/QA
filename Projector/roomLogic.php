@@ -29,8 +29,8 @@
         }
         elseif ($type = filter_input(INPUT_POST, "getQuest")) {
             $qid = filter_input(INPUT_POST, "qID");
-            $result = getQuestion($roomID);
-            echo json_encode($result);
+            $result = getQuestion($qid);
+            echo $result;
         }
     }
     else {
