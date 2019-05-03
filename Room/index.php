@@ -5,12 +5,15 @@
 </head>
 <script>
   const mode = "User";
+  const RKey = <?php echo $_SESSION['roomKey'] ?>;
 </script>
 <main>
 <div id="Hold">
 <script>
 // Test if There is a Quiz
 
+// Start Logic
+logicLoop("start");
 </script>
 </div>
 <div id="QuestionBox">

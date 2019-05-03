@@ -4,9 +4,10 @@
 </head>
 <script>
     const mode = "Host";
-    const QList = <?php echo $_SESSION['qSetIDList'] ?>
-    const RKey = <?php echo $_SESSION['roomKey'] ?>
-    const timer = <?php echo $_SESSION['timer'] ?>
+    const QList = <?php echo json_encode($_SESSION['qSetIDList']) ?>;
+    const RKey = <?php echo $_SESSION['roomKey'] ?>;
+    const remainingTime = <?php echo $_SESSION['timer'];?>;
+    const MaxPop = <?php echo $_SESSION['attendeeCountM'];?>;
 </script>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <main>
@@ -18,9 +19,9 @@
                 <th style="width=25%">
                     <div id="popBox">
                         <p>Students Present</p>
-                        <p id="popCurrent" class="pop">10</p>
+                        <p id="popCurrent" class="pop">0</p>
                         <p class="pop">---</p>
-                        <p id="popExpected" class="pop">15</p>
+                        <p id="popExpected" class="pop"><?php echo $_SESSION['attendeeCountM'];?></p>
                     </div>
                 </th>
                 <th style="width:50%">

@@ -61,20 +61,26 @@
         }
         else // If rosterName not anonymous
         {
-            if($stmt = $MYSQLi->prepare('SELECT rosterID from rosters WHERE rosterName = ?'))
+            if($stmt = $MYSQLi->prepare('SELECT rosterID, attendee_count from rosters WHERE rosterName = ?'))
             {
                 $stmt->bind_param('s', $rosterName);
                 $stmt->execute();
-                $rosterID = $stmt->get_result()->fetch_assoc()['rosterName'];
-                
+                $result = $stmt->get_result()->fetch_assoc();
+                $_SESSION['rosterID'] = $result['rosterID'];
+                $_SESSION['attendeeCountM'] = $result['attendee_count'];
             }
-
             if($stmt = $MYSQLi->prepare('INSERT INTO rooms (ownerID, qSetID, timer, rosterID, roomKey)
                 VALUES (?, ?, ?, ?, NULL)'))
             {
+                echo $userID." ".$qSetID." ".$timer." ".$rosterID;
+
                 $stmt->bind_param('ssss', $userID, $qSetID, $timer, $rosterID);
                 $stmt->execute();
                 $roomID = $MYSQLi->insert_id;
+                echo $roomID;
+            }
+            else {
+                echo "Failure";
             }
         }
         if ($stmt = $MYSQLi->prepare('SELECT roomKey FROM rooms WHERE roomID = ?'))
@@ -83,14 +89,13 @@
             $stmt->execute();
             $roomKey = $stmt->get_result()->fetch_assoc()['roomKey'];
         }
-
+        echo $roomKey;
         // Set session variables from post
         $_SESSION['roomID'] = $roomID;
         $_SESSION['roomKey'] = $roomKey;
         $_SESSION['qSetID'] = $qSetID;
         $_SESSION['qSetName'] = $qSetName;
         $_SESSION['qSetIDList'] = getQuestionIDList($qSetID);
-        $_SESSION['rosterID'] = $rosterID;
         $_SESSION['rosterName'] = $rosterName;
         $_SESSION['timer'] = $timer;
 

@@ -533,7 +533,6 @@ async function updateSetFromForm(origin, type, secondary, userId, folderID, setI
             console.log("something went wrong");
         } else {
             let result = await response.text();
-            console.log(result)
 
             //remove form and reenable node if successful
             if (!target.classList.contains("hidden")) {
