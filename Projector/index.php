@@ -28,7 +28,10 @@
 				<button id="btnQPrev" class="QBtn" onclick="nextQuestion(True)"><i class="fas fa-angle-double-left"></i></button>
             	<button id="btnNext" class="QBtn" onclick="nextQuestion(False)"><i class="fas fa-angle-double-right"></i></button>
         	</div>
-        	<div id="RoomKeyBox" class="RoomKeyBox"><?php echo $_SESSION['roomKey'] ?></div>
+        	<div id="RoomKeyBox" class="RoomKeyBox">
+			<p>Room Key</p>
+			<?php echo $_SESSION['roomKey'] ?>
+		</div>
         	<div id="AnswerGrid" class="AnswerGrid">
         		<p id="A1" class="RoomAnswer">Answer</p>
             	<p id="A2" class="RoomAnswer">Answer</p>
