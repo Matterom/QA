@@ -1,4 +1,7 @@
-<?php    
+<?php
+    #########################
+    ### By Matthew Nelson ###
+    #########################
     include_once 'database.php';
     include 'classes.php';
     #functions to pull the crap

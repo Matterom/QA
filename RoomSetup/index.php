@@ -1,6 +1,6 @@
 <?php include '../view/header.php';?>
 <?php include '../model/question_db.php'?>
-<!--This is where successful login attempts are sent, This is the configuration hub for new "Questions" and rooms owned by the user-->
+<!--By Matthew Nelson: This page allows for the configuration and control of questions-->
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 <main>
 

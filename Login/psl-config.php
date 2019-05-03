@@ -1,4 +1,7 @@
 <?php
+    #########################
+    ### By Matthew Nelson ###
+    #########################
     //Connection
     define("HOST", "localhost");
     define("USER", "lnsys");

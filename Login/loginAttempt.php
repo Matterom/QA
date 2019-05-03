@@ -1,4 +1,7 @@
 <?php
+    #########################
+    ### By Matthew Nelson ###
+    #########################
     session_start();
     include_once 'psl-config.php';
     #Initialize login database connection from configuration

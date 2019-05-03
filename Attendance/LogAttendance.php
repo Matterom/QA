@@ -1,4 +1,7 @@
 <?php 
+    #########################
+    ### By Matthew Nelson ###
+    #########################
 
     $result = "";
     #TODO Cleanup the error code 

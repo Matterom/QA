@@ -1,3 +1,4 @@
+<!--This is where successful login attempts are sent, This is the configuration hub for new "Questions" and rooms owned by the user-->
 <?php session_start();?>
 <!DOCTYPE html>
 <html>

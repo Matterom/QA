@@ -1,7 +1,11 @@
 <?php
+    ##############################
+    ### Page By Matthew Nelson ###
+    ##############################
     include '../model/question_db.php';
     include '../model/classes.php';
 
+    //Directs inputs based on the initial Key
     if($func = filter_input(INPUT_POST, "folder")){
         if ($type = filter_input(INPUT_POST, "update")) {
             $userID = filter_input(INPUT_POST, "user");

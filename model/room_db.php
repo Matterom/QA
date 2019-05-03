@@ -141,6 +141,7 @@ function answerQuestion($attemptID, $questionID, $answerID) {
     }
 }
 
+## By Matthew Nelson ##
 function getRoom($roomID) {
     global $MYSQLi;
     if ($statement = $MYSQLi->prepare("SELECT * FROM rooms WHERE roomID = ?")) {

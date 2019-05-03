@@ -1,4 +1,7 @@
 <?php
+    #########################
+    ### By Matthew Nelson ###
+    #########################
     define("DATABASE", "qaproject");
     define("HOST", "localhost");
     define("USER", "quesys");
