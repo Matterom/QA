@@ -5,7 +5,7 @@
 <script>
     const mode = "Host";
     const QList = <?php echo json_encode($_SESSION['qSetIDList']) ?>;
-    const RKey = <?php echo $_SESSION['roomKey'] ?>;
+    const RKey = '<?php echo $_SESSION['roomKey'] ?>';
     const remainingTime = <?php echo $_SESSION['timer'];?>;
     const MaxPop = <?php echo $_SESSION['attendeeCountM'];?>;
 </script>

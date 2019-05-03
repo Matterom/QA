@@ -124,4 +124,18 @@ function answerQuestion($attemptID, $questionID, $answerID) {
         return 0;
     }
 }
+
+function getRoom($roomID) {
+    global $MYSQLi;
+    if ($statement = $MYSQLi->prepare("SELECT * FROM rooms WHERE roomID = ?")) {
+        $statement->bind_param('s', $roomID);
+        $statement->execute();
+        $return = $statement->get_result();
+        $statement->close();
+        return json_encode($return->fetch_assoc());
+    }
+}
+
+
+
 ?>

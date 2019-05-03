@@ -50,8 +50,11 @@ function logicLoop(arg) {
         case "clear":
             clearInterval(logloop)
             time = 0
+            break;
         case "pause":
             clearInterval(logloop)
+            break;
+
     }
 }
 
@@ -62,39 +65,16 @@ function updateClock(mode) {
 }
 
 async function updateQuiz(mode, target) {
+    const room = await getRoomInfo()
+    console.log(room);
     //Note, in the future, check against website or php variable to prevent errors
     if (mode == "Host") {
-        // Check Quiz State, If Time Remaining < 0, Move to next Question, 
-        const data = new FormData();
-        data.append("Quiz", true);
-        data.append("", true);
-        const response = await fetch("roomLogic.php", {
-            method: 'POST',
-            body: data
-        });
-        if (!response.ok) {
-            //throw error
-        } else {
-            //set content to be loaded by room clients.
-            const Q = JSON.parse(response);
-            buildQuestion(Q, "Host");
-        }
+        // Check Quiz State, If Time Remaining < 0, Move to next Question
+
     } else if (mode == "Review") {
         //TODO review mode for looking back
     } else if (mode == "User") {
-        const response1 = await fetch("roomLogic.php", {
-            method: 'POST',
-            body: data
-        });
-        if (!response1.ok) {
-            //throw error
-        } else {
-            //Pull Current Room Data and parse functions
 
-
-            //E
-
-        }
     } else {
         //nothinh happens
     }
@@ -102,7 +82,7 @@ async function updateQuiz(mode, target) {
 }
 //Start Quiz
 async function startQuiz() {
-
+    // Get first question and update server
     const data = new FormData();
     data.append("Quiz", true);
     data.append("QSetRqst", true);
@@ -126,14 +106,15 @@ async function getRoomInfo() {
         const data = new FormData()
         data.append("Room", true);
         data.append("get", true);
-        const response = await fetch(roomLogic.php, {
+        data.append("roomID", roomID);
+        const response = await fetch("roomLogic.php", {
             method: 'POST',
             body: data
         });
         if (!response.ok) {
             console.log("Respone from server lost")
         } else {
-            result = await response;
+            result = await response.json();
             return result;
         }
     }
@@ -153,7 +134,7 @@ async function nextQuestion() {
     data.append("Question", true);
     data.append("Next", true);
     //Pull the question object and refresh the relevant DOM
-    const response = await fetch(roomLogic.php, {
+    const response = await fetch("roomLogic.php", {
         method: 'POST',
         body: data
     });
@@ -347,7 +328,7 @@ async function revealSetAssoc(setID) {
     if (!response.ok) {
         console.log("something went wrong");
     } else {
-        result = await response.text();
+        let result = await response.text();
         for (let i = 0; i < qBoxes.length; ++i) {
             qid = qBoxes[i].id.split(':')[1];
             if (result.includes(qid)) {
@@ -827,7 +808,7 @@ function generateQEle(QBox, folder, user, qid, Q) {
     qString += "<div id='" + qid + ":5" + "' class='ans5 " + Q.answer.five[2] + "'>" + Q.answer.five[1] + "</div><div id='" + qid + ":ch5' class='ch5 " + Q.answer.five[2] + "'><input type='checkbox' name='answerFive' value='true' " + (Q.answer.five[0] ? "checked='true'" : "") + "/></div>"
     qString += "</div>"
     qString += "<div id='" + qid + ":args' class='hidden'>" + "TF::" + Q.args.TF + "</div>"
-    qString += "<div id='BH:" + qid + "' class='btnHolder'>"
+    qString += "<div id='BH:" + qid + "' class='btnholder'>"
     qString += "<button onclick='addChoice(" + qid + ")' class='hidden addChoice btnqa'><i class='fas fa-plus'></i> Add Answer Choice</button>"
     qString += "<button class='hidden addToSet btnqa' onclick='addToSet(" + qid + ", true)'><i class='fas fa-file-alt'></i> Add to Quiz</button>"
     qString += "<button class='hidden subFromSet btnqa' onclick='addToSet(" + qid + ", false)'><i class='fas fa-file-alt'></i> Remove from Quiz</button>"

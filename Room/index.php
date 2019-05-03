@@ -5,7 +5,7 @@
 </head>
 <script>
   const mode = "User";
-  const RKey = <?php echo $_SESSION['roomKey'] ?>;
+  const RKey = '<?php echo $_SESSION['roomKey'] ?>';
 </script>
 <main>
 <div id="Hold">

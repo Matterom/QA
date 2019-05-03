@@ -164,7 +164,7 @@
             $statement->execute();
             $return = $statement->get_result();
             $statement->close();
-            return $return-fetch(MYSQLI_ASSOC);
+            return $return->fetch(MYSQLI_ASSOC);
 
         }
         else {
