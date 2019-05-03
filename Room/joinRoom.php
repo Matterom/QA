@@ -1,5 +1,5 @@
 <?php
-    if($_SERVER['REQUEST_METHOD']=='POST' && $_POST['joinRoom']== "Submit")
+    if($_SERVER['REQUEST_METHOD']=='POST' && array_key_exists('joinRoom',$_POST))
     {
         $attendeeID = filter_input(INPUT_POST, 'joinroom_idKey', FILTER_SANITIZE_NUMBER_INT);
         $roomKey = filter_input(INPUT_POST, 'joinroom_roomKey', FILTER_SANITIZE_STRING);
@@ -29,8 +29,8 @@
     {
         ?>
         <form action="Room/joinRoom.php" method="POST">
-        RoomKey: <br><input type="text" name="joinroom_roomKey" value=""><br>
-        ID Key: <br><input type="text" name="joinroom_idKey" value=""><br>
-        <input type="submit" class="raised" name="joinRoom">
+        RoomKey: <input type="text" name="joinroom_roomKey" value=""><br>
+        ID Key: <input type="text" name="joinroom_idKey" value=""><br>
+        <input type="submit" name="joinRoom" class = "raised" value="Join Quiz">
         </form>
 <?php }?>
