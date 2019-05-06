@@ -1,3 +1,10 @@
+<!-- ********** updateAccount.php **********
+     Purpose: Handles form data for Account/
+     index.php. Makes changes to account table
+     in MySQL as needed.
+     Programmer: Sean Anderson
+     ***************************************
+-->
 <?php 
     if ($_SERVER["REQUEST_METHOD"] == "POST")
     {

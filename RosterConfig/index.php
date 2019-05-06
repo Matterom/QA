@@ -1,3 +1,18 @@
+<!-- ********** Roster/Index.php **********
+     Purpose: This page is for configuring user rosters. Users can 
+     create a new roster or add new attendees to an existing roster. 
+     Deletion of rosters and attendees not yet supported.
+     Algorithm: * Pull all of the roster data from the MySQL server
+                  and store it as a PHP array. 
+                * Create a div with a list of rosters as the rosters column
+                * Create a separate div for each roster with the
+                  list of all attendees for that roster. Set the visibility
+                  for each to hidden.
+                * Javascript trigger onclick for each roster listed on the left
+                  which sets the associated attendee list visibility to
+                  visible and makes all other roster lists invisible.
+     Programmer: Sean Anderson
+-->
 <?php 
     include "../view/header.php";
     include "../model/database.php";

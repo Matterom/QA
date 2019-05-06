@@ -1,7 +1,11 @@
+<!-- ********** logAttendance.php **********
+     Purpose: Logic for handling attendance
+     login from front page.
+     Programmers: Sean Anderson / Matthew Nelson
+     ***************************************
+-->
+
 <?php 
-    #########################
-    ### By Matthew Nelson ###
-    #########################
 
     $result = "";
     #TODO Cleanup the error code 

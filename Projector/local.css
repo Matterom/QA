@@ -1,3 +1,5 @@
+/* Page Created by David Fretz and finalized by Nayeli Garcia and Steve Ramos*/
+
 /* TODO Device Styling */
 .grid-container {
   display: grid;
@@ -44,7 +46,6 @@ button:hover{
     background-color:#018744;
 } 
 
-}
 #QuestionBox {
     max-width: 60%;
     min-height: 75%;

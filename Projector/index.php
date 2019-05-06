@@ -1,3 +1,4 @@
+<!-- Project Index Page Created by David Fretz -->
 <?php include '../view/header.php';?>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

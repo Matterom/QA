@@ -1,8 +1,9 @@
 /*************** qa_test_cases.sql ***************
-* Class:    CS/CINF Senior Project
+* Class:    CS/CINF/IT Senior Project
 * Group:    Q and A
 * Purpose:  Insert test data into database to test
 *           core functionality of website.
+* Created by Sean Anderson
 ****************************************************/
 USE qaproject;
 

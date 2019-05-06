@@ -1,7 +1,8 @@
 /*************** qa_install_script.sql ***************
-* Class:    CS/CINF Senior Project
+* Class:    CS/CINF/IT Senior Project
 * Group:    Q and A
 * Purpose:  Consolidated SQL install script
+* Programmer: Sean Anderson
 ****************************************************/
 
 /*
@@ -60,8 +61,8 @@ CREATE TABLE IF NOT EXISTS rosters (
 
 
 /********** Rooms **********
-Syntax: "INSERT IGNORE INTO rooms (ownerID, rosterID, roomKey) 
-            VALUES (@id, @roster, NULL)"
+Syntax: "INSERT IGNORE INTO rooms (ownerID, rosterID, roomKey, qSetID, timer) 
+            VALUES (@id, @roster, NULL, @qSetID, @timer)"
 Constraints: FK for rosterID (rosters)
 Trigger Algorithm:  Auto-generate a 6-digit alphanumeric key for roomKey and
                     set start_time to NOW.
@@ -190,7 +191,14 @@ BEGIN
 end $$
 DELIMITER ;
 
--- Create question folder
+/********** Question Folders **********
+* Syntax: "INSERT IGNORE INTO questionfolders (ownerID, folderName, folderDescription)
+*           VALUES()"
+* Constraints: FK for roomKey (rooms) and attendeeID (attendees)
+* Trigger Algorithm:  Check that attendee is a member of the roster associated with
+*                     the given roomKey. If so, set the date to current_date and
+*                     insert. Otherwise, send signal 45000 error.
+*/
 CREATE TABLE IF NOT EXISTS questionfolders (
     folderID int(11) NOT NULL AUTO_INCREMENT,
     ownerID int(11) NOT NULL,
@@ -201,7 +209,10 @@ CREATE TABLE IF NOT EXISTS questionfolders (
         REFERENCES accounts(id)
 ) ;
 
--- Create Question
+/********** Question Table **********
+* Syntax: "INSERT INTO questiontable (folderID, question) VALUES ()"
+* Constraints: FK on folderID to folders(folderID)
+*/
 CREATE TABLE IF NOT EXISTS questiontable (
     questionID int(11) NOT NULL AUTO_INCREMENT,
     folderID int(11) NOT NULL,
@@ -228,6 +239,8 @@ CREATE TABLE IF NOT EXISTS questionsets (
 );
 
 /********** QuestionSetPairings **********
+* Syntax: INSERT INTO questionsetpairings (qID, qsetID) VALUES()
+* Purpose: Connects questions with their questionsets.
 */
 CREATE TABLE questionsetpairings (
     qID int(11) NOT NULL,
@@ -240,7 +253,8 @@ Syntax:         INSERT INTO quizattempts (roomKey, attendeeID, quizID)
                     VALUES (@key, @attendee, NULL)
 Constraints:    FK on quizID and roomKey from published_quizzes
 Triggers:       Auto-fill quizID. Create an attendance record if non exists. Check
-                    if attendee has access to given quiz.
+                    if attendee has access to given quiz. Auto-increment 
+                    rooms(active_connnections)
 */
 CREATE TABLE quizattempts (
     attemptID int(11) NOT NULL AUTO_INCREMENT,
@@ -306,7 +320,12 @@ end $$
 DELIMITER ;
 */
 
--- Create AnswerSubmission (a answer the the attendee provides, linked to a quiz attempt)
+/********** Answer Submission **********
+* Purpose: Each row is an attendee's answer to a given question
+* Syntax:  INSERT INTO answersubmissions (quizAttemptID, questionID, answer_choice)
+*           VALUES()
+* Constraints: FK on quizAttemptID references quizattempts(attemptID)
+*/
 CREATE TABLE IF NOT EXISTS answersubmissions (
     answerSubmitID int(11) AUTO_INCREMENT,
     quizAttemptID int(11) NOT NULL,
@@ -317,7 +336,8 @@ CREATE TABLE IF NOT EXISTS answersubmissions (
         REFERENCES quizattempts (attemptID) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-
+/*** FK on Rooms(qSetID) references questionsets(qSetID) 
+*/
 ALTER TABLE rooms 
 ADD CONSTRAINT room_qSet_fk FOREIGN KEY(qSetID)
         REFERENCES questionsets(qSetID);
@@ -327,7 +347,11 @@ ADD CONSTRAINT room_qSet_fk FOREIGN KEY(qSetID)
 -------------------------------
 */
 
--- Add access permissions
+/*
+-------------------------------
+-- Accounts and Permissions  --
+-------------------------------
+*/
 GRANT USAGE ON *.* TO 'lnsys'@'localhost' IDENTIFIED BY PASSWORD '*571B02166B46C27003D2E30B815657658C800579';
 GRANT SELECT, INSERT, UPDATE ON qaproject.* TO 'lnsys'@'localhost';
 

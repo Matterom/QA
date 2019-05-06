@@ -1,4 +1,9 @@
-<?php include '../view/header.php';?>
+<?php 
+  
+    #########################
+    ### By Matthew Nelson ###
+    #########################
+    include '../view/header.php';?>
 <!--This handles the user page for rooms EG A drops them here -->
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -1,3 +1,10 @@
+<!-- ********** joinRoom.php **********
+     Purpose: Logic for handling room
+     access requests by attendees.
+     Programmer: Sean Anderson
+     **********************************
+-->
+
 <?php
     if(session_status() == PHP_SESSION_NONE) {
         session_start();

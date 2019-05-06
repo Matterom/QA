@@ -1,3 +1,8 @@
+<!-- ********** newRosterorAttendee.php **********
+     Purpose:   Processes the insertion of new roster
+                or attendee data into the MySQL DB.
+     Programmer: Sean Anderson
+-->
 <?php 
     if($_SERVER['REQUEST_METHOD'] == "POST"){
         

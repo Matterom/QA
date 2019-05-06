@@ -1,3 +1,6 @@
+<!-- DASHBOARD - Landing Page for Account Holders 
+     Programmer: Sean Anderson
+-->
 <main>
     <?php $user_id = $_SESSION['id']; ?>
     <script>

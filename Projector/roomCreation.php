@@ -16,7 +16,7 @@
         'qSetID'        from SELECT WHERE qSetName = $qSetName
         'qSetIDList'    from getQuestionIDList($qSetID)
         'timer'         from $_POST
-
+    Programmer: Sean Anderson
 */ -->
 
 <?php 
